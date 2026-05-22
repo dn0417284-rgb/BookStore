@@ -1,0 +1,139 @@
+book-store/                                     # Thư mục gốc project
+│
+├── client/                                     # Frontend Angular
+│
+│   ├── src/                                    # Source code Angular
+│   │
+│   │   ├── assets/                             # Ảnh, icon, file tĩnh
+│   │   │
+│   │   ├── styles.css                          # CSS global toàn website
+│   │   │
+│   │   ├── proxy.conf.json                     # Proxy tránh lỗi CORS
+│   │   │
+│   │   └── app/                                # App Angular chính
+│   │
+│   │       ├── core/                           # Thành phần cốt lõi
+│   │       │
+│   │       │   ├── services/                   # Gọi API backend
+│   │       │   │
+│   │       │   │   ├── auth.service.ts         # Đăng nhập, đăng ký
+│   │       │   │   ├── product.service.ts      # API sản phẩm
+│   │       │   │   ├── cart.service.ts         # API giỏ hàng
+│   │       │   │   ├── order.service.ts        # API đơn hàng
+│   │       │   │   └── customer.service.ts     # API khách hàng
+│   │       │   │
+│   │       │   └── models/                     # Model TypeScript
+│   │       │
+│   │       │       ├── product.model.ts
+│   │       │       ├── order.model.ts
+│   │       │       ├── cart.model.ts
+│   │       │       ├── customer.model.ts
+│   │       │       └── user.model.ts
+│   │       │
+│   │       │
+│   │       ├── shared/                         # Component dùng chung
+│   │       │
+│   │       │   └── components/
+│   │       │
+│   │       │       ├── header/                 # Header website
+│   │       │       ├── footer/                 # Footer website
+│   │       │       ├── product-card/           # Card sách
+│   │       │       ├── search-bar/             # Thanh tìm kiếm
+│   │       │       └── loading/                # Spinner loading
+│   │       │
+│   │       │
+│   │       ├── pages/                          # Các trang website
+│   │       │
+│   │       │   ├── home/                       # Trang chủ
+│   │       │   ├── login/                      # Đăng nhập
+│   │       │   ├── register/                   # Đăng ký
+│   │       │   ├── cart/                       # Giỏ hàng
+│   │       │   ├── checkout/                   # Thanh toán
+│   │       │   ├── product-detail/             # Chi tiết sản phẩm
+│   │       │   ├── search/                     # Tìm kiếm sản phẩm
+│   │       │   │
+│   │       │   └── admin/                      # Trang admin
+│   │       │
+│   │       │       ├── dashboard/              # Dashboard thống kê
+│   │       │       │
+│   │       │       ├── product-management/     # CRUD sản phẩm
+│   │       │       │   ├── product-list/
+│   │       │       │   ├── add-product/
+│   │       │       │   └── edit-product/
+│   │       │       │
+│   │       │       ├── order-management/       # CRUD đơn hàng
+│   │       │       │   ├── order-list/
+│   │       │       │   └── order-detail/
+│   │       │       │
+│   │       │       └── customer-management/    # Quản lý khách hàng
+│   │       │           ├── customer-list/
+│   │       │           └── customer-detail/
+│   │       │
+│   │       │
+│   │       ├── app-routing.module.ts           # Khai báo route Angular
+│   │       ├── app.module.ts                   # Module gốc Angular
+│   │       └── app.component.ts                # Component gốc
+│   │
+│   │
+│   ├── angular.json                            # Cấu hình Angular
+│   ├── package.json                            # Danh sách thư viện Angular
+│   ├── package-lock.json
+│   └── tsconfig.json
+│
+│
+├── server/                                     # Backend NodeJS + Express
+│
+│   ├── src/
+│   │
+│   │   ├── config/                             # Cấu hình hệ thống
+│   │   │   └── db.js                           # Kết nối MySQL
+│   │   │
+│   │   ├── controllers/                        # Nhận request/response
+│   │   │   ├── auth.controller.js
+│   │   │   ├── product.controller.js
+│   │   │   ├── cart.controller.js
+│   │   │   ├── order.controller.js
+│   │   │   └── customer.controller.js
+│   │   │
+│   │   ├── models/                             # Query MySQL
+│   │   │   ├── auth.model.js
+│   │   │   ├── product.model.js
+│   │   │   ├── cart.model.js
+│   │   │   ├── order.model.js
+│   │   │   └── customer.model.js
+│   │   │
+│   │   ├── routes/                             # API routes
+│   │   │   ├── auth.routes.js
+│   │   │   ├── product.routes.js
+│   │   │   ├── cart.routes.js
+│   │   │   ├── order.routes.js
+│   │   │   └── customer.routes.js
+│   │   │
+│   │   ├── services/                           # Business logic
+│   │   │   ├── auth.service.js
+│   │   │   ├── product.service.js
+│   │   │   ├── cart.service.js
+│   │   │   ├── order.service.js
+│   │   │   └── customer.service.js
+│   │   │
+│   │   ├── utils/                              # Hàm tiện ích
+│   │   │   ├── response.js
+│   │   │   └── validator.js
+│   │   │
+│   │   ├── app.js                              # Config Express
+│   │   └── server.js                           # Chạy server
+│   │
+│   │
+│   ├── uploads/                                # Ảnh upload
+│   │
+│   ├── .env                                    # Biến môi trường
+│   ├── package.json                            # Thư viện backend
+│   └── package-lock.json
+│
+│
+├── database/                                   # Database MySQL
+│   ├── bookstore.sql                           # Tạo database/table
+│   └── seed.sql                                # Dữ liệu mẫu
+│
+│
+└── README.md                                   # Hướng dẫn project
