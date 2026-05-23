@@ -1,0 +1,98 @@
+/* Tiêu đề */
+h2 {
+  text-align: center;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #2c3e50;
+  margin-bottom: 20px;
+}
+
+/* Bảng */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: 'Segoe UI', sans-serif;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+th {
+  background-color: #34495e;
+  color: #fff;
+  padding: 12px;
+  text-align: center;
+  font-weight: 600;
+}
+
+td {
+  padding: 10px;
+  text-align: center;
+  border-bottom: 1px solid #ddd;
+  color: #2c3e50;
+}
+
+/* Hàng xen kẽ */
+tr:nth-child(even) {
+  background-color: #f8f9fa;
+}
+
+tr:hover {
+  background-color: #ecf0f1;
+}
+
+/* Nút hành động */
+button {
+  padding: 6px 14px;
+  margin: 2px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+}
+
+/* Nút cảnh báo */
+button:nth-child(1) {
+  background-color: #e67e22;
+  color: #fff;
+}
+
+button:nth-child(1):hover {
+  background-color: #d35400;
+}
+
+/* Nút xóa */
+button:nth-child(2) {
+  background-color: #e74c3c;
+  color: #fff;
+}
+
+button:nth-child(2):hover {
+  background-color: #c0392b;
+}
+
+/* Phân trang */
+span {
+  margin: 0 12px;
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+button:disabled {
+  background-color: #bdc3c7;
+  cursor: not-allowed;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  table,
+  th,
+  td {
+    font-size: 14px;
+  }
+
+  button {
+    padding: 5px 10px;
+    font-size: 13px;
+  }
+}
