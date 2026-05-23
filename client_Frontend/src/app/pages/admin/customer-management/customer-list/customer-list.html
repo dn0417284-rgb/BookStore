@@ -3,24 +3,24 @@
 <table border="1">
   <tr>
     <th>Tên</th>
-    <th>Giới tính</th>
     <th>Email</th>
     <th>SĐT</th>
     <th>Địa chỉ</th>
     <th>Cảnh báo</th>
+    <th>Trang Thai</th>
     <th>Hành động</th>
   </tr>
 
   <tr *ngFor="let customer of customers">
     <td>{{ customer.full_name }}</td>
-    <td>{{ customer.gender }}</td>
     <td>{{ customer.email }}</td>
     <td>{{ customer.phone }}</td>
     <td>{{ customer.address }}</td>
     <td>{{ customer.warning_count }}</td>
+    <td>{{ customer.account_status ? 'hoat dong' : 'ngung hoat dong' }}</td>
     <td>
-      <button (click)="warningCustomer(customer.id)">Cảnh báo</button>
-      <button (click)="deleteCustomer(customer.id)">Xóa</button>
+      <button (click)="warningCustomer(customer.customer_id)">Cảnh báo</button>
+      <button (click)="deleteCustomer(customer.customer_id)">Xóa</button>
     </td>
   </tr>
 </table>

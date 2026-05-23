@@ -3,7 +3,7 @@ import { CustomerList } from './pages/admin/customer-management/customer-list/cu
 
 export const routes: Routes = [
   {
-    path: 'admin/customers',
+    path: '',
     component: CustomerList,
   },
 ];
