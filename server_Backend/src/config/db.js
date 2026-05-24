@@ -1,18 +1,16 @@
-const mysql = require("mysql2");
+import mysql from 'mysql2/promise';
+import dotenv from 'dotenv';
 
-const db = mysql.createConnection({
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
+dotenv.config();
+
+const db = await mysql.createConnection({
+  host: process.env.DB_HOST || 'localhost',
+  user: process.env.DB_USER || 'root',
+  password: process.env.DB_PASSWORD || '',
+  database: process.env.DB_NAME || 'bookstore',
 });
 
-db.connect((err) => {
-  if (err) {
-    console.log(err);
-  } else {
-    console.log("MySQL Connected");
-  }
-});
 
-module.exports = db;
+console.log("MySQL Connected");
+
+export default db;
