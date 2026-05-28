@@ -1,58 +1,77 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Customer } from '../../../../core/models/customer.model';
 import { CustomerService } from '../../../../core/services/customerService';
+
 @Component({
-  imports: [CommonModule],
-  standalone: true,
   selector: 'app-customer-list',
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './customer-list.html',
   styleUrl: './customer-list.css',
 })
 export class CustomerList implements OnInit {
-  constructor(private customerService: CustomerService) {}
+  constructor(
+    private customerService: CustomerService,
+    private cdr: ChangeDetectorRef,
+  ) {}
+
   customers: Customer[] = [];
+  pagedCustomers: Customer[] = [];
 
   currentPage = 1;
-
-  totalPages = 3;
+  pageSize = 5;
+  totalPages = 1;
 
   ngOnInit(): void {
     this.loadCustomers();
   }
 
   loadCustomers() {
-    this.customerService.getCustomers().subscribe((data: any) => {
+    this.customerService.getCustomers().subscribe((data) => {
       this.customers = data;
+      this.cdr.markForCheck();
+
+      this.totalPages = Math.max(1, Math.ceil(this.customers.length / this.pageSize));
+
+      this.currentPage = 1;
+
+      this.pagedCustomers = this.customers.slice(0, this.pageSize);
     });
   }
 
-  deleteCustomer(id: number) {
-    const confirmDelete = confirm('Bạn có chắc muốn xóa không?');
+  updatePage() {
+    const start = (this.currentPage - 1) * this.pageSize;
+    const end = start + this.pageSize;
 
-    if (confirmDelete) {
-      this.customers = this.customers.filter((customer) => customer.customer_id !== id);
-    }
-  }
-
-  warningCustomer(id: number) {
-    const customer = this.customers.find((customer) => customer.customer_id === id);
-
-    if (customer) {
-      customer.warning_count++;
-
-      alert('Đã cảnh báo khách hàng');
-    }
+    this.pagedCustomers = this.customers.slice(start, end);
   }
 
   nextPage() {
     if (this.currentPage < this.totalPages) {
       this.currentPage++;
+      this.updatePage();
     }
   }
+
   prevPage() {
     if (this.currentPage > 1) {
       this.currentPage--;
+      this.updatePage();
     }
+  }
+
+  deleteCustomer(id: number) {
+    this.customers = this.customers.filter((c) => c.customer_id !== id);
+
+    this.totalPages = Math.max(1, Math.ceil(this.customers.length / this.pageSize));
+
+    this.updatePage();
+  }
+
+  warningCustomer(id: number) {
+    const customer = this.customers.find((c) => c.customer_id === id);
+
+    if (customer) customer.warning_count++;
   }
 }

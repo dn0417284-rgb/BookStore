@@ -6,6 +6,6 @@ import { HttpClient } from '@angular/common/http';
 export class CustomerService {
   constructor(private http: HttpClient) {}
   getCustomers() {
-    return this.http.get('/api/customers');
+    return this.http.get<any[]>('/api/customers');
   }
 }

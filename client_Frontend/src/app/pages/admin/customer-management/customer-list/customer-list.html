@@ -1,32 +1,41 @@
 <h2>Quản lý khách hàng</h2>
 
 <table border="1">
-  <tr>
-    <th>Tên</th>
-    <th>Email</th>
-    <th>SĐT</th>
-    <th>Địa chỉ</th>
-    <th>Cảnh báo</th>
-    <th>Trang Thai</th>
-    <th>Hành động</th>
-  </tr>
-
-  <tr *ngFor="let customer of customers">
-    <td>{{ customer.full_name }}</td>
-    <td>{{ customer.email }}</td>
-    <td>{{ customer.phone }}</td>
-    <td>{{ customer.address }}</td>
-    <td>{{ customer.warning_count }}</td>
-    <td>{{ customer.account_status ? 'hoat dong' : 'ngung hoat dong' }}</td>
-    <td>
-      <button (click)="warningCustomer(customer.customer_id)">Cảnh báo</button>
-      <button (click)="deleteCustomer(customer.customer_id)">Xóa</button>
-    </td>
-  </tr>
+  <thead>
+    <tr>
+      <th>Tên</th>
+      <th>Email</th>
+      <th>SĐT</th>
+      <th>Địa chỉ</th>
+      <th>Cảnh báo</th>
+      <th>Trạng thái</th>
+      <th>Hành động</th>
+    </tr>
+  </thead>
+  <a></a>
+  <tbody>
+    @for (customer of pagedCustomers; track customer.customer_id) {
+      <tr>
+        <td>{{ customer.full_name }}</td>
+        <td>{{ customer.email }}</td>
+        <td>{{ customer.phone }}</td>
+        <td>{{ customer.address }}</td>
+        <td>{{ customer.warning_count }}</td>
+        <td>
+          {{ customer.account_status ? 'hoạt động' : 'ngưng hoạt động' }}
+        </td>
+        <td>
+          <button (click)="warningCustomer(customer.customer_id)">Cảnh báo</button>
+          <button (click)="deleteCustomer(customer.customer_id)">Xóa</button>
+        </td>
+      </tr>
+    }
+  </tbody>
 </table>
-
 <br />
 
-<button (click)="prevPage()">Previous</button>
+<button (click)="prevPage()" [disabled]="currentPage === 1">Previous</button>
+
 <span> Trang {{ currentPage }} / {{ totalPages }} </span>
-<button (click)="nextPage()">Next</button>
+
+<button (click)="nextPage()" [disabled]="currentPage === totalPages">Next</button>

@@ -3,6 +3,7 @@ CREATE TABLE customers (
   customer_id INT PRIMARY KEY AUTO_INCREMENT,
   email VARCHAR(100) NOT NULL UNIQUE,
   full_name VARCHAR(100) NOT NULL,
+   password VARCHAR(255) NOT NULL,
   phone VARCHAR(45),
   address VARCHAR(255),
   account_status BOOLEAN DEFAULT TRUE,
