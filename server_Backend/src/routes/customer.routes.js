@@ -1,7 +1,9 @@
 import express from "express";
-import { getCustomers } from "../controllers/customer.controller.js";
-const router = express.Router();
+import customerController from "../controllers/customer.controller.js";
+const customerRoutes = express.Router();
 
 //Get list-customers
-router.get("/", getCustomers);
-export default router;
+customerRoutes.get("/", customerController.getCustomers);
+//Delete customer
+customerRoutes.delete("/:id", customerController.deleteCustomer);
+export default customerRoutes;

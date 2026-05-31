@@ -1,98 +1,25 @@
-/* Tiêu đề */
-h2 {
-  text-align: center;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  color: #2c3e50;
-  margin-bottom: 20px;
-}
-
-/* Bảng */
-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-family: 'Segoe UI', sans-serif;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  border-radius: 6px;
-  overflow: hidden;
-}
-
-th {
-  background-color: #34495e;
-  color: #fff;
-  padding: 12px;
-  text-align: center;
+.customer-name {
   font-weight: 600;
+  color: #0f172a;
 }
 
-td {
-  padding: 10px;
-  text-align: center;
-  border-bottom: 1px solid #ddd;
-  color: #2c3e50;
+.customer-email {
+  color: #64748b;
 }
 
-/* Hàng xen kẽ */
-tr:nth-child(even) {
-  background-color: #f8f9fa;
-}
+.warning-badge {
+  width: 28px;
+  height: 28px;
 
-tr:hover {
-  background-color: #ecf0f1;
-}
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 
-/* Nút hành động */
-button {
-  padding: 6px 14px;
-  margin: 2px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-weight: 500;
-  transition: background-color 0.3s ease;
-}
+  border-radius: 50%;
 
-/* Nút cảnh báo */
-button:nth-child(1) {
-  background-color: #e67e22;
-  color: #fff;
-}
+  background: #fef3c7;
+  color: #d97706;
 
-button:nth-child(1):hover {
-  background-color: #d35400;
-}
-
-/* Nút xóa */
-button:nth-child(2) {
-  background-color: #e74c3c;
-  color: #fff;
-}
-
-button:nth-child(2):hover {
-  background-color: #c0392b;
-}
-
-/* Phân trang */
-span {
-  margin: 0 12px;
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-button:disabled {
-  background-color: #bdc3c7;
-  cursor: not-allowed;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  table,
-  th,
-  td {
-    font-size: 14px;
-  }
-
-  button {
-    padding: 5px 10px;
-    font-size: 13px;
-  }
+  font-size: 13px;
+  font-weight: 600;
 }

@@ -10,9 +10,9 @@ CREATE TABLE customers (
   warning_count INT DEFAULT 0
 );
 
--- Books information (thong_tin_sach)
-CREATE TABLE books (
-  book_id INT PRIMARY KEY AUTO_INCREMENT,
+-- Products information (thong_tin_sach)
+CREATE TABLE products (
+  product_id INT PRIMARY KEY AUTO_INCREMENT,
   title VARCHAR(255) NOT NULL,
   rating VARCHAR(50),
   sold INT DEFAULT 0,
@@ -27,11 +27,11 @@ CREATE TABLE books (
 -- Cart (gio_hang)
 CREATE TABLE cart (
   customer_id INT,
-  book_id INT,
+  product_id INT,
   quantity INT DEFAULT 1,
-  PRIMARY KEY (customer_id, book_id),
+  PRIMARY KEY (customer_id, product_id),
   FOREIGN KEY (customer_id) REFERENCES customers(customer_id),
-  FOREIGN KEY (book_id) REFERENCES books(book_id)
+  FOREIGN KEY (product_id) REFERENCES books(product_id)
 );
 
 -- Payment (thanh_toan)

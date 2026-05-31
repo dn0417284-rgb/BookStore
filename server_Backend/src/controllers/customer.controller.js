@@ -1,16 +1,36 @@
 import customerService from "../services/customer.service.js";
+import customerModel from "../models/customer.model.js";
 
-// Danh sách khách hàng -> trả về client
-export const getCustomers = async (req, res) => {
-  try {
-    const customers = await customerService.getCustomers();
+const customerController = {
+  // lấy danh sách khách hàng
+  getCustomers: async (req, res) => {
+    try {
+      const customers = await customerModel.getCustomers();
+      res.json(customers);
+    } catch (error) {
+      res.status(500).json({
+        message: "Lỗi server",
+      });
+    }
+  },
+  //xóa khách hàng
+  deleteCustomer: async (req, res) => {
+    try {
+      const id = req.params.id;
 
-    res.status(200).json(customers);
-  } catch (error) {
-    console.error(error);
+      await customerModel.deleteCustomer(id);
 
-    res.status(500).json({
-      message: "Lỗi server",
-    });
-  }
+      res.status(200).json({
+        success: true,
+        message: "Xóa thành công",
+      });
+    } catch (error) {
+      res.status(500).json({
+        success: false,
+        message: "Lỗi server",
+      });
+    }
+  },
 };
+
+export default customerController;

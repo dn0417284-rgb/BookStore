@@ -8,7 +8,7 @@ import { CustomerService } from '../../../../core/services/customerService';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './customer-list.html',
-  styleUrl: './customer-list.css',
+  styleUrls: ['./customer-list.css', '../../admin-common.css'],
 })
 export class CustomerList implements OnInit {
   constructor(
@@ -20,7 +20,7 @@ export class CustomerList implements OnInit {
   pagedCustomers: Customer[] = [];
 
   currentPage = 1;
-  pageSize = 5;
+  pageSize = 7;
   totalPages = 1;
 
   ngOnInit(): void {
@@ -30,13 +30,13 @@ export class CustomerList implements OnInit {
   loadCustomers() {
     this.customerService.getCustomers().subscribe((data) => {
       this.customers = data;
-      this.cdr.markForCheck();
 
       this.totalPages = Math.max(1, Math.ceil(this.customers.length / this.pageSize));
 
       this.currentPage = 1;
+      this.updatePage();
 
-      this.pagedCustomers = this.customers.slice(0, this.pageSize);
+      this.cdr.markForCheck();
     });
   }
 
@@ -62,16 +62,22 @@ export class CustomerList implements OnInit {
   }
 
   deleteCustomer(id: number) {
-    this.customers = this.customers.filter((c) => c.customer_id !== id);
-
-    this.totalPages = Math.max(1, Math.ceil(this.customers.length / this.pageSize));
-
-    this.updatePage();
+    this.customerService.deleteCustomer(id).subscribe({
+      next: (res: any) => {
+        alert(res.message);
+        this.loadCustomers();
+      },
+      error: (err) => {
+        alert(err.error.message);
+      },
+    });
   }
 
   warningCustomer(id: number) {
     const customer = this.customers.find((c) => c.customer_id === id);
 
-    if (customer) customer.warning_count++;
+    if (customer) {
+      customer.warning_count++;
+    }
   }
 }

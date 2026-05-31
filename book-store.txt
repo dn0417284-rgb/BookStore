@@ -66,9 +66,8 @@ book-store/                                     # Thư mục gốc project
 │   │       │       │   └── order-detail/
 │   │       │       │
 │   │       │       └── customer-management/    # Quản lý khách hàng
-│   │       │           ├── customer-list/
-│   │       │           └── customer-detail/
-│   │       │
+│   │       │       |   ├── customer-list/
+│   │       │       |___ admin-common # CSS chung của chức năng quản lý 
 │   │       │
 │   │       ├── app-routing.module.ts           # Khai báo route Angular
 │   │       ├── app.module.ts                   # Module gốc Angular
