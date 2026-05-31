@@ -1,0 +1,83 @@
+<div class="page-title">
+  <h2>Quản lý khách hàng</h2>
+  <p>Danh sách và thông tin chi tiết của toàn bộ khách hàng đang hoạt động trong hệ thống.</p>
+  <p>Số lượng khách hàng {{ customers.length }}</p>
+</div>
+
+<div class="table-card">
+  <div class="table-responsive">
+    <table>
+      <thead>
+        <tr>
+          <th>Tên</th>
+          <th>Email</th>
+          <th>SĐT</th>
+          <th>Địa chỉ</th>
+          <th>Cảnh báo</th>
+          <th>Trạng thái</th>
+          <th>Hành động</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        @for (customer of pagedCustomers; track customer.customer_id) {
+          <tr>
+            <td class="customer-name">
+              {{ customer.full_name }}
+            </td>
+
+            <td class="customer-email">
+              {{ customer.email }}
+            </td>
+
+            <td>
+              {{ customer.phone }}
+            </td>
+
+            <td>
+              {{ customer.address }}
+            </td>
+
+            <td>
+              <span class="warning-badge">
+                {{ customer.warning_count }}
+              </span>
+            </td>
+
+            <td>
+              <span
+                class="status"
+                [class.status-active]="customer.account_status"
+                [class.status-inactive]="!customer.account_status"
+              >
+                {{ customer.account_status ? 'Hoạt động' : 'Ngưng hoạt động' }}
+              </span>
+            </td>
+
+            <td>
+              <div class="action-buttons">
+                <button class="btn-warning" (click)="warningCustomer(customer.customer_id)">
+                  Cảnh báo
+                </button>
+
+                <button class="btn-delete" (click)="deleteCustomer(customer.customer_id)">
+                  Xóa
+                </button>
+              </div>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pagination">
+    <span class="page-info"> Trang {{ currentPage }} / {{ totalPages }} </span>
+
+    <button class="page-btn" (click)="prevPage()" [disabled]="currentPage === 1">Trước</button>
+
+    <button class="page-btn" (click)="nextPage()" [disabled]="currentPage === totalPages">
+      Sau
+    </button>
+  </div>
+</div>
