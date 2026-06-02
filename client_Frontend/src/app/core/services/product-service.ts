@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Product } from '../models/product.model';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -10,14 +11,14 @@ export class ProductService {
   getProducts() {
     return this.http.get<Product[]>(`/api/products`);
   }
-  createProduct(product: Product) {
-    return this.http.post(`/api/products`, product);
+  createProduct(formData: FormData): Observable<Product> {
+    return this.http.post<Product>(`/api/products`, formData);
   }
   deleteProduct(id: number) {
     return this.http.delete(`/api/products/${id}`);
   }
   updateProduct(id: number, product: Product) {
-    return this.http.put(`/api/products/${id}`, product);
+    return this.http.put<Product>(`/api/products/${id}`, product);
   }
 }
 // GET → Dùng để lấy dữ liệu từ server (ví dụ: lấy danh sách sách).

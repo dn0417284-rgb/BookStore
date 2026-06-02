@@ -3,11 +3,11 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Product } from '../../../../core/models/product.model';
 import { ProductService } from '../../../../core/services/product-service';
-
+import { AddProduct } from '../add-product/add-product';
 @Component({
   selector: 'app-product-list',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, AddProduct],
   templateUrl: './product-list.html',
   styleUrls: ['./product-list.css', '../../admin-common.css'],
 })
@@ -19,12 +19,10 @@ export class ProductList implements OnInit {
 
   books: Product[] = [];
   filteredBooks: Product[] = [];
-
   searchTerm = '';
-
   currentPage = 1;
-  itemsPerPage = 5;
-
+  itemsPerPage = 7;
+  showAddForm = false;
   ngOnInit(): void {
     this.loadBooks();
   }
@@ -55,7 +53,6 @@ export class ProductList implements OnInit {
           book.description?.toLowerCase().includes(keyword),
       );
     }
-
     this.currentPage = 1;
   }
 
@@ -73,20 +70,20 @@ export class ProductList implements OnInit {
       this.currentPage++;
     }
   }
-
   prevPage(): void {
     if (this.currentPage > 1) {
       this.currentPage--;
     }
   }
-
-  addBook(): void {
-    alert('Chuyển đến form thêm sách');
+  toggleAddForm(): void {
+    this.showAddForm = !this.showAddForm;
   }
-
-  editBook(id: number): void {
-    alert(`Sửa sách ID: ${id}`);
+  onProductAdded(product: Product): void {
+    this.books.push(product);
+    this.filteredBooks.push(product);
+    this.showAddForm = false;
   }
+  editBook(id: number): void {}
 
   deleteBook(id: number): void {
     const confirmed = confirm('Bạn có chắc muốn xóa sách này không?');
@@ -94,17 +91,13 @@ export class ProductList implements OnInit {
     if (!confirmed) {
       return;
     }
-
     this.productService.deleteProduct(id).subscribe({
       next: () => {
         this.books = this.books.filter((book) => book.product_id !== id);
-
         this.filteredBooks = this.filteredBooks.filter((book) => book.product_id !== id);
-
         if (this.currentPage > this.totalPages) {
           this.currentPage = this.totalPages;
         }
-
         alert('Xóa sách thành công');
         this.loadBooks();
       },

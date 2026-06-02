@@ -1,1 +1,49 @@
-<p>add-product works!</p>
+<form [formGroup]="productForm" (ngSubmit)="onSubmit()" class="product-form">
+  <h2>Thêm sách mới</h2>
+
+  <div class="form-group">
+    <label>Tiêu đề</label>
+    <input type="text" formControlName="title" />
+  </div>
+
+  <div class="form-group">
+    <label>Số lượng</label>
+    <input type="number" formControlName="sold" />
+  </div>
+
+  <div class="form-group">
+    <label>Giá bán</label>
+    <input type="number" formControlName="price" />
+  </div>
+
+  <div class="form-group">
+    <label>Nhà xuất bản</label>
+    <input type="text" formControlName="publisher" />
+  </div>
+
+  <div class="form-group">
+    <label>Tác giả</label>
+    <input type="text" formControlName="author" />
+  </div>
+
+  <div class="form-group">
+    <label>Loại bìa</label>
+    <input type="text" formControlName="cover_type" />
+  </div>
+
+  <div class="form-group full-width">
+    <label>Mô tả</label>
+    <textarea formControlName="description"></textarea>
+  </div>
+
+  <div class="form-group full-width">
+    <label>Hình ảnh</label>
+    <input type="file" accept="image/*" />
+  </div>
+
+  <div class="form-actions">
+    <button type="submit" [disabled]="productForm.invalid">Thêm sách</button>
+
+    <button type="button" class="btn-cancel" (click)="onCancel()">Hủy</button>
+  </div>
+</form>
