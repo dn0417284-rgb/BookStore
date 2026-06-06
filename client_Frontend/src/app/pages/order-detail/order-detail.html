@@ -1,0 +1,428 @@
+<div class="order-detail-container">
+
+  <!-- LOADING -->
+
+  <div
+    *ngIf="loading"
+    class="loading"
+  >
+    Đang tải đơn hàng...
+  </div>
+
+  <!-- ERROR -->
+
+  <div
+    *ngIf="!loading && error"
+    class="error-box"
+  >
+    {{ error }}
+  </div>
+
+  <!-- CONTENT -->
+
+  <ng-container *ngIf="!loading && order">
+
+    <!-- HEADER -->
+
+    <div class="page-header">
+
+      <h1>
+        Chi tiết đơn hàng #{{ order.order_id }}
+      </h1>
+
+      <a
+        routerLink="/orders"
+        class="btn-back"
+      >
+        ← Quay lại
+      </a>
+
+    </div>
+
+    <!-- STATUS -->
+
+    <div class="status-card">
+  <div class="status-top">
+    <div>
+      <h3>Trạng thái đơn hàng</h3>
+      <p class="status-text">
+        Vận chuyển: {{ getStatusText(order.status) }}
+      </p>
+      
+      <!-- 🌟 BỔ SUNG DÒNG NÀY: Hiển thị Trạng thái thanh toán Tiếng Việt -->
+      <p class="status-text" style="margin-top: 5px;">
+        Thanh toán: 
+        <span [ngClass]="getPaymentStatusClass()" style="font-weight: bold;">
+          {{ getPaymentStatusText(order.payment_status) }}
+        </span>
+      </p>
+    </div>
+
+    <!-- Cục Badge hiển thị nhãn trạng thái vận chuyển bên phải -->
+    <span class="status" [ngClass]="getStatusClass()">
+      {{ getStatusText(order.status) }}
+    </span>
+  </div>
+</div>
+
+    <!-- INFO GRID -->
+
+    <div class="info-grid">
+
+      <!-- CUSTOMER -->
+
+      <div class="info-card">
+
+        <h3>
+          Thông tin nhận hàng
+        </h3>
+
+        <p>
+          <strong>Người nhận:</strong>
+          {{ order.customer_name }}
+        </p>
+
+        <p>
+          <strong>SĐT:</strong>
+          {{ order.phone }}
+        </p>
+
+        <p>
+          <strong>Email:</strong>
+          {{ order.email || 'Không có' }}
+        </p>
+
+        <p>
+          <strong>Địa chỉ:</strong>
+          {{ order.address }}
+        </p>
+
+        <p *ngIf="order.note">
+          <strong>Ghi chú:</strong>
+          {{ order.note }}
+        </p>
+
+      </div>
+
+      <!-- PAYMENT -->
+
+      <div class="info-card">
+
+        <h3>
+          Thanh toán
+        </h3>
+
+        <p>
+
+          <strong>
+            Phương thức:
+          </strong>
+
+          <span
+            class="payment-badge"
+            [ngClass]="getPaymentClass()"
+          >
+
+            {{
+              order.payment_method === 'MOMO'
+                ? 'Ví MoMo'
+                : 'Thanh toán khi nhận hàng'
+            }}
+
+          </span>
+
+        </p>
+
+        <p>
+
+          <strong>
+            Trạng thái:
+          </strong>
+
+          <span
+            class="payment-status"
+          >
+
+            {{
+              order.payment_status === 'PAID'
+                ? 'Đã thanh toán'
+                : 'Chưa thanh toán'
+            }}
+
+          </span>
+
+        </p>
+
+        <p *ngIf="order.payment_time">
+
+          <strong>
+            Thời gian thanh toán:
+          </strong>
+
+          {{
+            order.payment_time
+            | date:'dd/MM/yyyy HH:mm'
+          }}
+
+        </p>
+
+      </div>
+
+      <!-- SHIPPING -->
+
+      <div class="info-card">
+
+        <h3>
+          Vận chuyển
+        </h3>
+
+        <p>
+
+          <strong>
+            Mã vận đơn:
+          </strong>
+
+          {{
+            order.tracking_code || 'Chưa có'
+          }}
+
+        </p>
+
+        <p>
+
+          <strong>
+            Shipper:
+          </strong>
+
+          {{
+            order.shipper_name || 'Chưa phân công'
+          }}
+
+        </p>
+
+        <p *ngIf="order.shipper_phone">
+
+          <strong>
+            SĐT shipper:
+          </strong>
+
+          {{ order.shipper_phone }}
+
+        </p>
+
+        <p>
+
+          <strong>
+            Dự kiến giao:
+          </strong>
+
+          <ng-container
+            *ngIf="order.expected_delivery_date; else noDate"
+          >
+
+            {{
+              order.expected_delivery_date
+              | date:'dd/MM/yyyy'
+            }}
+
+          </ng-container>
+
+          <ng-template #noDate>
+            Chưa cập nhật
+          </ng-template>
+
+        </p>
+
+      </div>
+
+    </div>
+
+    <!-- TIMELINE -->
+
+    <div class="timeline-card">
+
+      <h3>
+        Lịch sử đơn hàng
+      </h3>
+
+      <div class="timeline">
+
+        <div class="timeline-item">
+
+          <span class="dot"></span>
+
+          <div>
+
+            <strong>
+              Đơn hàng được tạo
+            </strong>
+
+            <p>
+              {{
+                order.created_at
+                | date:'dd/MM/yyyy HH:mm'
+              }}
+            </p>
+
+          </div>
+
+        </div>
+
+        <div
+          *ngIf="order.delivered_at"
+          class="timeline-item"
+        >
+
+          <span class="dot"></span>
+
+          <div>
+
+            <strong>
+              Đã giao hàng
+            </strong>
+
+            <p>
+              {{
+                order.delivered_at
+                | date:'dd/MM/yyyy HH:mm'
+              }}
+            </p>
+
+          </div>
+
+        </div>
+
+        <div
+          *ngIf="order.confirmed_received_at"
+          class="timeline-item"
+        >
+
+          <span class="dot"></span>
+
+          <div>
+
+            <strong>
+              Khách đã nhận hàng
+            </strong>
+
+            <p>
+              {{
+                order.confirmed_received_at
+                | date:'dd/MM/yyyy HH:mm'
+              }}
+            </p>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- PRODUCTS -->
+
+    <div class="products-card">
+
+      <h3>
+        Sản phẩm đã đặt
+      </h3>
+
+      <div
+        *ngFor="let item of order.items || []"
+        class="product-row"
+      >
+
+        <img
+          [src]="'images/' + item.image"
+          [alt]="item.title"
+        >
+
+        <div class="product-info">
+
+          <h4>
+            {{ item.title }}
+          </h4>
+
+          <p>
+            {{ item.author }}
+          </p>
+
+        </div>
+
+        <div class="product-qty">
+          x{{ item.quantity }}
+        </div>
+
+        <div class="product-price">
+
+          {{
+            item.price
+            | number
+          }}₫
+
+        </div>
+
+        <div class="product-total">
+
+          {{
+            (item.price * item.quantity)
+            | number
+          }}₫
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- TOTAL -->
+
+    <div class="total-card">
+  <!-- Hàng 1: Tổng giá trị hóa đơn gốc -->
+  <div class="total-row sub-row">
+    <span class="label">Tổng giá trị đơn hàng</span>
+    <span class="value">{{ order.total_amount | number }}₫</span>
+  </div>
+
+  <!-- Hàng 2: Số tiền thực tế cần chi trả -->
+  <div class="total-row main-row">
+    <span class="label">Cần thanh toán</span>
+    <strong class="value highlight">{{ order.payment_status === 'PAID' ? '0' : (order.total_amount | number) }}₫</strong>
+  </div>
+</div>
+
+
+    <!-- ACTION -->
+
+    <div class="action-bar">
+
+      <button
+        *ngIf="order.status === 'DELIVERED'"
+        class="btn-success"
+      >
+        Xác nhận đã nhận hàng
+      </button>
+
+      <div
+        class="action-bar"
+        *ngIf="
+          order &&
+          order.status === 'PENDING'
+        "
+      >
+
+        <button
+          class="btn-danger"
+          (click)="cancelOrder()"
+        >
+          Hủy đơn hàng
+        </button>
+
+      </div>
+
+    </div>
+
+  </ng-container>
+
+</div>
