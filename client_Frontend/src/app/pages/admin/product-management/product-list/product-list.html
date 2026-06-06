@@ -39,7 +39,12 @@
         <tbody>
           <tr *ngFor="let book of pagedBooks">
             <td>
-              <!-- <img [src]="book.image" [alt]="book.title" class="book-image" /> -->
+              <img
+                [src]="'http://localhost:3000/uploads/' + book.image"
+                [alt]="book.title"
+                class="book-image"
+                (error)="book.image = 'assets/no-image.png'"
+              />
             </td>
 
             <td class="book-title">
@@ -50,7 +55,7 @@
             <td class="price">{{ book.price | number }}đ</td>
             <td>
               <span class="rating-badge">
-                {{ book.rating }}
+                {{ book.rating || 0 }}
               </span>
             </td>
             <td>{{ book.sold }}</td>
@@ -61,7 +66,7 @@
             </td>
             <td>
               <div class="action-buttons">
-                <button class="btn-edit" (click)="editBook(book.product_id)">Sửa</button>
+                <button class="btn-edit" (click)="editBook(book)">Sửa</button>
                 <button class="btn-delete" (click)="deleteBook(book.product_id)">Xóa</button>
               </div>
             </td>
@@ -90,5 +95,16 @@
       (productAdd)="onProductAdded($event)"
       (cancel)="toggleAddForm()"
     ></app-add-product>
+  </div>
+</div>
+<!-- Modal Edit -->
+<div class="overlay" *ngIf="showEditForm">
+  <div class="modal">
+    <app-edit-product
+      [product]="selectedBook"
+      (productUpdated)="onProductUpdated()"
+      (cancel)="closeEditForm()"
+    >
+    </app-edit-product>
   </div>
 </div>

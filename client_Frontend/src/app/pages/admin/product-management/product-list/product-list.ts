@@ -4,10 +4,11 @@ import { FormsModule } from '@angular/forms';
 import { Product } from '../../../../core/models/product.model';
 import { ProductService } from '../../../../core/services/product-service';
 import { AddProduct } from '../add-product/add-product';
+import { EditProduct } from '../edit-product/edit-product';
 @Component({
   selector: 'app-product-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, AddProduct],
+  imports: [CommonModule, FormsModule, AddProduct, EditProduct],
   templateUrl: './product-list.html',
   styleUrls: ['./product-list.css', '../../admin-common.css'],
 })
@@ -23,6 +24,8 @@ export class ProductList implements OnInit {
   currentPage = 1;
   itemsPerPage = 7;
   showAddForm = false;
+  showEditForm = false;
+  selectedBook!: Product;
   ngOnInit(): void {
     this.loadBooks();
   }
@@ -78,13 +81,23 @@ export class ProductList implements OnInit {
   toggleAddForm(): void {
     this.showAddForm = !this.showAddForm;
   }
+  //được gọi khi một sản phẩm mới được thêm thành công
   onProductAdded(product: Product): void {
     this.books.push(product);
     this.filteredBooks.push(product);
     this.showAddForm = false;
   }
-  editBook(id: number): void {}
-
+  editBook(product: Product): void {
+    this.selectedBook = { ...product };
+    this.showEditForm = true;
+  }
+  onProductUpdated(): void {
+    this.showEditForm = false;
+    this.loadBooks();
+  }
+  closeEditForm(): void {
+    this.showEditForm = false;
+  }
   deleteBook(id: number): void {
     const confirmed = confirm('Bạn có chắc muốn xóa sách này không?');
 

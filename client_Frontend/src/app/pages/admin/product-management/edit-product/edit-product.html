@@ -38,7 +38,7 @@
 
   <div class="form-group full-width">
     <label>Hình ảnh</label>
-    <input type="file" accept="image/*" />
+    <input type="file" accept="image/*" (change)="onFileSelected($event)" />
   </div>
 
   <div class="form-actions">

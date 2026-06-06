@@ -150,3 +150,12 @@
 .btn-cancel:active {
   transform: translateY(0);
 }
+.invalid {
+  border: 2px solid #dc3545;
+}
+
+.error {
+  color: #dc3545;
+  font-size: 12px;
+  margin-top: 4px;
+}

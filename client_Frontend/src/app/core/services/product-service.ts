@@ -11,14 +11,14 @@ export class ProductService {
   getProducts() {
     return this.http.get<Product[]>(`/api/products`);
   }
-  createProduct(formData: FormData): Observable<Product> {
-    return this.http.post<Product>(`/api/products`, formData);
+  createProduct(formData: FormData) {
+    return this.http.post(`/api/products`, formData);
   }
   deleteProduct(id: number) {
     return this.http.delete(`/api/products/${id}`);
   }
-  updateProduct(id: number, product: Product) {
-    return this.http.put<Product>(`/api/products/${id}`, product);
+  updateProduct(id: number, formData: FormData) {
+    return this.http.put<Product>(`/api/products/${id}`, formData);
   }
 }
 // GET → Dùng để lấy dữ liệu từ server (ví dụ: lấy danh sách sách).

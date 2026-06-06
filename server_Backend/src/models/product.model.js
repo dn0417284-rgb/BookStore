@@ -10,11 +10,10 @@ const productModel = {
   createProduct: async (product) => {
     const [result] = await db.query(
       `INSERT INTO products
-      (title, rating, sold, price, publisher, author, cover_type, description, image)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      (title,sold, price, publisher, author, cover_type, description, image)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         product.title,
-        product.rating,
         product.sold,
         product.price,
         product.publisher,
@@ -41,7 +40,6 @@ const productModel = {
     const [result] = await db.query(
       `UPDATE products
        SET title = ?,
-           rating = ?,
            sold = ?,
            price = ?,
            publisher = ?,
@@ -52,7 +50,6 @@ const productModel = {
        WHERE product_id = ?`,
       [
         product.title,
-        product.rating,
         product.sold,
         product.price,
         product.publisher,
