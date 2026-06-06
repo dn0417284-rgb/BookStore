@@ -1,0 +1,358 @@
+.orders-container {
+  max-width: 1400px;
+  margin: 30px auto;
+  padding: 20px;
+
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.orders-container h1,
+.orders-container .empty,
+.pagination {
+  grid-column: 1 / -1;
+}
+
+/* ===== TITLE ===== */
+
+.orders-container h1 {
+  margin: 0 0 10px;
+  font-size: 32px;
+  font-weight: 700;
+  color: #111827;
+}
+
+/* ===== EMPTY ===== */
+
+.empty {
+  text-align: center;
+  padding: 80px 20px;
+
+  background: white;
+  border-radius: 20px;
+
+  color: #64748b;
+}
+
+/* ===== CARD ===== */
+
+.order-card {
+  background: #fff;
+
+  border-radius: 20px;
+
+  border: 1px solid #e5e7eb;
+
+  overflow: hidden;
+
+  display: flex;
+  flex-direction: column;
+
+  transition: all .25s ease;
+}
+
+.order-card:hover {
+  transform: translateY(-5px);
+
+  box-shadow:
+    0 15px 35px rgba(0,0,0,.08);
+}
+
+/* ===== HEADER ===== */
+
+.order-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 20px 24px;
+
+  border-bottom: 1px solid #f1f5f9;
+
+  background: linear-gradient(
+    180deg,
+    #ffffff,
+    #fafafa
+  );
+}
+
+.order-code {
+  font-size: 20px;
+  font-weight: 700;
+
+  color: #111827;
+}
+
+/* ===== STATUS ===== */
+
+.status {
+  padding: 8px 14px;
+
+  border-radius: 999px;
+
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.status.pending {
+  background: #fef3c7;
+  color: #b45309;
+}
+
+.status.confirmed {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.status.shipping {
+  background: #ede9fe;
+  color: #6d28d9;
+}
+
+.status.completed {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.status.cancelled {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+/* ===== INFO ===== */
+
+.order-info {
+  padding: 20px 24px;
+}
+
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  margin-bottom: 12px;
+
+  font-size: 14px;
+}
+
+.info-row:last-child {
+  margin-bottom: 0;
+}
+
+.info-row span {
+  color: #64748b;
+}
+
+.info-row strong {
+  color: #111827;
+}
+
+.price {
+  color: #dc2626 !important;
+  font-size: 18px;
+}
+
+/* ===== BOOK PREVIEW ===== */
+
+.order-preview {
+  display: flex;
+  align-items: center;
+
+  gap: 16px;
+
+  padding: 20px 24px;
+
+  border-top: 1px solid #f1f5f9;
+}
+
+.order-preview img {
+  width: 80px;
+  height: 110px;
+
+  object-fit: cover;
+
+  border-radius: 12px;
+
+  border: 1px solid #e5e7eb;
+
+  box-shadow:
+    0 4px 12px rgba(0,0,0,.08);
+}
+
+.preview-content {
+  flex: 1;
+}
+
+.preview-content h4 {
+  margin: 0 0 8px;
+
+  font-size: 16px;
+  font-weight: 700;
+
+  color: #111827;
+}
+
+.product-count {
+  display: inline-block;
+
+  padding: 5px 12px;
+
+  border-radius: 999px;
+
+  background: #eff6ff;
+  color: #2563eb;
+
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* ===== FOOTER ===== */
+
+.order-footer {
+  margin-top: auto;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 18px 24px;
+
+  border-top: 1px solid #f1f5f9;
+
+  background: #fafafa;
+}
+
+.item-total {
+  color: #64748b;
+  font-size: 13px;
+}
+
+.detail-link {
+  text-decoration: none;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  color: #2563eb;
+
+  transition: .2s;
+}
+
+.detail-link:hover {
+  color: #1d4ed8;
+}
+
+/* ===== PAGINATION ===== */
+
+.pagination {
+  margin-top: 10px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  gap: 8px;
+}
+
+.pagination button {
+  min-width: 42px;
+  height: 42px;
+
+  border: 1px solid #dbe1e8;
+
+  border-radius: 10px;
+
+  background: white;
+
+  cursor: pointer;
+
+  transition: .2s;
+}
+
+.pagination button:hover:not(:disabled) {
+  background: #f3f4f6;
+}
+
+.pagination button.active {
+  background: #2563eb;
+  border-color: #2563eb;
+
+  color: white;
+}
+
+.pagination button:disabled {
+  opacity: .5;
+  cursor: not-allowed;
+}
+
+.dots {
+  padding: 0 10px;
+  color: #94a3b8;
+}
+
+/* ===== TABLET ===== */
+
+@media (max-width: 1200px) {
+  .orders-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* ===== MOBILE ===== */
+
+@media (max-width: 768px) {
+
+  .orders-container {
+    grid-template-columns: 1fr;
+    padding: 15px;
+  }
+
+  .order-header,
+  .order-info,
+  .order-preview,
+  .order-footer {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .order-preview img {
+    width: 70px;
+    height: 95px;
+  }
+}
+/* Định dạng cụm nút bấm bên phải của chân thẻ Card */
+.order-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.action-buttons-group {
+  display: flex;
+  align-items: center;
+  gap: 16px; /* Khoảng cách giữa nút Thanh Toán và link Chi Tiết */
+}
+
+/* Nút thanh toán nhỏ nhắn, tinh tế */
+.btn-pay-now {
+  background-color: #1a73e8;
+  color: #ffffff;
+  border: none;
+  padding: 6px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-pay-now:hover {
+  background-color: #155cb4;
+}
+
+/* Thêm lớp màu cho Badge Chờ thanh toán đồng bộ */
+.status.unpaid {
+  background-color: #fff5f5;
+  color: #e53e3e;
+}
