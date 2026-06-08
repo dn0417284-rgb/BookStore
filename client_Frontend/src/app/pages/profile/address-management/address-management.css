@@ -1,0 +1,364 @@
+/* ==========================================================================
+   1. RESET & NỀN TẢNG CHUNG
+   ========================================================================== */
+.address-container {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 0 20px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  color: #2d3748;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+.address-container h2 {
+  font-size: 22px;
+  font-weight: 700;
+  color: #1a202c;
+  margin-bottom: 24px;
+  letter-spacing: -0.5px;
+}
+
+/* ==========================================================================
+   2. KHUNG CARD CHỨA FORM NHẬP LIỆU
+   ========================================================================== */
+.address-form-card {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 28px;
+  /* Đổ bóng 2 lớp mịn theo xu hướng Modern UI */
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 10px 15px -3px rgba(0, 0, 0, 0.03);
+  border: 1px solid #edf2f7;
+  transition: box-shadow 0.3s ease;
+}
+
+.address-form-card:hover {
+  box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.08), 0 8px 16px -6px rgba(0, 0, 0, 0.04);
+}
+
+/* Hệ thống hiển thị 2 cột (Grid) */
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  margin-bottom: 18px;
+}
+
+.form-group {
+  position: relative;
+  width: 100%;
+}
+
+.form-row .form-group {
+  margin-bottom: 0; /* Xóa khoảng cách thừa khi nằm trên cùng hàng */
+}
+
+.form-group.full-width-row {
+  grid-column: span 2;
+}
+
+/* ==========================================================================
+   3. PHONG CÁCH INPUT & SELECT ĐỒNG BỘ
+   ========================================================================== */
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 13px 16px;
+  font-size: 15px;
+  font-weight: 400;
+  color: #2d3748;
+  background-color: #ffffff;
+  border: 1px solid #cbd5e0;
+  border-radius: 10px;
+  outline: none;
+  box-sizing: border-box;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Định dạng text hiển thị cho Placeholder */
+.form-group input::placeholder {
+  color: #a0aec0;
+  opacity: 1;
+}
+
+/* Tự biến hóa icon mũi tên cho Dropdown Select mượt hơn của hệ điều hành */
+.form-group select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  /* Dùng SVG màu xám mờ tinh tế */
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://w3.org' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%234A5568' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'></polyline></svg>");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-size: 16px;
+  padding-right: 42px;
+  cursor: pointer;
+}
+
+/* Hiệu ứng trỏ chuột Focus vào ô nhập liệu */
+.form-group input:focus,
+.form-group select:focus {
+  border-color: #3182ce;
+  background-color: #fff;
+  /* Tạo vòng sáng Glow xung quanh viền */
+  box-shadow: 0 0 0 4px rgba(66, 153, 225, 0.15);
+}
+
+/* Trạng thái bị khóa (Vô hiệu hóa khi chưa chọn Tỉnh/Huyện) */
+.form-group select:disabled {
+  background-color: #f7fafc;
+  color: #a0aec0;
+  border-color: #e2e8f0;
+  cursor: not-allowed;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://w3.org' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23CBD5E0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'></polyline></svg>");
+}
+
+/* ==========================================================================
+   4. HỆ THỐNG NÚT BẤM (BUTTONS)
+   ========================================================================== */
+/* Nút chính gửi dữ liệu (Xanh dương thương hiệu) */
+.btn-submit {
+  width: 100%;
+  background-color: #3182ce;
+  color: #ffffff;
+  border: none;
+  padding: 14px 24px;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 10px;
+  cursor: pointer;
+  margin-top: 10px;
+  box-shadow: 0 4px 6px -1px rgba(49, 130, 206, 0.2);
+  transition: all 0.2s ease;
+}
+
+.btn-submit:hover:not(:disabled) {
+  background-color: #2b6cb0;
+  box-shadow: 0 6px 12px -2px rgba(49, 130, 206, 0.3);
+  transform: translateY(-1px);
+}
+
+.btn-submit:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.btn-submit:disabled {
+  background-color: #e2e8f0;
+  color: #a0aec0;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+
+/* Nút hủy bỏ trạng thái sửa */
+.btn-cancel {
+  width: 100%;
+  background-color: transparent;
+  color: #4a5568;
+  border: 1px solid #e2e8f0;
+  padding: 12px 24px;
+  font-size: 15px;
+  font-weight: 500;
+  border-radius: 10px;
+  cursor: pointer;
+  margin-top: 12px;
+  transition: all 0.2s ease;
+}
+
+.btn-cancel:hover {
+  background-color: #f7fafc;
+  color: #2d3748;
+  border-color: #cbd5e0;
+}
+
+/* Thanh ngăn cách giữa Form và List */
+.divider {
+  border: 0;
+  height: 1px;
+  background-color: #e2e8f0;
+  margin: 40px 0;
+}
+
+/* ==========================================================================
+   5. DANH SÁCH ĐỊA CHỈ ĐÃ LƯU
+   ========================================================================== */
+.address-list h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #2d3748;
+  margin-bottom: 18px;
+}
+
+/* Từng khối địa chỉ */
+.address-item {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.2s ease;
+}
+
+.address-item:hover {
+  border-color: #cbd5e0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+}
+
+/* Khối địa chỉ mặc định */
+.address-item.default-item {
+  border-color: #bee3f8;
+  background-color: #f7fafc;
+}
+
+.address-info {
+  flex: 1;
+  padding-right: 24px;
+}
+
+.user-meta {
+  margin: 0 0 8px 0;
+  font-size: 16px;
+  color: #1a202c;
+}
+
+.user-meta strong {
+  font-weight: 600;
+}
+
+/* Nhãn Badge "Mặc định" */
+.badge-default {
+  background-color: #ebf8ff;
+  color: #2b6cb0;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 3px 10px;
+  border-radius: 6px;
+  margin-left: 12px;
+  border: 1px solid #ebf8ff;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.address-text {
+  margin: 0;
+  font-size: 14px;
+  color: #718096;
+  line-height: 1.6;
+}
+
+/* Khu vực nút Sửa / Xóa bên phải */
+.address-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.btn-action {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  padding: 8px 14px;
+  font-size: 13px;
+  font-weight: 500;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* Nút Sửa */
+.btn-action.edit {
+  color: #3182ce;
+  border-color: #ebf8ff;
+  background-color: #ebf8ff;
+}
+
+.btn-action.edit:hover {
+  background-color: #bee3f8;
+  color: #2b6cb0;
+}
+
+/* Nút Xóa */
+.btn-action.delete {
+  color: #e53e3e;
+  border-color: #fff5f5;
+  background-color: #fff5f5;
+}
+
+.btn-action.delete:hover {
+  background-color: #fed7d7;
+  color: #9b2c2c;
+}
+
+/* Nút đặt làm mặc định */
+.btn-action.set-default {
+  color: #4a5568;
+  background-color: #ffffff;
+  border-color: #e2e8f0;
+}
+
+.btn-action.set-default:hover {
+  background-color: #edf2f7;
+  color: #2d3748;
+  border-color: #cbd5e0;
+}
+
+/* Trạng thái trống rỗng (Chưa có địa chỉ) */
+.empty-state {
+  text-align: center;
+  padding: 48px 24px;
+  background-color: #f7fafc;
+  border-radius: 14px;
+  border: 2px dashed #e2e8f0;
+  color: #718096;
+  font-size: 15px;
+}
+
+/* ==========================================================================
+   6. RESPONSIVE (TỐI ƯU GIAO DIỆN MOBILE)
+   ========================================================================== */
+@media (max-width: 640px) {
+  .address-form-card {
+    padding: 20px;
+  }
+  
+  .form-row {
+    grid-template-columns: 1fr; /* Chuyển thành 1 cột đứng trên điện thoại */
+    gap: 0;
+  }
+  
+  .form-row .form-group {
+    margin-bottom: 16px; /* Bổ sung khoảng cách dọc */
+  }
+  
+  .form-row .form-group:last-child {
+    margin-bottom: 0;
+  }
+
+  .form-group.full-width-row {
+    grid-column: span 1;
+  }
+  
+  .address-item {
+    flex-direction: column; /* Đẩy cụm nút Sửa/Xóa xuống dưới thông tin địa chỉ */
+    align-items: flex-start;
+    gap: 18px;
+    padding: 16px;
+  }
+  
+  .address-info {
+    padding-right: 0;
+  }
+  
+  .address-actions {
+    width: 100%;
+    justify-content: flex-end; /* Căn các nút hành động về bên phải */
+    border-top: 1px solid #edf2f7;
+    padding-top: 14px;
+  }
+  
+  .btn-action {
+    padding: 8px 12px; /* Thu nhỏ nút một chút trên màn hình nhỏ */
+  }
+}
