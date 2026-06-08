@@ -1,7 +1,7 @@
-const Cart = require('../models/cart.model');
+import Cart from '../models/cart.model.js';
 
 // GET CART
-exports.getCart = (req, res) => {
+const getCart = (req, res) => {
 
   const customerId =
     req.user.customer_id;
@@ -30,7 +30,7 @@ exports.getCart = (req, res) => {
 };
 
 // ADD TO CART
-exports.addToCart = (req, res) => {
+const addToCart = (req, res) => {
 
   const customerId = req.user.customer_id;
   const { product_id, quantity } = req.body;
@@ -44,7 +44,6 @@ exports.addToCart = (req, res) => {
       });
     }
 
-    // 🔥 QUAN TRỌNG: trả về cart mới luôn
     Cart.getByCustomer(customerId, (err2, results) => {
 
       if (err2) {
@@ -56,7 +55,7 @@ exports.addToCart = (req, res) => {
 
       return res.status(201).json({
         success: true,
-        data: results   // ✅ TRẢ CART MỚI
+        data: results
       });
 
     });
@@ -65,7 +64,7 @@ exports.addToCart = (req, res) => {
 };
 
 // UPDATE QUANTITY
-exports.updateQuantity = (req, res) => {
+const updateQuantity = (req, res) => {
 
   const customerId = req.user.customer_id;
   const productId = req.params.productId;
@@ -91,15 +90,16 @@ exports.updateQuantity = (req, res) => {
 
       return res.status(200).json({
         success: true,
-        data: results   // 🔥 QUAN TRỌNG
+        data: results
       });
 
     });
 
   });
 };
+
 // REMOVE ITEM
-exports.removeItem = (req, res) => {
+const removeItem = (req, res) => {
 
   const customerId = req.user.customer_id;
   const productId = req.params.productId;
@@ -124,15 +124,16 @@ exports.removeItem = (req, res) => {
 
       return res.status(200).json({
         success: true,
-        data: results   // 🔥 QUAN TRỌNG
+        data: results
       });
 
     });
 
   });
 };
+
 // CLEAR CART
-exports.clearCart = (req, res) => {
+const clearCart = (req, res) => {
 
   const customerId =
     req.user.customer_id;
@@ -158,4 +159,12 @@ exports.clearCart = (req, res) => {
     }
   );
 
+};
+
+export {
+  getCart,
+  addToCart,
+  updateQuantity,
+  removeItem,
+  clearCart
 };

@@ -1,4 +1,4 @@
-const db = require('../config/db');
+import db from '../config/db.js';
 
 class Cart {
 
@@ -42,7 +42,6 @@ class Cart {
           return callback(err);
         }
 
-        // Đã tồn tại -> cộng số lượng
         if (results.length > 0) {
 
           db.query(
@@ -153,4 +152,4 @@ class Cart {
 
 }
 
-module.exports = Cart;
+export default Cart;

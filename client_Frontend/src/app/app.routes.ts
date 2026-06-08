@@ -1,5 +1,4 @@
 import { Routes } from '@angular/router';
-
 import { adminGuard } from './core/guards/admin.guard';
 
 export const routes: Routes = [
@@ -49,13 +48,13 @@ export const routes: Routes = [
   },
 
   {
-    path: 'admin/orders/:id',
-    loadComponent: () =>
-      import(
-        './pages/admin/order-management/order-detail-admin/order-detail-admin'
-      ).then(m => m.OrderDetailAdmin),
-    canActivate: [adminGuard]
-  },
+  path: 'admin/orders/:id',
+  loadComponent: () =>
+    import(
+      './pages/admin/order-management/order-detail-admin/order-detail-admin'
+    ).then(m => m.OrderDetailAdmin),
+  canActivate: [adminGuard]
+},
 
   {
     path: 'orders/:id',

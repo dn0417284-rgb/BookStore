@@ -1,21 +1,16 @@
-const express =
-  require('express');
+import express from 'express';
 
-const router =
-  express.Router();
+import verifyToken from '../middlewares/auth.middleware.js';
 
-const verifyToken =
-  require('../middlewares/auth.middleware');
-
-const {
+import {
   getCart,
   addToCart,
   updateQuantity,
   removeItem,
   clearCart
-} = require(
-  '../controllers/cart.controller'
-);
+} from '../controllers/cart.controller.js';
+
+const router = express.Router();
 
 // Lấy giỏ hàng
 router.get(
@@ -52,5 +47,4 @@ router.delete(
   clearCart
 );
 
-module.exports =
-  router;
+export default router;

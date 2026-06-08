@@ -1,4 +1,4 @@
-const db = require('../config/db');
+import db from '../config/db.js';
 
 class Address {
 
@@ -169,4 +169,4 @@ class Address {
 
 }
 
-module.exports = Address;
+export default Address;

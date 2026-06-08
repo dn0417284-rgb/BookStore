@@ -1,0 +1,296 @@
+<div class="order-management">
+
+  <div class="page-header">
+
+    <h1>
+      Quản lý đơn hàng
+    </h1>
+
+    <p>
+      Theo dõi và xử lý đơn hàng của khách hàng
+    </p>
+
+  </div>
+
+  <!-- SEARCH -->
+
+  <div class="filter-card">
+
+    <div class="filter-grid">
+
+      <input
+        type="text"
+        placeholder="Mã đơn hàng"
+        [(ngModel)]="searchOrderId"
+      >
+
+      <input
+        type="text"
+        placeholder="Tên khách hàng"
+        [(ngModel)]="searchCustomer"
+      >
+
+      <input
+        type="text"
+        placeholder="Số điện thoại"
+        [(ngModel)]="searchPhone"
+      >
+
+      <select
+        [(ngModel)]="searchStatus"
+      >
+
+        <option value="">
+          Tất cả trạng thái
+        </option>
+
+        <option value="PENDING">
+          Chờ xác nhận
+        </option>
+
+        <option value="CONFIRMED">
+          Đã xác nhận
+        </option>
+
+        <option value="PACKING">
+          Đang đóng gói
+        </option>
+
+        <option value="SHIPPING">
+          Đang giao
+        </option>
+
+        <option value="DELIVERED">
+          Đã giao
+        </option>
+
+        <option value="RECEIVED">
+          Đã nhận hàng
+        </option>
+
+        <option value="FAILED">
+          Giao thất bại
+        </option>
+
+        <option value="CANCELLED">
+          Đã hủy
+        </option>
+
+      </select>
+
+      <input
+        type="date"
+        [(ngModel)]="fromDate"
+      >
+
+      <input
+        type="date"
+        [(ngModel)]="toDate"
+      >
+
+    </div>
+
+    <div class="filter-actions">
+
+      <button
+        class="btn-search"
+        (click)="search()"
+      >
+        Tìm kiếm
+      </button>
+
+      <button
+        class="btn-reset"
+        (click)="resetFilter()"
+      >
+        Làm mới
+      </button>
+
+    </div>
+
+  </div>
+
+  <!-- LOADING -->
+
+  <div
+    *ngIf="loading"
+    class="loading"
+  >
+    Đang tải dữ liệu...
+  </div>
+
+  <!-- TABLE -->
+
+  <div
+    *ngIf="!loading"
+    class="table-card"
+  >
+
+    <table>
+
+      <thead>
+
+        <tr>
+
+          <th>STT</th>
+
+          <th>Mã đơn</th>
+
+          <th>Khách hàng</th>
+
+          <th>SĐT</th>
+
+          <th>Tổng tiền</th>
+
+          <th>Trạng thái</th>
+
+          <th>Ngày tạo</th>
+
+          <th>Thao tác</th>
+
+        </tr>
+
+      </thead>
+
+      <tbody>
+
+        <tr
+          *ngFor="
+            let order of pagedOrders;
+            let i = index
+          "
+        >
+
+          <td>
+            {{ getSTT(i) }}
+          </td>
+
+          <td>
+            #{{ order.order_id }}
+          </td>
+
+          <td>
+            {{ order.customer_name }}
+          </td>
+
+          <td>
+            {{ order.phone }}
+          </td>
+
+          <td>
+            {{ order.total_amount | number }}₫
+          </td>
+
+          <td>
+
+            <span
+              class="status-badge"
+              [ngClass]="
+                order.status.toLowerCase()
+              "
+            >
+
+              {{
+                getStatusText(
+                  order.status
+                )
+              }}
+
+            </span>
+
+          </td>
+
+          <td>
+
+            {{
+              order.created_at
+              | date:'dd/MM/yyyy HH:mm'
+            }}
+
+          </td>
+
+          <td>
+
+            <a
+               [routerLink]="[
+               '/admin/orders',
+               order.order_id
+               ]"
+               class="btn-view"
+               >
+               Chi tiết
+            </a>
+
+          </td>
+
+        </tr>
+
+        <tr
+          *ngIf="
+            pagedOrders.length === 0
+          "
+        >
+
+          <td
+            colspan="8"
+            class="empty"
+          >
+
+            Không có dữ liệu
+
+          </td>
+
+        </tr>
+
+      </tbody>
+
+    </table>
+
+  </div>
+
+  <!-- PAGINATION -->
+
+  <div
+    *ngIf="
+      totalPages > 1
+    "
+    class="pagination"
+  >
+
+    <button
+      (click)="changePage(
+        currentPage - 1
+      )"
+      [disabled]="currentPage === 1"
+    >
+      ←
+    </button>
+
+    <button
+      *ngFor="
+        let page of getPages()
+      "
+      (click)="changePage(page)"
+      [class.active]="
+        currentPage === page
+      "
+    >
+
+      {{ page }}
+
+    </button>
+
+    <button
+      (click)="changePage(
+        currentPage + 1
+      )"
+      [disabled]="
+        currentPage === totalPages
+      "
+    >
+      →
+    </button>
+
+  </div>
+
+</div>
