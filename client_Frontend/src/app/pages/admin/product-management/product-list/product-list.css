@@ -1,10 +1,13 @@
 .book-image {
-  width: 50px;
-  height: 72px;
-  object-fit: cover;
-
-  border-radius: 8px;
+  width: 60px;
+  height: 80px;
+  object-fit: contain;
+  border-radius: 6px;
   border: 1px solid #e2e8f0;
+  background-color: #f9fafb;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  display: block;
+  margin: 0 auto; /* căn giữa trong ô */
 }
 
 .book-title {
@@ -21,16 +24,11 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-
   min-width: 42px;
-
   padding: 5px 10px;
-
   border-radius: 20px;
-
   background: #fef3c7;
   color: #92400e;
-
   font-size: 12px;
   font-weight: 600;
 }
@@ -39,17 +37,14 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-
   padding: 5px 10px;
-
   border-radius: 20px;
-
   background: #dbeafe;
   color: #1d4ed8;
-
   font-size: 12px;
   font-weight: 500;
 }
+
 .search-btn {
   padding: 10px 18px;
   border: none;
@@ -60,7 +55,46 @@
   font-weight: 500;
   transition: 0.2s;
 }
-
 .search-btn:hover {
   opacity: 0.9;
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+
+  background: rgba(15, 23, 42, 0.55);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  z-index: 999;
+  backdrop-filter: blur(6px);
+}
+
+.modal {
+  width: 700px;
+  max-width: 80vw;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+  animation: modalShow 0.25s ease;
+}
+
+@keyframes modalShow {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.main-content.blurred {
+  filter: blur(3px);
+  pointer-events: none;
 }

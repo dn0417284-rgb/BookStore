@@ -18,16 +18,16 @@ export class CartService {
 
   constructor(private http: HttpClient) {}
 
-  // ==========================
+  
   // INIT LOAD CART
-  // ==========================
+  
   initCart(): void {
     this.loadCart();
   }
 
-  // ==========================
+  
   // LOAD CART FROM SERVER
-  // ==========================
+  
   loadCart(): void {
     this.http.get<any>(this.apiUrl).subscribe({
       next: (res) => {

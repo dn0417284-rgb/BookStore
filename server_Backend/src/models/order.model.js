@@ -1,17 +1,13 @@
-const db = require('../config/db');
+import db from "../config/db";
 
 class Order {
-
   static create(order, callback) {
-
     db.getConnection((err, connection) => {
-
       if (err) {
         return callback(err);
       }
 
-      connection.beginTransaction(err => {
-
+      connection.beginTransaction((err) => {
         if (err) {
           connection.release();
           return callback(err);
@@ -25,7 +21,7 @@ class Order {
           address,
           note,
           total_amount,
-          items
+          items,
         } = order;
 
         connection.query(
@@ -49,27 +45,21 @@ class Order {
             email || null,
             address,
             note || null,
-            total_amount
+            total_amount,
           ],
           (err, result) => {
-
             if (err) {
-
               return connection.rollback(() => {
                 connection.release();
                 callback(err);
               });
-
             }
 
             const orderId = result.insertId;
 
             const insertItems = (index) => {
-
               if (index >= items.length) {
-
-                return connection.commit(err => {
-
+                return connection.commit((err) => {
                   connection.release();
 
                   if (err) {
@@ -77,9 +67,7 @@ class Order {
                   }
 
                   callback(null, orderId);
-
                 });
-
               }
 
               const item = items[index];
@@ -95,43 +83,28 @@ class Order {
                 )
                 VALUES (?, ?, ?, ?)
                 `,
-                [
-                  orderId,
-                  item.product_id,
-                  item.quantity,
-                  item.price
-                ],
+                [orderId, item.product_id, item.quantity, item.price],
                 (err) => {
-
                   if (err) {
-
                     return connection.rollback(() => {
                       connection.release();
                       callback(err);
                     });
-
                   }
 
                   insertItems(index + 1);
-
-                }
+                },
               );
-
             };
 
             insertItems(0);
-
-          }
+          },
         );
-
       });
-
     });
-
   }
 
   static getAll(callback) {
-
     db.query(
       `
       SELECT
@@ -148,7 +121,6 @@ class Order {
       ORDER BY o.order_id DESC
       `,
       (err, orders) => {
-
         if (err) {
           return callback(err);
         }
@@ -159,8 +131,7 @@ class Order {
 
         let completed = 0;
 
-        orders.forEach(order => {
-
+        orders.forEach((order) => {
           db.query(
             `
             SELECT
@@ -177,7 +148,6 @@ class Order {
             `,
             [order.order_id],
             (err, items) => {
-
               if (err) {
                 return callback(err);
               }
@@ -189,22 +159,14 @@ class Order {
               if (completed === orders.length) {
                 callback(null, orders);
               }
-
-            }
+            },
           );
-
         });
-
-      }
+      },
     );
-
   }
 
-  static getByCustomerId(
-    customerId,
-    callback
-  ) {
-
+  static getByCustomerId(customerId, callback) {
     db.query(
       `
       SELECT
@@ -224,7 +186,6 @@ class Order {
       `,
       [customerId],
       (err, orders) => {
-
         if (err) {
           return callback(err);
         }
@@ -235,8 +196,7 @@ class Order {
 
         let completed = 0;
 
-        orders.forEach(order => {
-
+        orders.forEach((order) => {
           db.query(
             `
             SELECT
@@ -253,7 +213,6 @@ class Order {
             `,
             [order.order_id],
             (err, items) => {
-
               if (err) {
                 return callback(err);
               }
@@ -265,23 +224,14 @@ class Order {
               if (completed === orders.length) {
                 callback(null, orders);
               }
-
-            }
+            },
           );
-
         });
-
-      }
+      },
     );
-
   }
 
-  static getOrderDetail(
-    orderId,
-    customerId,
-    callback
-  ) {
-
+  static getOrderDetail(orderId, customerId, callback) {
     db.query(
       `
       SELECT *
@@ -289,25 +239,17 @@ class Order {
       WHERE order_id = ?
       AND customer_id = ?
       `,
-      [
-        orderId,
-        customerId
-      ],
+      [orderId, customerId],
       (err, orders) => {
-
         if (err) {
           return callback(err);
         }
 
         if (!orders.length) {
-          return callback(
-            null,
-            null
-          );
+          return callback(null, null);
         }
 
-        const order =
-          orders[0];
+        const order = orders[0];
 
         db.query(
           `
@@ -331,31 +273,20 @@ class Order {
           `,
           [orderId],
           (err, items) => {
-
             if (err) {
               return callback(err);
             }
 
             order.items = items;
 
-            callback(
-              null,
-              order
-            );
-
-          }
+            callback(null, order);
+          },
         );
-
-      }
+      },
     );
+  }
 
-  } 
-
-  static getOrderDetailAdmin(
-    orderId,
-    callback
-  ) {
-
+  static getOrderDetailAdmin(orderId, callback) {
     db.query(
       `
       SELECT *
@@ -364,7 +295,6 @@ class Order {
       `,
       [orderId],
       (err, orders) => {
-
         if (err) {
           return callback(err);
         }
@@ -392,28 +322,20 @@ class Order {
           `,
           [orderId],
           (err, items) => {
-
             if (err) {
               return callback(err);
             }
 
             order.items = items;
 
-            callback(
-              null,
-              order
-            );
-
-          }
+            callback(null, order);
+          },
         );
-
-      }
+      },
     );
-
   }
 
   static getAllOrders(callback) {
-
     const sql = `
       SELECT
         order_id,
@@ -426,40 +348,22 @@ class Order {
       ORDER BY created_at DESC
     `;
 
-    db.query(
-      sql,
-      callback
-    );
-
+    db.query(sql, callback);
   }
 
-  static updateOrderStatus(
-    orderId,
-    status,
-    callback
-  ) {
-
+  static updateOrderStatus(orderId, status, callback) {
     db.query(
       `
       UPDATE orders
       SET status = ?
       WHERE order_id = ?
       `,
-      [
-        status,
-        orderId
-      ],
-      callback
+      [status, orderId],
+      callback,
     );
-
   }
 
-  static cancelOrder(
-    orderId,
-    customerId,
-    callback
-  ) {
-
+  static cancelOrder(orderId, customerId, callback) {
     db.query(
       `
       SELECT status
@@ -467,37 +371,18 @@ class Order {
       WHERE order_id = ?
       AND customer_id = ?
       `,
-      [
-        orderId,
-        customerId
-      ],
+      [orderId, customerId],
       (err, rows) => {
-
         if (err) {
           return callback(err);
         }
 
         if (!rows.length) {
-
-          return callback(
-            new Error(
-              'Không tìm thấy đơn hàng'
-            )
-          );
-
+          return callback(new Error("Không tìm thấy đơn hàng"));
         }
 
-        if (
-          rows[0].status !==
-          'PENDING'
-        ) {
-
-          return callback(
-            new Error(
-              'Chỉ được hủy đơn đang chờ xác nhận'
-            )
-          );
-
+        if (rows[0].status !== "PENDING") {
+          return callback(new Error("Chỉ được hủy đơn đang chờ xác nhận"));
         }
 
         db.query(
@@ -507,15 +392,11 @@ class Order {
           WHERE order_id = ?
           `,
           [orderId],
-          callback
+          callback,
         );
-
-      }
+      },
     );
-
   }
-
 }
 
-
-module.exports = Order;
+export default Order;

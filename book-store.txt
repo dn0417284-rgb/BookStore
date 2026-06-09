@@ -53,17 +53,15 @@ book-store/                                     # Thư mục gốc project
 │   │       │   ├── search/                     # Tìm kiếm sản phẩm
 │   │       │   │
 │   │       │   └── admin/                      # Trang admin
-│   │       │
-│   │       │       ├── dashboard/              # Dashboard thống kê
 │   │       │       │
-│   │       │       ├── product-management/     # CRUD sản phẩm
+│   │       │       ├── product-management/     # quản lý sản phảm
 │   │       │       │   ├── product-list/
 │   │       │       │   ├── add-product/
 │   │       │       │   └── edit-product/
 │   │       │       │
-│   │       │       ├── order-management/       # CRUD đơn hàng
-│   │       │       │   ├── order-list/
-│   │       │       │   └── order-detail/
+│   │       │       ├── order-management/       # Quản lý đơn hàng
+│   │       │       │   ├── order-list/ Thông tin tất cả đơn hàng
+│   │       │       │   └── order-detail/Thông tin chi tiết từng đơn hàng
 │   │       │       │
 │   │       │       └── customer-management/    # Quản lý khách hàng
 │   │       │       |   ├── customer-list/
