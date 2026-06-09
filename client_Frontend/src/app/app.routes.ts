@@ -10,12 +10,6 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/register/register').then((m) => m.Register),
   },
   {
-    path: 'admin',
-
-    loadComponent: () => import('./pages/admin/dashboard/dashboard').then((m) => m.Dashboard),
-  },
-
-  {
     path: 'admin/products',
     loadComponent: () =>
       import('./pages/admin/product-management/product-list/product-list').then(
@@ -54,13 +48,11 @@ export const routes: Routes = [
 
   {
     path: 'cart',
-
     loadComponent: () => import('./pages/cart/cart').then((m) => m.Cart),
   },
 
   {
     path: 'checkout',
-
     loadComponent: () => import('./pages/checkout/checkout').then((m) => m.Checkout),
   },
 
