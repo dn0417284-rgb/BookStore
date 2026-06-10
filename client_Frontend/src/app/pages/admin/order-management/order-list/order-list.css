@@ -1,0 +1,244 @@
+/* ===== Title ===== */
+.page-title {
+  margin-bottom: 24px;
+  align-items: center;
+  gap: 20px;
+}
+.page-title h2 {
+  font-size: 32px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0;
+}
+.order-count {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 16px;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 999px;
+}
+.count-label {
+  color: #475569;
+  font-size: 14px;
+  font-weight: 500;
+}
+.count-value {
+  min-width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #2563eb;
+  color: white;
+  border-radius: 50%;
+  font-size: 14px;
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.25);
+}
+
+/* ===== Toolbar ===== */
+.toolbar {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 20px;
+}
+.toolbar-right {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+.search-input {
+  width: 320px;
+  height: 42px;
+  border: 1px solid #d1d5db;
+  border-radius: 24px;
+  padding: 0 16px;
+  font-size: 14px;
+}
+.search-btn {
+  height: 42px;
+  padding: 0 18px;
+  border: none;
+  border-radius: 8px;
+  background: #2563eb;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.search-btn:hover {
+  opacity: 0.9;
+}
+.reset-btn {
+  height: 42px;
+  padding: 0 16px;
+  border: none;
+  border-radius: 8px;
+  background: #64748b;
+  color: #fff;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.reset-btn:hover {
+  background: #475569;
+}
+.date-input {
+  height: 42px;
+  padding: 0 12px;
+  border: 1px solid #dbe2ea;
+  border-radius: 8px;
+  font-size: 14px;
+}
+.date-separator {
+  font-size: 16px;
+  font-weight: 600;
+  color: #64748b;
+}
+
+/* ===== Table ===== */
+.table-card {
+  background: #fff;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  overflow: hidden;
+}
+.table-responsive {
+  overflow-x: auto;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+thead {
+  background: #2563eb;
+}
+thead th {
+  color: #fff;
+  padding: 14px 18px;
+  text-align: left;
+  font-size: 14px;
+  font-weight: 600;
+}
+tbody td {
+  padding: 14px 18px;
+  border-bottom: 1px solid #f1f5f9;
+  font-size: 14px;
+  color: #334155;
+}
+tbody tr:hover {
+  background: #f8fafc;
+}
+.order-code {
+  color: #2563eb;
+  font-weight: 700;
+}
+.customer-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.customer-info strong {
+  color: #0f172a;
+}
+.customer-info span {
+  color: #64748b;
+  font-size: 13px;
+}
+.price {
+  color: #b91c1c;
+  font-weight: 700;
+}
+
+/* ===== Status Badges ===== */
+.status-badge {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+}
+.pending {
+  background: #fef3c7;
+  color: #92400e;
+}
+.confirmed {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+.shipping {
+  background: #cffafe;
+  color: #0f766e;
+}
+.delivered,
+.received {
+  background: #dcfce7;
+  color: #15803d;
+}
+.failed,
+.cancelled {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+/* ===== Buttons ===== */
+.btn-detail {
+  padding: 8px 14px;
+  border: none;
+  border-radius: 6px;
+  background: #e0f2fe;
+  color: #0369a1;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+}
+.btn-detail:hover {
+  background: #bae6fd;
+}
+.btn-edit {
+  padding: 8px 14px;
+  border: none;
+  border-radius: 6px;
+  background: #fee2e2;
+  color: #b91c1c;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+}
+.btn-edit:hover {
+  background: #fca5a5;
+}
+
+/* ===== Pagination ===== */
+.pagination {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 20px;
+  border-top: 1px solid #e2e8f0;
+}
+.page-info {
+  color: #64748b;
+  font-size: 14px;
+}
+.page-btn {
+  border: 1px solid #cbd5e1;
+  background: #fff;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+}
+.page-btn:hover:not(:disabled) {
+  background: #f1f5f9;
+}
+.page-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.empty-state {
+  text-align: center;
+  color: #94a3b8;
+  padding: 30px;
+}

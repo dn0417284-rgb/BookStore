@@ -1,0 +1,98 @@
+<div class="page-title">
+  <h2>Quản lý đơn hàng</h2>
+
+  <div class="order-count">
+    <span class="count-label">Tổng đơn hàng</span>
+    <span class="count-value">{{ orders.length }}</span>
+  </div>
+</div>
+
+<div class="toolbar">
+  <div class="toolbar-right">
+    <input
+      type="text"
+      placeholder="Tìm kiếm mã đơn hàng hoặc khách hàng..."
+      [(ngModel)]="searchTerm"
+      class="search-input"
+    />
+    <input type="date" [(ngModel)]="fromDate" class="date-input" />
+    <span class="date-separator">→</span>
+
+    <input type="date" [(ngModel)]="toDate" class="date-input" />
+
+    <button class="search-btn" (click)="searchOrders()">Tìm kiếm</button>
+    <button class="reset-btn" (click)="resetSearch()">Làm mới</button>
+  </div>
+</div>
+
+<div class="table-card">
+  <div class="table-responsive">
+    <table>
+      <thead>
+        <tr>
+          <th>Mã đơn hàng</th>
+          <th>Mã vận đơn</th>
+          <th>Khách hàng</th>
+          <th>Tổng tiền</th>
+          <th>Trạng thái</th>
+          <th>Ngày tạo</th>
+          <th>Thông tin đơn hàng</th>
+          <th>Hành động</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let order of pagedOrders">
+          <td class="order-code">
+            {{ order.order_code }}
+          </td>
+
+          <td>
+            {{ order.tracking_code || '---' }}
+          </td>
+
+          <td>
+            <div class="customer-info">
+              <strong>{{ order.customer_name }}</strong>
+              <span>{{ order.phone }}</span>
+            </div>
+          </td>
+
+          <td class="price">{{ order.total_amount | number }}đ</td>
+
+          <td>
+            <span class="status-badge" [ngClass]="order.status.toLowerCase()">
+              {{ getStatusText(order.status) }}
+            </span>
+          </td>
+
+          <td>
+            {{ order.created_at | date: 'dd/MM/yyyy HH:mm' }}
+          </td>
+
+          <td>
+            <button class="btn-detail" (click)="viewOrder(order.order_id)">Xem chi tiết</button>
+          </td>
+
+          <td>
+            <button class="btn-edit" (click)="deleteOder(order.order_id)">Xóa</button>
+          </td>
+        </tr>
+
+        <tr *ngIf="pagedOrders.length === 0">
+          <td colspan="8" class="empty-state">Không có đơn hàng nào</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pagination">
+    <span class="page-info"> Trang {{ currentPage }} / {{ totalPages }} </span>
+
+    <button class="page-btn" (click)="prevPage()" [disabled]="currentPage === 1">Trước</button>
+
+    <button class="page-btn" (click)="nextPage()" [disabled]="currentPage === totalPages">
+      Sau
+    </button>
+  </div>
+</div>

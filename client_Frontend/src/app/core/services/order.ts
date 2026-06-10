@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
+
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+
 import { Observable, map } from 'rxjs';
+
 import { Order } from '../models/order.model';
 
 @Injectable({
@@ -8,6 +11,7 @@ import { Order } from '../models/order.model';
 })
 export class OrderService {
   private apiUrl = 'http://localhost:3000/api/orders';
+
   constructor(private http: HttpClient) {}
 
   private getHeaders(): HttpHeaders {
@@ -39,20 +43,20 @@ export class OrderService {
   }
 
   getAllOrders(): Observable<any> {
-    return this.http.get<any>(`api/admin/oders`, {
+    return this.http.get<any>(`${this.apiUrl}/admin/all`, {
       headers: this.getHeaders(),
     });
   }
 
   getOrderDetailAdmin(orderId: number): Observable<any> {
-    return this.http.get<any>(`api/admin/${orderId}`, {
+    return this.http.get<any>(`${this.apiUrl}/admin/${orderId}`, {
       headers: this.getHeaders(),
     });
   }
 
   updateOrderStatus(orderId: number, status: string): Observable<any> {
     return this.http.put(
-      `api/admin/${orderId}/status`,
+      `${this.apiUrl}/admin/${orderId}/status`,
       {
         status,
       },

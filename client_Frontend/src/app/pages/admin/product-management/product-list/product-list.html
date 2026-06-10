@@ -1,10 +1,15 @@
 <div class="page-title">
   <h2>Quản lý sách</h2>
-  <p>Số lượng sách {{ filteredBooks.length }}</p>
+
+  <div class="book-count">
+    <span class="count-label">Tổng số sách</span>
+    <span class="count-value">{{ filteredBooks.length }}</span>
+  </div>
 </div>
+
 <!-- Nội dung chính -->
 <div class="main-content" [class.blurred]="showAddForm">
-  <!-- Tìm kiếm  -->
+  <!-- Tìm kiếm -->
   <div class="toolbar">
     <div class="toolbar-right">
       <input
@@ -14,7 +19,9 @@
         class="search-input"
         (keyup.enter)="searchBooks()"
       />
+
       <button class="search-btn" (click)="searchBooks()">Tìm kiếm</button>
+
       <button class="primary-btn" (click)="toggleAddForm()">+ Thêm sách</button>
     </div>
   </div>

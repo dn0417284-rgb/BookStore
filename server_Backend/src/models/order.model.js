@@ -1,4 +1,4 @@
-import db from "../config/db";
+import db from "../config/db.js";
 
 class Order {
   static create(order, callback) {
@@ -335,20 +335,24 @@ class Order {
     );
   }
 
-  static getAllOrders(callback) {
+  static async getAllOrders() {
     const sql = `
-      SELECT
-        order_id,
-        customer_name,
-        phone,
-        total_amount,
-        status,
-        created_at
-      FROM orders
-      ORDER BY created_at DESC
-    `;
+    SELECT
+      order_id,
+      order_code,
+      tracking_code,
+      customer_name,
+      phone,
+      total_amount,
+      status,
+      payment_status,
+      created_at
+    FROM orders
+    ORDER BY created_at DESC
+  `;
 
-    db.query(sql, callback);
+    const [rows] = await db.query(sql);
+    return rows;
   }
 
   static updateOrderStatus(orderId, status, callback) {
