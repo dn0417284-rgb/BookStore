@@ -7,8 +7,8 @@ import cors from 'cors';
 import './src/config/db.js';
 
 import productRoutes from './src/routes/product.routes.js';
-import authRoutes from './src/routes/auth.route.js';
-import customerRoutes from './src/routes/customer.route.js';
+// import authRoutes from './src/routes/auth.route.js';
+//import customerRoutes from './src/routes/customer.route.js';
 import orderRoutes from './src/routes/order.routes.js';
 import cartRoutes from './src/routes/cart.routes.js';
 import addressRoutes from './src/routes/address.routes.js';
@@ -22,9 +22,9 @@ app.use(express.json());
 // Routes
 app.use('/api/products', productRoutes);
 
-app.use('/api/auth', authRoutes);
+// app.use('/api/auth', authRoutes);
 
-app.use('/api/customers', customerRoutes);
+// app.use('/api/customers', customerRoutes);
 
 app.use('/api/orders', orderRoutes);
 
