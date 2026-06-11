@@ -1,1 +1,278 @@
-<p>home works!</p>
+<div class="container">
+
+  <!-- HERO -->
+  <div
+    class="hero"
+    *ngIf="currentTab === 'best-seller'"
+  >
+    <h1>Nhà Sách Online</h1>
+
+    <p>
+      Khám phá hàng ngàn đầu sách hấp dẫn về công nghệ,
+      kinh doanh, kỹ năng sống và văn học.
+    </p>
+  </div>
+
+  <!-- TAB -->
+  <div class="top-bar">
+
+    <div class="tabs-container">
+
+      <button
+        class="tab-btn"
+        [class.active]="currentTab === 'best-seller'"
+        (click)="switchTab('best-seller')"
+      >
+        Sách Bán Chạy
+      </button>
+
+      <button
+        class="tab-btn"
+        [class.active]="currentTab === 'all'"
+        (click)="switchTab('all')"
+      >
+        Tất Cả Sách
+      </button>
+
+    </div>
+
+  </div>
+
+  <!-- FILTER -->
+  <div
+  class="filter-panel"
+  *ngIf="currentTab === 'all'"
+>
+
+  <div class="filter-title">
+    Lọc sản phẩm
+  </div>
+
+  <div class="filter-bar">
+
+    <input
+      type="number"
+      placeholder="20.000đ"
+      [(ngModel)]="minPrice"
+    >
+
+    <input
+      type="number"
+      placeholder="500.000đ"
+      [(ngModel)]="maxPrice"
+    >
+
+    <input
+      type="text"
+      placeholder="Tác giả"
+      [(ngModel)]="authorKeyword"
+    >
+
+    <input
+      type="text"
+      placeholder="Tên sách"
+      [(ngModel)]="titleKeyword"
+    >
+
+    <button
+      class="btn-filter"
+      (click)="searchByPrice()"
+    >
+      Lọc
+    </button>
+
+  </div>
+
+</div>
+
+  <!-- SỐ LƯỢNG -->
+  <div
+    class="product-count-wrapper"
+    *ngIf="currentTab === 'all'"
+  >
+    <span class="product-count">
+      {{ filteredProducts.length }} sản phẩm
+    </span>
+  </div>
+
+  <!-- LƯỚI DANH SÁCH SẢN PHẨM (PRODUCTS GRID) -->
+
+  <div class="book-grid">
+
+    <div
+      class="book-card"
+      *ngFor="let product of products"
+    >
+
+      <a
+        [routerLink]="['/product', product.product_id]"
+        class="book-link"
+      >
+
+        <!-- IMAGE -->
+
+        <div class="image-wrapper">
+
+          <img
+            [src]="'images/' + product.image"
+            [alt]="product.title"
+          >
+
+          <div class="overlay">
+            Xem chi tiết
+          </div>
+
+        </div>
+
+        <!-- INFO -->
+
+        <div class="book-info">
+
+          <h3>
+            {{ product.title }}
+          </h3>
+
+          <div class="meta">
+
+            <span class="author">
+              {{ product.author }}
+            </span>
+
+            <span class="rating">
+              ⭐ {{ product.rating }}
+            </span>
+
+          </div>
+
+          <div class="price">
+            {{ product.price | number }} đ
+          </div>
+
+          <div class="book-stats">
+            Đã bán: {{ product.sold }}
+          </div>
+
+          <div
+            class="book-stats"
+            *ngIf="product.stock > 0"
+          >
+            Còn lại: {{ product.stock }}
+          </div>
+
+          <div
+            class="book-stats out-stock"
+            *ngIf="product.stock <= 0"
+          >
+            Hết hàng
+          </div>
+
+        </div>
+
+      </a>
+
+      <!-- QUANTITY - Ô VUÔNG NHẬP SỐ NẰM NGANG -->
+
+      <div class="quantity-selector">
+
+        <button
+          type="button"
+          (click)="decreaseQuantity(product.product_id)"
+        >
+          -
+        </button>
+
+        <input
+          type="number"
+          min="1"
+          [value]="quantities[product.product_id]"
+          (input)="onQuantityChange(product.product_id, $event)"
+          class="quantity-input"
+        >
+
+        <button
+          type="button"
+          (click)="increaseQuantity(product.product_id)"
+        >
+          +
+        </button>
+
+      </div>
+
+      <!-- ACTIONS -->
+
+      <div class="actions">
+
+        <button
+          class="btn-cart"
+          [disabled]="product.stock <= 0"
+          (click)="addToCart(product)"
+        >
+          {{ product.stock > 0 ? 'Thêm giỏ hàng' : 'Hết hàng' }}
+        </button>
+
+        <button
+          class="btn-buy"
+          [disabled]="product.stock <= 0"
+          (click)="buyNow(product)"
+        >
+          Mua ngay
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- ==========================================================================
+       CẬP NHẬT MỚI: THANH ĐIỀU KHIỂN PHÂN TRANG (PAGINATION)
+       Chỉ hiển thị khi đang xem tab 'Tất Cả Sách' và tổng số trang lớn hơn 1
+       ========================================================================== -->
+  <div 
+    class="pagination-container" 
+    *ngIf="currentTab === 'all' && totalPages > 1"
+  >
+    <!-- Nút quay lại trang trước (Prev) -->
+    <button 
+      class="page-arrow" 
+      (click)="prevPage()" 
+      [disabled]="currentPage === 1"
+    >
+      &laquo;
+    </button>
+
+    <!-- Vòng lặp hiển thị danh sách số trang và dấu ba chấm '...' -->
+    <ng-container *ngFor="let page of pagesArray">
+      
+      <!-- Thẻ nút bấm hiển thị số trang thực tế -->
+      <button 
+        *ngIf="page !== '...'"
+        class="page-number-btn"
+        [class.active]="currentPage === page"
+        (click)="goToPage(page)"
+      >
+        {{ page }}
+      </button>
+
+      <!-- Thẻ span hiển thị text dấu ba chấm tĩnh, không thể click -->
+      <span 
+        *ngIf="page === '...'" 
+        class="page-dots"
+      >
+        {{ page }}
+      </span>
+
+    </ng-container>
+
+    <!-- Nút tiến tới trang tiếp theo (Next) -->
+    <button 
+      class="page-arrow" 
+      (click)="nextPage()" 
+      [disabled]="currentPage === totalPages"
+    >
+      &raquo;
+    </button>
+  </div>
+
+</div>
+
