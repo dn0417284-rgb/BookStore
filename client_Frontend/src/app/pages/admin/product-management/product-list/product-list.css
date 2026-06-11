@@ -14,7 +14,55 @@
   font-weight: 600;
   color: #0f172a;
 }
+.page-title {
+  margin-bottom: 24px;
+}
 
+.page-title h2 {
+  font-size: 32px;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 12px;
+}
+
+.book-count {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+
+  padding: 10px 18px;
+
+  background: #eff6ff;
+
+  border: 1px solid #bfdbfe;
+
+  border-radius: 999px;
+}
+
+.count-label {
+  color: #475569;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.count-value {
+  min-width: 34px;
+  height: 34px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #2563eb;
+  color: white;
+
+  border-radius: 50%;
+
+  font-size: 14px;
+  font-weight: 700;
+
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.25);
+}
 .price {
   color: #b91c1c;
   font-weight: 700;
