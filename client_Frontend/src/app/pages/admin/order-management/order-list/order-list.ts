@@ -24,6 +24,7 @@ export class OrderList implements OnInit {
   toDate = '';
   currentPage = 1;
   pageSize = 8;
+  selectedStatus = '';
 
   ngOnInit(): void {
     this.loadOrders();
@@ -51,8 +52,9 @@ export class OrderList implements OnInit {
         order.customer_name?.toLowerCase().includes(keyword) ||
         order.order_code?.toLowerCase().includes(keyword);
 
-      let matchDate = true;
+      const matchStatus = !this.selectedStatus || order.status === this.selectedStatus;
 
+      let matchDate = true;
       const createdDate = new Date(order.created_at);
 
       if (this.fromDate) {
@@ -63,11 +65,10 @@ export class OrderList implements OnInit {
       if (this.toDate) {
         const to = new Date(this.toDate);
         to.setHours(23, 59, 59, 999);
-
         matchDate = matchDate && createdDate <= to;
       }
 
-      return matchKeyword && matchDate;
+      return matchKeyword && matchDate && matchStatus;
     });
 
     this.currentPage = 1;
@@ -76,7 +77,7 @@ export class OrderList implements OnInit {
     this.searchTerm = '';
     this.fromDate = '';
     this.toDate = '';
-
+    this.selectedStatus = '';
     this.filteredOrders = [...this.orders];
     this.currentPage = 1;
   }
@@ -119,20 +120,18 @@ export class OrderList implements OnInit {
     this.router.navigate(['/orders', id]);
   }
 
-  deleteOder(id: number): void {
-    this.orderService.deleteOrder(id).subscribe({
+  cancelOrder(id: number): void {
+    if (!confirm('Bạn có chắc muốn hủy đơn này?')) {
+      return;
+    }
+
+    this.orderService.cancelOrder(id).subscribe({
       next: () => {
-        this.orders = this.orders.filter((o) => o.order_id !== id);
-        this.filteredOrders = this.filteredOrders.filter((o) => o.order_id !== id);
-        if (this.currentPage > this.totalPages) {
-          this.currentPage = this.totalPages;
-        }
-        alert('Xóa đơn hàng thành công');
         this.loadOrders();
+        alert('Hủy đơn hàng thành công');
       },
-      error: (err) => {
-        console.error(err);
-        alert('Xóa đơn hàng thất bại');
+      error: () => {
+        alert('Hủy đơn hàng thất bại');
       },
     });
   }

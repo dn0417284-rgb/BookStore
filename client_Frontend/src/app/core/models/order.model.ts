@@ -13,17 +13,12 @@ export interface OrderItem {
 
 export interface Order {
   order_id: number;
-
   order_code?: string;
   tracking_code?: string;
-
   customer_name: string;
   phone: string;
-
   total_amount: number;
-
   payment_status?: 'UNPAID' | 'PAID' | 'REFUNDED';
-
   status:
     | 'PENDING'
     | 'CONFIRMED'
@@ -33,8 +28,6 @@ export interface Order {
     | 'RECEIVED'
     | 'FAILED'
     | 'CANCELLED';
-
   created_at: string;
-
   items: OrderItem[];
 }

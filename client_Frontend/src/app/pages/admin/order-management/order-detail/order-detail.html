@@ -1,0 +1,71 @@
+<div *ngIf="order">
+  <h2>
+    Đơn hàng
+    {{ order.order_code }}
+  </h2>
+
+  <hr />
+
+  <p>
+    Khách hàng:
+    {{ order.customer_name }}
+  </p>
+
+  <p>
+    SĐT:
+    {{ order.phone }}
+  </p>
+
+  <p>
+    Tổng tiền:
+    {{ order.total_amount | number }} đ
+  </p>
+
+  <p>
+    Ngày tạo:
+    {{ order.created_at | date: 'dd/MM/yyyy' }}
+  </p>
+
+  <hr />
+
+  <h3>Sản phẩm</h3>
+
+  <table>
+    <tr>
+      <th>Sách</th>
+      <th>SL</th>
+      <th>Giá</th>
+      <th>Tạm tính</th>
+    </tr>
+
+    <tr *ngFor="let item of order.items">
+      <td>{{ item.title }}</td>
+
+      <td>
+        {{ item.quantity }}
+      </td>
+
+      <td>
+        {{ item.price | number }}
+      </td>
+
+      <td>
+        {{ item.subtotal | number }}
+      </td>
+    </tr>
+  </table>
+
+  <hr />
+
+  <h3>Trạng thái đơn hàng</h3>
+
+  <select [(ngModel)]="order.status">
+    <option *ngFor="let s of statuses" [value]="s">
+      {{ s }}
+    </option>
+  </select>
+
+  <button (click)="updateStatus()">Cập nhật</button>
+
+  <button *ngIf="order.status !== 'CANCELLED'" (click)="cancelOrder()">Hủy đơn</button>
+</div>

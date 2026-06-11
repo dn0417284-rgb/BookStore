@@ -17,9 +17,18 @@
     />
     <input type="date" [(ngModel)]="fromDate" class="date-input" />
     <span class="date-separator">→</span>
-
     <input type="date" [(ngModel)]="toDate" class="date-input" />
-
+    <select [(ngModel)]="selectedStatus" class="status-filter">
+      <option value="">Tất cả trạng thái</option>
+      <option value="PENDING">Chờ xác nhận</option>
+      <option value="CONFIRMED">Đã xác nhận</option>
+      <option value="PACKING">Đang đóng gói</option>
+      <option value="SHIPPING">Đang giao</option>
+      <option value="DELIVERED">Đã giao</option>
+      <option value="RECEIVED">Đã nhận</option>
+      <option value="FAILED">Giao thất bại</option>
+      <option value="CANCELLED">Đã hủy</option>
+    </select>
     <button class="search-btn" (click)="searchOrders()">Tìm kiếm</button>
     <button class="reset-btn" (click)="resetSearch()">Làm mới</button>
   </div>
@@ -75,7 +84,13 @@
           </td>
 
           <td>
-            <button class="btn-edit" (click)="deleteOder(order.order_id)">Xóa</button>
+            <button
+              class="btn-edit"
+              *ngIf="order.status === 'PENDING'"
+              (click)="cancelOrder(order.order_id)"
+            >
+              Hủy đơn
+            </button>
           </td>
         </tr>
 

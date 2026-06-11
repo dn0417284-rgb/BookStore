@@ -9,7 +9,13 @@ export class AdminOderService {
   getAllOders() {
     return this.http.get<Order[]>(`/api/orders/admin/all`);
   }
-  deleteOrder(id: number) {
-    return this.http.delete(`/api/orders/admin/${id}`);
+  getOrderById(id: number) {
+    return this.http.get<any>(`/api/orders/admin/${id}`);
+  }
+  updateStatus(id: number, status: string) {
+    return this.http.put(`/api/orders/admin/${id}/status`, { status });
+  }
+  cancelOrder(id: number) {
+    return this.http.put(`/api/orders/admin/${id}/cancel`, {});
   }
 }
