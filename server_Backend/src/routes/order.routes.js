@@ -1,5 +1,5 @@
 import express from "express";
-
+import verifyToken from "../middlewares/auth.middleware.js";
 import {
   createOrder,
   getOrders,
@@ -12,33 +12,33 @@ import {
   momoIPN,
 } from "../controllers/order.controller.js";
 
-const orderRoutes = express.Router();
+const router = express.Router();
 
-// 1. Tuyến đường tạo mới đơn hàng
-orderRoutes.post("/", createOrder);
+// Tạo đơn hàng
+router.post("/", verifyToken, createOrder);
 
-// 2. Bổ sung: tạo lại liên kết thanh toán MoMo/ZaloPay
-orderRoutes.post("/repay", repayOrder);
+// Thanh toán lại
+router.post("/repay", verifyToken, repayOrder);
 
-// 3. Bổ sung: nhận thông báo đối soát từ Server MoMo
-orderRoutes.post("/momo-ipn", momoIPN);
+// IPN MoMo
+router.post("/momo-ipn", momoIPN);
 
-// 4. Lấy danh sách lịch sử đơn hàng của khách hiện tại
-orderRoutes.get("/", getOrders);
+// Danh sách đơn hàng của khách
+router.get("/", verifyToken, getOrders);
 
-// 5. Admin: lấy toàn bộ đơn hàng
-orderRoutes.get("/admin/all", getAllOrders);
+// Admin lấy toàn bộ đơn hàng
+router.get("/admin/all", verifyToken, getAllOrders);
 
-// 6. Admin: xem chi tiết một đơn hàng
-orderRoutes.get("/admin/:id", getOrderDetailAdmin);
+// Admin xem chi tiết đơn
+router.get("/admin/:id", verifyToken, getOrderDetailAdmin);
 
-// 7. Admin: cập nhật trạng thái giao hàng
-orderRoutes.put("/admin/:id/status", updateOrderStatus);
+// Admin cập nhật trạng thái
+router.put("/admin/:id/status", verifyToken, updateOrderStatus);
 
-// 8. Khách hàng: hủy đơn hàng
-orderRoutes.put("/:id/cancel", cancelOrder);
+// Hủy đơn
+router.put("/:id/cancel", verifyToken, cancelOrder);
 
-// 9. Khách hàng: xem chi tiết đơn hàng cụ thể
-orderRoutes.get("/:id", getOrderDetail);
+// Chi tiết đơn hàng
+router.get("/:id", verifyToken, getOrderDetail);
 
-export default orderRoutes;
+export default router;

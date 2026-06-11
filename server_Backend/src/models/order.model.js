@@ -21,6 +21,8 @@ class Order {
           address,
           note,
           total_amount,
+          payment_method,
+          address_id,
           items,
         } = order;
 
@@ -34,9 +36,11 @@ class Order {
             email,
             address,
             note,
-            total_amount
+            total_amount,
+            payment_method,
+            address_id
           )
-          VALUES (?, ?, ?, ?, ?, ?, ?)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
           `,
           [
             customer_id,
@@ -46,6 +50,8 @@ class Order {
             address,
             note || null,
             total_amount,
+            payment_method || "COD",
+            address_id || null,
           ],
           (err, result) => {
             if (err) {
@@ -72,6 +78,8 @@ class Order {
 
               const item = items[index];
 
+              console.log(item);
+
               connection.query(
                 `
                 INSERT INTO order_items
@@ -79,11 +87,24 @@ class Order {
                   order_id,
                   product_id,
                   quantity,
-                  price
+                  price,
+                  title,
+                  author,
+                  image,
+                  subtotal
                 )
-                VALUES (?, ?, ?, ?)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
                 `,
-                [orderId, item.product_id, item.quantity, item.price],
+                [
+                  orderId,
+                  item.product_id,
+                  item.quantity,
+                  item.price,
+                  item.title,
+                  item.author,
+                  item.image,
+                  item.price * item.quantity,
+                ],
                 (err) => {
                   if (err) {
                     return connection.rollback(() => {
@@ -350,7 +371,6 @@ class Order {
     FROM orders
     ORDER BY created_at DESC
   `;
-
     const [rows] = await db.query(sql);
     return rows;
   }
@@ -382,11 +402,13 @@ class Order {
         }
 
         if (!rows.length) {
-          return callback(new Error("Không tìm thấy đơn hàng"));
+          return callback(new Error("KhÃ´ng tÃ¬m tháº¥y Ä‘Æ¡n hÃ ng"));
         }
 
         if (rows[0].status !== "PENDING") {
-          return callback(new Error("Chỉ được hủy đơn đang chờ xác nhận"));
+          return callback(
+            new Error("Chá»‰ Ä‘Æ°á»£c há»§y Ä‘Æ¡n Ä‘ang chá» xÃ¡c nháº­n"),
+          );
         }
 
         db.query(

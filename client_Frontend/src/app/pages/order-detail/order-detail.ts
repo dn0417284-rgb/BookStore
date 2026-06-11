@@ -190,6 +190,84 @@ export class OrderDetail implements OnInit {
       : '';
 
   }
+  
+  repayOrder(): void {
+
+    if (!this.order) {
+      return;
+    }
+
+    this.orderService
+      .repayOrder(this.order.order_id)
+      .subscribe({
+
+        next: (res: any) => {
+
+          const paymentUrl =
+            res.paymentUrl ||
+            res.data?.paymentUrl;
+
+          if (paymentUrl) {
+            window.location.href = paymentUrl;
+          } else {
+            alert('Không tạo được link thanh toán');
+          }
+
+        },
+
+        error: (err) => {
+
+          console.error(err);
+
+          alert(
+            err.error?.message ||
+            'Không thể thanh toán lại'
+          );
+
+        }
+
+      });
+
+  }
+
+  payAgain(): void {
+
+    if (!this.order) {
+      return;
+    }
+
+    this.orderService
+      .repayOrder(this.order.order_id)
+      .subscribe({
+
+        next: (res: any) => {
+
+          const paymentUrl =
+            res.paymentUrl ||
+            res.payUrl;
+
+          if (paymentUrl) {
+            window.location.href = paymentUrl;
+          } else {
+            alert('Không lấy được link thanh toán');
+          }
+
+        },
+
+        error: (err) => {
+
+          console.error(err);
+
+          alert(
+            err.error?.message ||
+            'Không thể tạo lại thanh toán'
+          );
+
+        }
+
+      });
+
+  }
 
   cancelOrder(): void {
 
@@ -229,4 +307,5 @@ export class OrderDetail implements OnInit {
 
   }
 
+  
 }

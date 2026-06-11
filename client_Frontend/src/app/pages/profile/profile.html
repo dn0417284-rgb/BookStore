@@ -1,0 +1,37 @@
+<div class="profile-container">
+
+  <h1>Thông tin cá nhân</h1>
+
+  <div class="card">
+
+    <p>
+      <strong>Họ tên:</strong>
+      {{ customer?.full_name }}
+    </p>
+
+    <p>
+      <strong>Email:</strong>
+      {{ customer?.email }}
+    </p>
+
+    <p>
+      <strong>Mã khách hàng:</strong>
+      {{ customer?.customer_id }}
+    </p>
+
+    <hr>
+
+    <p>
+      <strong>Địa chỉ nhận hàng:</strong>
+
+      <a
+        routerLink="/addresses"
+        class="address-btn"
+      >
+        Quản lý địa chỉ
+      </a>
+    </p>
+
+  </div>
+
+</div>

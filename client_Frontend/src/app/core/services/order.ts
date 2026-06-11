@@ -1,16 +1,12 @@
 import { Injectable } from '@angular/core';
-
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-
 import { Observable, map } from 'rxjs';
-
 import { Order } from '../models/order.model';
-
 @Injectable({
   providedIn: 'root',
 })
 export class OrderService {
-  private apiUrl = 'http://localhost:3000/api/orders';
+  private apiUrl = '/api/orders';
 
   constructor(private http: HttpClient) {}
 
@@ -59,6 +55,18 @@ export class OrderService {
       `${this.apiUrl}/admin/${orderId}/status`,
       {
         status,
+      },
+      {
+        headers: this.getHeaders(),
+      },
+    );
+  }
+
+  repayOrder(orderId: number) {
+    return this.http.post(
+      `${this.apiUrl}/repay`,
+      {
+        order_id: orderId,
       },
       {
         headers: this.getHeaders(),

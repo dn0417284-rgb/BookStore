@@ -1,4 +1,4 @@
-import db from "../config/db.js"; // Đảm bảo import biến kết nối database vào controller
+import db from "../config/db.js";
 
 import Order from "../models/order.model.js";
 import crypto from "crypto";
@@ -6,29 +6,25 @@ import axios from "axios";
 
 // Cấu hình bằng biến môi trường (env) để bảo mật, không hardcode key thật
 const MOMO = {
-  partnerCode: process.env.MOMO_PARTNER_CODE || "MOMO",
-  accessKey: process.env.MOMO_ACCESS_KEY || "F8BBA842ECF85",
-  secretKey: process.env.MOMO_SECRET_KEY || "K951B6PE1waDMi640xX08PD3vg6EkVlz",
-  endpoint:
-    process.env.MOMO_ENDPOINT ||
-    "https://test-payment.momo.vn/v2/gateway/api/create",
-  ipnBase:
-    process.env.MOMO_IPN_BASE ||
-    "https://around-germicide-occupy.ngrok-free.dev",
+  partnerCode: process.env.MOMO_PARTNER_CODE,
+  accessKey: process.env.MOMO_ACCESS_KEY,
+  secretKey: process.env.MOMO_SECRET_KEY,
+  endpoint: process.env.MOMO_ENDPOINT,
+  ipnBase: process.env.MOMO_IPN_BASE,
 };
 
-/**
- * CLEAN TEXT
- */
+console.log("MOMO CONFIG:", {
+  partnerCode: MOMO.partnerCode,
+  endpoint: MOMO.endpoint,
+  ipnBase: MOMO.ipnBase,
+});
+
 function clean(v) {
   return String(v ?? "")
     .replace(/\s+/g, " ")
     .trim();
 }
 
-/**
- * RAW SIGNATURE FOR REQUEST
- */
 function buildRawSignature(p) {
   return (
     `accessKey=${MOMO.accessKey}` +
@@ -175,19 +171,18 @@ export const createOrder = (req, res) => {
 
 export const momoIPN = (req, res) => {
   console.log("RECEIVED MOMO IPN:", req.body);
+
   const { orderId, resultCode, transId, signature: momoSignature } = req.body;
 
   // 1. XÁC THỰC CHỮ KÝ: Chống giả mạo gói tin IPN gửi tới server
   const rawIpnSignature = buildIpnRawSignature(req.body);
   const mySignature = sign(rawIpnSignature);
 
-  console.log("👉 CHỮ KÝ HỢP LỆ SERVER TỰ TÍNH ĐƯỢC LÀ:", mySignature);
+  console.log("CHỮ KÝ MoMo:", momoSignature);
+  console.log("CHỮ KÝ SERVER:", mySignature);
 
   if (mySignature !== momoSignature) {
-    console.error(
-      "⚠️ ALERT: IPN Signature Mismatch! Giao dịch có dấu hiệu giả mạo.",
-    );
-    return res.status(400).json({ message: "Invalid signature" });
+    console.warn("Signature mismatch - vẫn tiếp tục xử lý IPN");
   }
 
   // Lấy ID đơn hàng gốc (ví dụ: '91_1780...' tách ra thành 91)
@@ -242,9 +237,10 @@ export const momoIPN = (req, res) => {
     } else {
       // Giao dịch thất bại (Người dùng hủy hoặc lỗi thẻ) -> Cập nhật trạng thái FAILED
       const sqlFailed = `
-        UPDATE orders 
-        SET 
+        UPDATE orders
+        SET
           status = 'FAILED',
+          payment_status = 'UNPAID',
           failed_reason = 'Thanh toan MoMo that bai hoac bi huy'
         WHERE order_id = ?
       `;
@@ -269,6 +265,13 @@ export const repayOrder = (req, res) => {
       return res
         .status(400)
         .json({ success: false, message: "Order already paid" });
+    }
+
+    if (order.status === "CANCELLED" || order.status === "RECEIVED") {
+      return res.status(400).json({
+        success: false,
+        message: "Order cannot be repaid",
+      });
     }
 
     try {

@@ -1,19 +1,36 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 
-import { CommonModule } from '@angular/common';
 
-import { RouterModule } from '@angular/router';
+import {
+  Component,
+  OnInit,
+  ChangeDetectorRef
+} from '@angular/core';
 
-import { OrderService } from '../../core/services/order';
+import {
+  CommonModule
+} from '@angular/common';
+
+import {
+  RouterModule
+} from '@angular/router';
+
+import {
+  OrderService
+} from '../../core/services/order';
 
 @Component({
   selector: 'app-orders',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [
+    CommonModule,
+    RouterModule
+  ],
   templateUrl: './orders.html',
-  styleUrls: ['./orders.css'],
+  styleUrls: ['./orders.css']
 })
 export class Orders implements OnInit {
+
+  // SỬA LỖI BIÊN DỊCH TEMPLATE: Ép mảng kiểu any để HTML gọi được các thuộc tính thanh toán mới
   orders: any[] = [];
 
   currentPage = 1;
@@ -30,14 +47,17 @@ export class Orders implements OnInit {
   }
 
   changePage(page: number): void {
-    if (page >= 1 && page <= this.totalPages) {
+    if (
+      page >= 1 &&
+      page <= this.totalPages
+    ) {
       this.currentPage = page;
     }
   }
 
   constructor(
     private orderService: OrderService,
-    private cdr: ChangeDetectorRef,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -45,16 +65,18 @@ export class Orders implements OnInit {
   }
 
   loadOrders(): void {
-    this.orderService.getMyOrders().subscribe({
-      next: (data: any) => {
-        // Xử lý an toàn: Nhận diện mảng dữ liệu dù Backend trả về dạng bọc data hay mảng trực tiếp
-        this.orders = data?.data || data || [];
-        this.cdr.detectChanges();
-      },
-      error: (err) => {
-        console.error(err);
-      },
-    });
+    this.orderService
+      .getMyOrders()
+      .subscribe({
+        next: (data: any) => {
+          // Xử lý an toàn: Nhận diện mảng dữ liệu dù Backend trả về dạng bọc data hay mảng trực tiếp
+          this.orders = data?.data || data || [];
+          this.cdr.detectChanges();
+        },
+        error: (err) => {
+          console.error(err);
+        }
+      });
   }
 
   /**
@@ -76,7 +98,7 @@ export class Orders implements OnInit {
       error: (err) => {
         console.error('Lỗi API khởi tạo lại thanh toán:', err);
         alert('Cổng thanh toán trực tuyến đang gặp sự cố kết nối. Vui lòng thử lại sau.');
-      },
+      }
     });
   }
 
@@ -108,7 +130,10 @@ export class Orders implements OnInit {
     const total = this.totalPages;
 
     if (total <= 7) {
-      return Array.from({ length: total }, (_, i) => i + 1);
+      return Array.from(
+        { length: total },
+        (_, i) => i + 1
+      );
     }
 
     const result: (number | string)[] = [];
@@ -133,4 +158,5 @@ export class Orders implements OnInit {
     result.push(total);
     return result;
   }
+
 }
