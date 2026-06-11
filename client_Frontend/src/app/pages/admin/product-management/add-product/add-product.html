@@ -1,0 +1,82 @@
+<form *ngIf="productForm" [formGroup]="productForm" (ngSubmit)="onSubmit()" class="product-form">
+  <h2>Thêm sách mới</h2>
+  <!-- Tiêu đề -->
+  <div class="form-group">
+    <label>Tiêu đề</label>
+    <input type="text" placeholder="Tiêu đề sách" formControlName="title" />
+    <div *ngIf="title?.invalid && (title?.dirty || title?.touched)">
+      <small *ngIf="title?.errors?.['required']" style="color: red"
+        >Tiêu đề không được để trống</small
+      >
+    </div>
+  </div>
+  <!-- Số lượng -->
+  <div class="form-group">
+    <label>Số lượng</label>
+    <input type="number" placeholder="Số lượng" formControlName="sold" />
+    <div *ngIf="sold?.invalid && (sold?.dirty || sold?.touched)">
+      <small *ngIf="sold?.errors?.['required']" style="color: red">Số lượng bắt buộc</small>
+      <small *ngIf="sold?.errors?.['min']" style="color: red">Giá trị chưa đúng</small>
+    </div>
+  </div>
+
+  <!-- Giá bán -->
+  <div class="form-group">
+    <label>Giá bán</label>
+    <input type="number" placeholder="Giá bán" formControlName="price" />
+    <div *ngIf="price?.invalid && (price?.dirty || price?.touched)">
+      <small *ngIf="price?.errors?.['required']" style="color: red">Giá bán bắt buộc</small>
+      <small *ngIf="price?.errors?.['min']" style="color: red">Giá trị chưa đúng</small>
+    </div>
+  </div>
+
+  <!-- Nhà xuất bản -->
+  <div class="form-group">
+    <label>Nhà xuất bản</label>
+    <input type="text" placeholder="Nhà xuất bản" formControlName="publisher" />
+    <div *ngIf="publisher?.invalid && (publisher?.dirty || publisher?.touched)">
+      <small *ngIf="publisher?.errors?.['required']" style="color: red"
+        >Nhà xuất bản bắt buộc</small
+      >
+    </div>
+  </div>
+
+  <!-- Tác giả -->
+  <div class="form-group">
+    <label>Tác giả</label>
+    <input type="text" placeholder="Tác giả" formControlName="author" />
+    <div *ngIf="author?.invalid && (author?.dirty || author?.touched)">
+      <small *ngIf="author?.errors?.['required']" style="color: red">Tác giả bắt buộc</small>
+    </div>
+  </div>
+
+  <!-- Loại bìa -->
+  <div class="form-group">
+    <label>Loại bìa</label>
+    <input type="text" placeholder="Loại bìa" formControlName="cover_type" />
+    <div *ngIf="cover_type?.invalid && (cover_type?.dirty || cover_type?.touched)">
+      <small *ngIf="cover_type?.errors?.['required']" style="color: red">Loại bìa bắt buộc</small>
+    </div>
+  </div>
+
+  <!-- Mô tả -->
+  <div class="form-group full-width">
+    <label>Mô tả</label>
+    <textarea placeholder="Mô tả sách" formControlName="description"></textarea>
+  </div>
+
+  <!-- Hình ảnh -->
+  <div class="form-group full-width">
+    <label>Hình ảnh</label>
+    <input type="file" accept="image/*" (change)="onFileSelected($event)" />
+    <div *ngIf="image?.invalid && (image?.dirty || image?.touched)">
+      <small *ngIf="image?.errors?.['required']" style="color: red">Hình ảnh bắt buộc</small>
+    </div>
+  </div>
+  <!-- Nút submit -->
+  <div class="form-actions">
+    <button type="submit" [disabled]="productForm.invalid">Thêm sách</button>
+
+    <button type="button" class="btn-cancel" (click)="onCancel()">Hủy</button>
+  </div>
+</form>

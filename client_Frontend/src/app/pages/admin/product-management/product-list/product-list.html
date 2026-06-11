@@ -1,0 +1,110 @@
+<div class="page-title">
+  <h2>Quản lý sách</h2>
+  <p>Số lượng sách {{ filteredBooks.length }}</p>
+</div>
+<!-- Nội dung chính -->
+<div class="main-content" [class.blurred]="showAddForm">
+  <!-- Tìm kiếm  -->
+  <div class="toolbar">
+    <div class="toolbar-right">
+      <input
+        type="text"
+        placeholder="Tìm kiếm tên sách hoặc tác giả..."
+        [(ngModel)]="searchTerm"
+        class="search-input"
+        (keyup.enter)="searchBooks()"
+      />
+      <button class="search-btn" (click)="searchBooks()">Tìm kiếm</button>
+      <button class="primary-btn" (click)="toggleAddForm()">+ Thêm sách</button>
+    </div>
+  </div>
+  <!-- Bang danh sach san pham -->
+  <div class="table-card">
+    <div class="table-responsive">
+      <table>
+        <thead>
+          <tr>
+            <th>Ảnh</th>
+            <th>Tên sách</th>
+            <th>Tác giả</th>
+            <th>NXB</th>
+            <th>Giá</th>
+            <th>Đánh giá</th>
+            <th>Đã bán</th>
+            <th>Loại bìa</th>
+            <th>Hành động</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let book of pagedBooks">
+            <td>
+              <img
+                [src]="'http://localhost:3000/uploads/' + book.image"
+                [alt]="book.title"
+                class="book-image"
+                (error)="book.image = 'assets/no-image.png'"
+              />
+            </td>
+
+            <td class="book-title">
+              {{ book.title }}
+            </td>
+            <td>{{ book.author }}</td>
+            <td>{{ book.publisher }}</td>
+            <td class="price">{{ book.price | number }}đ</td>
+            <td>
+              <span class="rating-badge">
+                {{ book.rating || 0 }}
+              </span>
+            </td>
+            <td>{{ book.sold }}</td>
+            <td>
+              <span class="cover-badge">
+                {{ book.cover_type }}
+              </span>
+            </td>
+            <td>
+              <div class="action-buttons">
+                <button class="btn-edit" (click)="editBook(book)">Sửa</button>
+                <button class="btn-delete" (click)="deleteBook(book.product_id)">Xóa</button>
+              </div>
+            </td>
+          </tr>
+          <tr *ngIf="pagedBooks.length === 0">
+            <td colspan="9" class="empty-state">Không tìm thấy sách nào</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!-- Phân trang -->
+    <div class="pagination">
+      <span class="page-info"> Trang {{ currentPage }} / {{ totalPages }} </span>
+      <button class="page-btn" (click)="prevPage()" [disabled]="currentPage === 1">Trước</button>
+      <button class="page-btn" (click)="nextPage()" [disabled]="currentPage === totalPages">
+        Sau
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Overlay + Form Add Product -->
+<div class="overlay" *ngIf="showAddForm">
+  <div class="modal">
+    <app-add-product
+      (productAdd)="onProductAdded($event)"
+      (cancel)="toggleAddForm()"
+    ></app-add-product>
+  </div>
+</div>
+<!-- Modal Edit -->
+<div class="overlay" *ngIf="showEditForm">
+  <div class="modal">
+    <app-edit-product
+      [product]="selectedBook"
+      (productUpdated)="onProductUpdated()"
+      (cancel)="closeEditForm()"
+    >
+    </app-edit-product>
+  </div>
+</div>
