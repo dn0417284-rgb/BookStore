@@ -1,9 +1,8 @@
-const express = require("express");
-const router = express.Router();
+import express from 'express';
 
-const verifyToken = require("../middlewares/auth.middleware");
+import verifyToken from '../middlewares/auth.middleware.js';
 
-const {
+import {
   createOrder,
   getOrders,
   getOrderDetail,
@@ -11,37 +10,72 @@ const {
   getOrderDetailAdmin,
   updateOrderStatus,
   cancelOrder,
-  repayOrder, // Bổ sung hàm repayOrder mới từ controller
-  momoIPN, // Bổ sung hàm momoIPN mới từ controller
-} = require("../controllers/order.controller");
+  repayOrder,
+  momoIPN
+} from '../controllers/order.controller.js';
 
-// 1. Tuyến đường tạo mới đơn hàng
-router.post("/", verifyToken, createOrder);
+const router = express.Router();
 
-// 2. BỔ SUNG: Tuyến đường yêu cầu tạo lại liên kết thanh toán MoMo/ZaloPay cho đơn cũ
-// Cần bảo mật bằng verifyToken giống y hệt như trang tạo đơn hàng chính
-router.post("/repay", verifyToken, repayOrder);
+// Tạo đơn hàng
+router.post(
+  '/',
+  verifyToken,
+  createOrder
+);
 
-// 3. BỔ SUNG: Tuyến đường nhận thông báo đối soát tiền tệ tự động gửi ngầm từ Server MoMo
-// CHÚ Ý: Tuyệt đối KHÔNG thêm verifyToken ở đây vì đây là API công khai dành riêng cho Server MoMo gọi vào
-router.post("/momo-ipn", momoIPN);
+// Thanh toán lại
+router.post(
+  '/repay',
+  verifyToken,
+  repayOrder
+);
 
-// 4. Tuyến đường lấy danh sách lịch sử đơn hàng của khách hiện tại
-router.get("/", verifyToken, getOrders);
+// IPN MoMo
+router.post(
+  '/momo-ipn',
+  momoIPN
+);
 
-// 5. Tuyến đường Admin: Lấy toàn bộ đơn hàng trong hệ thống
-router.get("/admin/all", verifyToken, getAllOrders);
+// Danh sách đơn hàng của khách
+router.get(
+  '/',
+  verifyToken,
+  getOrders
+);
 
-// 6. Tuyến đường Admin: Xem chi tiết một mã đơn bất kỳ
-router.get("/admin/:id", verifyToken, getOrderDetailAdmin);
+// Admin lấy toàn bộ đơn hàng
+router.get(
+  '/admin/all',
+  verifyToken,
+  getAllOrders
+);
 
-// 7. Tuyến đường Admin: Cập nhật trạng thái giao hàng (SHIPPING, COMPLETED,...)
-router.put("/admin/:id/status", verifyToken, updateOrderStatus);
+// Admin xem chi tiết đơn
+router.get(
+  '/admin/:id',
+  verifyToken,
+  getOrderDetailAdmin
+);
 
-// 8. Tuyến đường Khách hàng: Hủy đơn hàng tự động
-router.put("/:id/cancel", verifyToken, cancelOrder);
+// Admin cập nhật trạng thái
+router.put(
+  '/admin/:id/status',
+  verifyToken,
+  updateOrderStatus
+);
 
-// 9. Tuyến đường Khách hàng: Xem chi tiết một đơn hàng cụ thể của họ
-router.get("/:id", verifyToken, getOrderDetail);
+// Hủy đơn
+router.put(
+  '/:id/cancel',
+  verifyToken,
+  cancelOrder
+);
 
-module.exports = router;
+// Chi tiết đơn hàng
+router.get(
+  '/:id',
+  verifyToken,
+  getOrderDetail
+);
+
+export default router;

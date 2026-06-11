@@ -87,6 +87,20 @@
       />
     </div>
 
+    <div
+      *ngIf="errorMessage"
+      class="alert-error"
+    >
+      {{ errorMessage }}
+    </div>
+
+    <div
+      *ngIf="successMessage"
+      class="alert-success"
+    >
+      {{ successMessage }}
+    </div>
+
     <!-- Nút hành động: Thêm / Cập nhật địa chỉ -->
     <button type="submit" [disabled]="!addressForm.form.valid" class="btn-submit">
       {{ editingId ? '✓ Cập nhật địa chỉ' : '+ Thêm địa chỉ' }}

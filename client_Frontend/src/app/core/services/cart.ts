@@ -9,7 +9,7 @@ import { CartItem } from '../models/cart-item.model';
 })
 export class CartService {
 
-  private apiUrl = 'http://localhost:3000/api/cart';
+  private apiUrl = '/api/cart';
 
   private buyNowItem: CartItem | null = null;
 
@@ -18,16 +18,16 @@ export class CartService {
 
   constructor(private http: HttpClient) {}
 
-  
+  // ==========================
   // INIT LOAD CART
-  
+  // ==========================
   initCart(): void {
     this.loadCart();
   }
 
-  
+  // ==========================
   // LOAD CART FROM SERVER
-  
+  // ==========================
   loadCart(): void {
     this.http.get<any>(this.apiUrl).subscribe({
       next: (res) => {
@@ -39,6 +39,7 @@ export class CartService {
     });
   }
 
+  
   // ==========================
   // GET CART API
   // ==========================
@@ -98,6 +99,10 @@ export class CartService {
         this.cartSubject.next([]);
       })
     );
+  }
+
+  clearLocalCart(): void {
+    this.cartSubject.next([]);
   }
 
   // ==========================

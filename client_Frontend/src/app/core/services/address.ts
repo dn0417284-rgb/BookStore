@@ -18,8 +18,7 @@ export interface Address {
 })
 export class AddressService {
 
-  private api =
-    'http://localhost:3000/api/addresses';
+  private api = '/api/addresses';
 
   constructor(
     private http: HttpClient

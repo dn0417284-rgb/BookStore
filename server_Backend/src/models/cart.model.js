@@ -1,8 +1,7 @@
-const db = require('../config/db');
+import db from '../config/db.js';
 
 class Cart {
 
-  // Lấy giỏ hàng theo customer
   static getByCustomer(customerId, callback) {
 
     db.query(
@@ -25,7 +24,6 @@ class Cart {
 
   }
 
-  // Thêm vào giỏ
   static add(customerId, productId, quantity, callback) {
 
     db.query(
@@ -42,7 +40,6 @@ class Cart {
           return callback(err);
         }
 
-        // Đã tồn tại -> cộng số lượng
         if (results.length > 0) {
 
           db.query(
@@ -87,7 +84,6 @@ class Cart {
 
   }
 
-  // Cập nhật số lượng
   static updateQuantity(
     customerId,
     productId,
@@ -112,7 +108,6 @@ class Cart {
 
   }
 
-  // Xóa 1 sản phẩm
   static remove(
     customerId,
     productId,
@@ -134,7 +129,6 @@ class Cart {
 
   }
 
-  // Xóa toàn bộ giỏ hàng
   static clear(
     customerId,
     callback
@@ -153,4 +147,4 @@ class Cart {
 
 }
 
-module.exports = Cart;
+export default Cart;

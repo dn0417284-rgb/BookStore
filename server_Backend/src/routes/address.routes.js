@@ -1,30 +1,16 @@
-const express =
-require('express');
+import express from 'express';
 
-const router =
-express.Router();
+import verifyToken from '../middlewares/auth.middleware.js';
 
-const verifyToken =
-require(
-  '../middlewares/auth.middleware'
-);
-
-const {
-
+import {
   getAddresses,
-
   createAddress,
-
   updateAddress,
-
   deleteAddress,
-
   setDefaultAddress
+} from '../controllers/address.controller.js';
 
-} =
-require(
-  '../controllers/address.controller'
-);
+const router = express.Router();
 
 router.get(
   '/',
@@ -56,5 +42,4 @@ router.put(
   setDefaultAddress
 );
 
-module.exports =
-router;
+export default router;
