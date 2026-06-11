@@ -1,0 +1,152 @@
+<div class="address-container">
+  <h2>Quản lý địa chỉ giao hàng</h2>
+
+  <!-- FORM NHẬP VÀ SỬA ĐỊA CHỈ -->
+  <form (ngSubmit)="saveAddress()" #addressForm="ngForm" class="address-form-card">
+    
+    <div class="form-row">
+      <!-- Ô nhập: Người nhận -->
+      <div class="form-group">
+        <input 
+          type="text" 
+          name="receiver_name" 
+          [(ngModel)]="form.receiver_name" 
+          placeholder="Người nhận" 
+          required
+        />
+      </div>
+
+      <!-- Ô nhập: Số điện thoại -->
+      <div class="form-group">
+        <input 
+          type="tel" 
+          name="phone" 
+          [(ngModel)]="form.phone" 
+          placeholder="Số điện thoại" 
+          required
+        />
+      </div>
+    </div>
+
+    <div class="form-row">
+      <!-- Ô chọn: Tỉnh/Thành phố -->
+      <div class="form-group">
+        <select 
+          name="province" 
+          [(ngModel)]="selectedProvinceCode" 
+          (change)="onProvinceChange()"
+          required>
+          <option [value]="null">Chọn tỉnh/thành phố</option>
+          <option *ngFor="let p of provinces" [value]="p.code">
+            {{ p.name }}
+          </option>
+        </select>
+      </div>
+
+      <!-- Ô chọn: Quận/Huyện -->
+      <div class="form-group">
+        <select 
+          name="district" 
+          [(ngModel)]="selectedDistrictCode" 
+          (change)="onDistrictChange()"
+          [disabled]="!selectedProvinceCode"
+          required>
+          <option [value]="null">Chọn quận/huyện</option>
+          <option *ngFor="let d of districts" [value]="d.code">
+            {{ d.name }}
+          </option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <!-- Ô chọn: Phường/Xã -->
+      <div class="form-group full-width-row">
+        <select 
+          name="ward" 
+          [(ngModel)]="form.ward"
+          (change)="selectWard(form.ward)"
+          [disabled]="!selectedDistrictCode"
+          required>
+          <option value="">Chọn phường/xã</option>
+          <option *ngFor="let w of wards" [value]="w.name">
+            {{ w.name }}
+          </option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Ô nhập: Số nhà, tên đường -->
+    <div class="form-group">
+      <input 
+        type="text" 
+        name="address_detail" 
+        [(ngModel)]="form.address_detail" 
+        placeholder="Số nhà, tên đường..." 
+        required
+      />
+    </div>
+
+    <div
+      *ngIf="errorMessage"
+      class="alert-error"
+    >
+      {{ errorMessage }}
+    </div>
+
+    <div
+      *ngIf="successMessage"
+      class="alert-success"
+    >
+      {{ successMessage }}
+    </div>
+
+    <!-- Nút hành động: Thêm / Cập nhật địa chỉ -->
+    <button type="submit" [disabled]="!addressForm.form.valid" class="btn-submit">
+      {{ editingId ? '✓ Cập nhật địa chỉ' : '+ Thêm địa chỉ' }}
+    </button>
+    
+    <!-- Nút hủy thao tác (chỉ hiện khi đang ở chế độ Sửa) -->
+    <button type="button" *ngIf="editingId" (click)="resetForm()" class="btn-cancel">
+      Hủy thay đổi
+    </button>
+  </form>
+
+  <hr class="divider" />
+
+  <!-- DANH SÁCH CÁC ĐỊA CHỈ ĐÃ LƯU -->
+  <div class="address-list" *ngIf="addresses.length > 0; else noAddress">
+    <h3>Danh sách địa chỉ đã lưu</h3>
+    
+    <div class="address-item" *ngFor="let addr of addresses" [class.default-item]="addr.is_default">
+      <div class="address-info">
+        <p class="user-meta">
+          <strong>{{ addr.receiver_name }}</strong> | {{ addr.phone }}
+          <span class="badge-default" *ngIf="addr.is_default">Mặc định</span>
+        </p>
+        <p class="address-text">
+          {{ addr.address_detail }}, {{ addr.ward }}, {{ addr.district }}, {{ addr.province }}
+        </p>
+      </div>
+      
+      <div class="address-actions">
+        <button type="button" (click)="editAddress(addr)" class="btn-action edit">Sửa</button>
+        <button type="button" (click)="deleteAddress(addr.address_id)" class="btn-action delete">Xóa</button>
+        <button 
+          type="button" 
+          *ngIf="!addr.is_default" 
+          (click)="setDefault(addr.address_id)" 
+          class="btn-action set-default">
+          Đặt mặc định
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Giao diện hiển thị khi danh sách địa chỉ rỗng -->
+  <ng-template #noAddress>
+    <div class="empty-state">
+      <p>Chưa có địa chỉ nào được lưu. Hãy thêm địa chỉ giao hàng đầu tiên của bạn!</p>
+    </div>
+  </ng-template>
+</div>

@@ -1,1 +1,416 @@
-<p>checkout works!</p>
+<!-- <div class="checkout-container">
+  <h1>Thanh toán đơn hàng</h1>
+
+  <div class="checkout-layout">
+   
+    <div class="checkout-main">
+      
+      <section class="checkout-section">
+        <div class="section-header">
+          <h3 class="section-title">ĐỊA CHỈ NHẬN HÀNG</h3>
+          <a *ngIf="addresses.length > 0" routerLink="/addresses" class="link-manage-address">
+            Quản lý địa chỉ
+          </a>
+        </div>
+
+        <div *ngIf="addresses.length === 0" class="empty-address-box">
+          <p>Bạn chưa có địa chỉ nhận hàng để thực hiện thanh toán.</p>
+          <a routerLink="/addresses" class="btn-add-address">
+            + Thêm địa chỉ mới
+          </a>
+        </div>
+
+        <div class="address-list-group" *ngIf="addresses.length > 0">
+          <div 
+            *ngFor="let address of addresses" 
+            class="address-card"
+            [class.selected]="selectedAddressId === address.address_id"
+            (click)="selectAddress(address)">
+            
+            <label class="address-label" (click)="$event.stopPropagation()">
+              <input
+                type="radio"
+                name="address_selection"
+                [value]="address.address_id"
+                [checked]="selectedAddressId === address.address_id"
+                (change)="selectAddress(address)"
+              />
+              
+              <div class="address-content">
+                <div class="address-top-info">
+                  <span class="receiver-name">{{ address.receiver_name }}</span>
+                  <span class="phone-number">{{ address.phone }}</span>
+                  <span *ngIf="address.is_default" class="default-badge">Mặc định</span>
+                </div>
+                <p class="address-detail-text">
+                  {{ address.address_detail }}, {{ address.ward }}, {{ address.district }}, {{ address.province }}
+                </p>
+              </div>
+            </label>
+          </div>
+          
+          <a routerLink="/addresses" class="btn-add-address-minimal">
+            + Thêm địa chỉ giao hàng khác
+          </a>
+        </div>
+      </section>
+
+      <section class="checkout-section">
+        <div class="section-header">
+          <h3 class="section-title">KIỂM TRA SẢN PHẨM</h3>
+        </div>
+
+        <div *ngIf="items.length === 0" class="empty-cart-box">
+          <p>Không có sản phẩm nào khả dụng trong phiên thanh toán này.</p>
+          <a routerLink="/cart" class="btn-back-cart">Quay lại giỏ hàng</a>
+        </div>
+
+        <div class="product-list-wrapper" *ngIf="items.length > 0">
+          <div *ngFor="let item of items" class="checkout-product-item">
+            
+           
+            <div (click)="goToProductDetail($event, item)" class="product-link-wrapper" style="cursor: pointer;">
+              <div class="product-thumbnail">
+                <img 
+                  [src]="'images/' + item.product.image" 
+                  [alt]="item.product.title" 
+                />
+              </div>
+            </div>
+            
+          
+            <div class="product-details">
+              <div (click)="goToProductDetail($event, item)" class="product-title-link" style="cursor: pointer;">
+                <h4 class="product-title">{{ item.product.title }}</h4>
+              </div>
+              <p class="product-unit-price">
+                Giá: {{ item.product.price | number }} đ
+              </p>
+            </div>
+
+            <div class="quantity-controller-box">
+              <button 
+                type="button" 
+                [disabled]="item.quantity <= 1 || isSubmitting" 
+                (click)="decreaseQuantity(item.product.product_id)">
+                -
+              </button>
+              <span class="quantity-value">{{ item.quantity }}</span>
+              <button 
+                type="button" 
+                [disabled]="isSubmitting"
+                (click)="increaseQuantity(item.product.product_id)">
+                +
+              </button>
+            </div>
+
+            <div class="product-subtotal-price">
+              {{ item.product.price * item.quantity | number }} đ
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div class="checkout-sidebar">
+      
+
+      <section class="checkout-section">
+        <h3 class="section-title">PHƯƠNG THỨC THANH TOÁN</h3>
+        
+        <div class="payment-methods-group">
+          <label class="payment-method-card" [class.active]="paymentMethod === 'COD'">
+            <input
+              type="radio"
+              name="payment_option"
+              value="COD"
+              [(ngModel)]="paymentMethod"
+              [disabled]="isSubmitting"
+            />
+            <div class="payment-meta">
+              <span class="payment-name">Thanh toán khi nhận hàng (COD)</span>
+              <small class="payment-desc">Nhận hàng rồi mới trả tiền</small>
+            </div>
+          </label>
+
+          <label class="payment-method-card" [class.active]="paymentMethod === 'MOMO'">
+            <input
+              type="radio"
+              name="payment_option"
+              value="MOMO"
+              [(ngModel)]="paymentMethod"
+              [disabled]="isSubmitting"
+            />
+            <div class="payment-meta">
+              <span class="payment-name">Ví điện tử MoMo</span>
+              <small class="payment-desc">Thanh toán nhanh qua ví điện tử</small>
+            </div>
+          </label>
+        </div>
+      </section>
+
+   
+      <section class="checkout-section">
+        <h3 class="section-title">GHI CHÚ ĐƠN HÀNG</h3>
+        <div class="note-box-wrapper">
+          <textarea
+            [(ngModel)]="note"
+            rows="3"
+            placeholder="Lưu ý cho người bán hoặc shipper (ví dụ: giao giờ hành chính)..."
+            [disabled]="isSubmitting">
+          </textarea>
+        </div>
+      </section>
+
+     
+      <section class="checkout-summary-card">
+        <div class="summary-line">
+          <span class="summary-label">Tạm tính:</span>
+          <span class="summary-value">{{ total() | number }} đ</span>
+        </div>
+        <div class="summary-line">
+          <span class="summary-label">Phí vận chuyển:</span>
+          <span class="summary-value free-shipping">Miễn phí</span>
+        </div>
+        
+        <div class="summary-divider"></div>
+        
+        <div class="summary-line total-amount-row">
+          <span class="total-label">Tổng thanh toán:</span>
+          <span class="total-value">{{ total() | number }} đ</span>
+        </div>
+
+        <button
+          type="button"
+          class="btn-place-order"
+          (click)="placeOrder()"
+          [disabled]="items.length === 0 || !selectedAddressId || isSubmitting">
+          <span *ngIf="!isSubmitting">ĐẶT HÀNG NGAY</span>
+          <span *ngIf="isSubmitting" class="spinner-text">ĐANG XỬ LÝ ĐƠN HÀNG...</span>
+        </button>
+      </section>
+
+    </div>
+  </div>
+</div> -->
+
+
+<div class="checkout-container">
+  <h1>Thanh toán đơn hàng</h1>
+
+  <div class="checkout-layout">
+    <!-- KHỐI BÊN TRÁI: THÔNG TIN GIAO HÀNG & ĐƠN HÀNG -->
+    <div class="checkout-main">
+      
+      <!-- 1. ĐỊA CHỈ NHẬN HÀNG -->
+      <section class="checkout-section">
+        <div class="section-header">
+          <h3 class="section-title">ĐỊA CHỈ NHẬN HÀNG</h3>
+          <a *ngIf="addresses.length > 0" routerLink="/addresses" class="link-manage-address">
+            Quản lý địa chỉ
+          </a>
+        </div>
+
+        <!-- Trường hợp chưa có địa chỉ -->
+        <div *ngIf="addresses.length === 0" class="empty-address-box">
+          <p>Bạn chưa có địa chỉ nhận hàng để thực hiện thanh toán.</p>
+          <a routerLink="/addresses" class="btn-add-address">
+            + Thêm địa chỉ mới
+          </a>
+        </div>
+
+        <!-- Danh sách địa chỉ khả dụng -->
+        <div class="address-list-group" *ngIf="addresses.length > 0">
+          <div 
+            *ngFor="let address of addresses" 
+            class="address-card"
+            [class.selected]="selectedAddressId === address.address_id"
+            (click)="selectAddress(address)">
+            
+            <label class="address-label" (click)="$event.stopPropagation()">
+              <input
+                type="radio"
+                name="address_selection"
+                [value]="address.address_id"
+                [checked]="selectedAddressId === address.address_id"
+                (change)="selectAddress(address)"
+              />
+              
+              <div class="address-content">
+                <div class="address-top-info">
+                  <span class="receiver-name">{{ address.receiver_name }}</span>
+                  <span class="phone-number">{{ address.phone }}</span>
+                  <span *ngIf="address.is_default" class="default-badge">Mặc định</span>
+                </div>
+                <p class="address-detail-text">
+                  {{ address.address_detail }}, {{ address.ward }}, {{ address.district }}, {{ address.province }}
+                </p>
+              </div>
+            </label>
+          </div>
+          
+          <a routerLink="/addresses" class="btn-add-address-minimal">
+            + Thêm địa chỉ giao hàng khác
+          </a>
+        </div>
+      </section>
+
+      <!-- 2. DANH SÁCH SẢN PHẨM MUA -->
+      <section class="checkout-section">
+        <div class="section-header">
+          <h3 class="section-title">KIỂM TRA SẢN PHẨM</h3>
+        </div>
+
+        <div *ngIf="items.length === 0" class="empty-cart-box">
+          <p>Không có sản phẩm nào khả dụng trong phiên thanh toán này.</p>
+          <a routerLink="/cart" class="btn-back-cart">Quay lại giỏ hàng</a>
+        </div>
+
+        <div class="product-list-wrapper" *ngIf="items.length > 0">
+          <div *ngFor="let item of items" class="checkout-product-item">
+            
+            <!-- HÀNH ĐỘNG: Click vào Khung ảnh để chuyển trang chi tiết -->
+            <div (click)="goToProductDetail($event, item)" class="product-link-wrapper" style="cursor: pointer;">
+              <div class="product-thumbnail">
+                <img 
+                  [src]="'images/' + item.product.image" 
+                  [alt]="item.product.title" 
+                />
+              </div>
+            </div>
+            
+            <!-- HÀNH ĐỘNG: Click vào Tiêu đề để chuyển trang chi tiết -->
+            <div class="product-details">
+              <div (click)="goToProductDetail($event, item)" class="product-title-link" style="cursor: pointer;">
+                <h4 class="product-title">{{ item.product.title }}</h4>
+              </div>
+              <p class="product-unit-price">
+                Giá: {{ item.product.price | number }} đ
+              </p>
+            </div>
+
+            <!-- Ô điều chỉnh số lượng -->
+            <div class="quantity-controller-box">
+              <button 
+                type="button" 
+                [disabled]="item.quantity <= 1 || isSubmitting" 
+                (click)="decreaseQuantity(item.product.product_id)">
+                -
+              </button>
+              <span class="quantity-value">{{ item.quantity }}</span>
+              <button 
+                type="button" 
+                [disabled]="isSubmitting"
+                (click)="increaseQuantity(item.product.product_id)">
+                +
+              </button>
+            </div>
+
+            <!-- Thành tiền từng sản phẩm -->
+            <div class="product-subtotal-price">
+              {{ item.product.price * item.quantity | number }} đ
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- KHỐI BÊN PHẢI: PHƯƠNG THỨC THANH TOÁN & TỔNG KẾT HÓA ĐƠN -->
+    <div class="checkout-sidebar">
+      
+      <!-- 3. PHƯƠNG THỨC THANH TOÁN -->
+      <section class="checkout-section">
+        <h3 class="section-title">PHƯƠNG THỨC THANH TOÁN</h3>
+        
+        <div class="payment-methods-group">
+          <!-- COD -->
+          <label class="payment-method-card" [class.active]="paymentMethod === 'COD'">
+            <input
+              type="radio"
+              name="payment_option"
+              value="COD"
+              [(ngModel)]="paymentMethod"
+              [disabled]="isSubmitting"
+            />
+            <div class="payment-meta">
+              <span class="payment-name">Thanh toán khi nhận hàng (COD)</span>
+              <small class="payment-desc">Nhận hàng rồi mới trả tiền</small>
+            </div>
+          </label>
+
+          <!-- MOMO -->
+          <label class="payment-method-card" [class.active]="paymentMethod === 'MOMO'">
+            <input
+              type="radio"
+              name="payment_option"
+              value="MOMO"
+              [(ngModel)]="paymentMethod"
+              [disabled]="isSubmitting"
+            />
+            <div class="payment-meta">
+              <span class="payment-name">Ví điện tử MoMo</span>
+              <small class="payment-desc">Thanh toán qua app MoMo cực nhanh</small>
+            </div>
+          </label>
+
+          <!-- ZALOPAY (BỔ SUNG MỚI) -->
+          <label class="payment-method-card" [class.active]="paymentMethod === 'ZALOPAY'">
+            <input
+              type="radio"
+              name="payment_option"
+              value="ZALOPAY"
+              [(ngModel)]="paymentMethod"
+              [disabled]="isSubmitting"
+            />
+            <div class="payment-meta">
+              <span class="payment-name">Ví điện tử ZaloPay</span>
+              <small class="payment-desc">Thanh toán qua ứng dụng ZaloPay</small>
+            </div>
+          </label>
+        </div>
+      </section>
+
+      <!-- 4. GHI CHÚ ĐƠN HÀNG -->
+      <section class="checkout-section">
+        <h3 class="section-title">GHI CHÚ ĐƠN HÀNG</h3>
+        <div class="note-box-wrapper">
+          <textarea
+            [(ngModel)]="note"
+            rows="3"
+            placeholder="Lưu ý cho người bán hoặc shipper (ví dụ: giao giờ hành chính)..."
+            [disabled]="isSubmitting">
+          </textarea>
+        </div>
+      </section>
+
+      <!-- 5. KHỐI TỔNG KẾT & ĐẶT HÀNG -->
+      <section class="checkout-summary-card">
+        <div class="summary-line">
+          <span class="summary-label">Tạm tính:</span>
+          <span class="summary-value">{{ total() | number }} đ</span>
+        </div>
+        <div class="summary-line">
+          <span class="summary-label">Phí vận chuyển:</span>
+          <span class="summary-value free-shipping">Miễn phí</span>
+        </div>
+        
+        <div class="summary-divider"></div>
+        
+        <div class="summary-line total-amount-row">
+          <span class="total-label">Tổng thanh toán:</span>
+          <span class="total-value">{{ total() | number }} đ</span>
+        </div>
+
+        <button
+          type="button"
+          class="btn-place-order"
+          (click)="placeOrder()"
+          [disabled]="items.length === 0 || !selectedAddressId || isSubmitting">
+          <span *ngIf="!isSubmitting">ĐẶT HÀNG NGAY</span>
+          <span *ngIf="isSubmitting" class="spinner-text">ĐANG CHUYỂN ĐẾN CỔNG THANH TOÁN...</span>
+        </button>
+      </section>
+
+    </div>
+  </div>
+</div>
