@@ -117,7 +117,7 @@ export class OrderList implements OnInit {
   }
 
   viewOrder(id: number): void {
-    this.router.navigate(['/orders', id]);
+    this.router.navigate(['/admin/orders', id]);
   }
 
   cancelOrder(id: number): void {

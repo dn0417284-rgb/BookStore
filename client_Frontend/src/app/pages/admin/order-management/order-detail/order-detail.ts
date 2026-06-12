@@ -4,6 +4,7 @@ import { AdminOderService } from '../../../../core/services/admin_orderService';
 import { Order } from '../../../../core/models/order.model';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ChangeDetectorRef } from '@angular/core';
 @Component({
   selector: 'app-order-detail',
   imports: [CommonModule, FormsModule],
@@ -14,6 +15,7 @@ export class OrderDetail implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private orderService: AdminOderService,
+    private cdr: ChangeDetectorRef,
   ) {}
   order!: Order;
 
@@ -33,6 +35,7 @@ export class OrderDetail implements OnInit {
     this.orderService.getOrderById(id).subscribe({
       next: (res: any) => {
         this.order = res.data;
+        this.cdr.detectChanges();
       },
     });
   }
@@ -53,5 +56,19 @@ export class OrderDetail implements OnInit {
         alert('Đã hủy đơn hàng');
       },
     });
+  }
+  getStatusText(status: string): string {
+    const map: { [key: string]: string } = {
+      PENDING: 'Chờ xác nhận',
+      CONFIRMED: 'Đã xác nhận',
+      PACKING: 'Đang đóng gói',
+      SHIPPING: 'Đang giao hàng',
+      DELIVERED: 'Đã giao hàng',
+      RECEIVED: 'Đã nhận hàng',
+      FAILED: 'Giao hàng thất bại',
+      CANCELLED: 'Đã hủy',
+    };
+
+    return map[status] || status;
   }
 }

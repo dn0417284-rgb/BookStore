@@ -307,53 +307,43 @@ class Order {
     );
   }
 
-  static getOrderDetailAdmin(orderId, callback) {
-    db.query(
+  static async getOrderDetailAdmin(orderId) {
+    const [orders] = await db.query(
       `
-      SELECT *
-      FROM orders
-      WHERE order_id = ?
-      `,
+    SELECT *
+    FROM orders
+    WHERE order_id = ?
+    `,
       [orderId],
-      (err, orders) => {
-        if (err) {
-          return callback(err);
-        }
-
-        if (!orders.length) {
-          return callback(null, null);
-        }
-
-        const order = orders[0];
-
-        db.query(
-          `
-          SELECT
-            oi.order_item_id,
-            oi.product_id,
-            oi.quantity,
-            oi.price,
-            p.title,
-            p.author,
-            p.image
-          FROM order_items oi
-          INNER JOIN products p
-            ON p.product_id = oi.product_id
-          WHERE oi.order_id = ?
-          `,
-          [orderId],
-          (err, items) => {
-            if (err) {
-              return callback(err);
-            }
-
-            order.items = items;
-
-            callback(null, order);
-          },
-        );
-      },
     );
+
+    if (!orders.length) {
+      return null;
+    }
+
+    const order = orders[0];
+
+    const [items] = await db.query(
+      `
+    SELECT
+      oi.order_item_id,
+      oi.product_id,
+      oi.quantity,
+      oi.price,
+      p.title,
+      p.author,
+      p.image
+    FROM order_items oi
+    INNER JOIN products p
+      ON p.product_id = oi.product_id
+    WHERE oi.order_id = ?
+    `,
+      [orderId],
+    );
+
+    order.items = items;
+
+    return order;
   }
 
   static async getAllOrders() {
@@ -375,53 +365,95 @@ class Order {
     return rows;
   }
 
-  static updateOrderStatus(orderId, status, callback) {
-    db.query(
+  static async updateOrderStatus(orderId, newStatus) {
+    const validTransitions = {
+      PENDING: ["CONFIRMED", "CANCELLED"],
+      CONFIRMED: ["PACKING"],
+      PACKING: ["SHIPPING"],
+      SHIPPING: ["DELIVERED", "FAILED"],
+      DELIVERED: ["RECEIVED"],
+      RECEIVED: [],
+      FAILED: [],
+      CANCELLED: [],
+    };
+
+    const [orders] = await db.query(
       `
-      UPDATE orders
-      SET status = ?
-      WHERE order_id = ?
-      `,
-      [status, orderId],
-      callback,
+    SELECT status
+    FROM orders
+    WHERE order_id = ?
+    `,
+      [orderId],
     );
+
+    if (!orders.length) {
+      throw new Error("ORDER_NOT_FOUND");
+    }
+
+    const currentStatus = orders[0].status;
+
+    const allowed = validTransitions[currentStatus] || [];
+
+    if (!allowed.includes(newStatus)) {
+      throw new Error("INVALID_STATUS_FLOW");
+    }
+
+    await db.query(
+      `
+    UPDATE orders
+    SET status = ?
+    WHERE order_id = ?
+    `,
+      [newStatus, orderId],
+    );
+
+    return true;
   }
 
-  static cancelOrder(orderId, customerId, callback) {
-    db.query(
+  static async cancelOrder(orderId) {
+    const [orders] = await db.query(
       `
-      SELECT status
-      FROM orders
-      WHERE order_id = ?
-      AND customer_id = ?
-      `,
-      [orderId, customerId],
-      (err, rows) => {
-        if (err) {
-          return callback(err);
-        }
-
-        if (!rows.length) {
-          return callback(new Error("KhÃ´ng tÃ¬m tháº¥y Ä‘Æ¡n hÃ ng"));
-        }
-
-        if (rows[0].status !== "PENDING") {
-          return callback(
-            new Error("Chá»‰ Ä‘Æ°á»£c há»§y Ä‘Æ¡n Ä‘ang chá» xÃ¡c nháº­n"),
-          );
-        }
-
-        db.query(
-          `
-          UPDATE orders
-          SET status = 'CANCELLED'
-          WHERE order_id = ?
-          `,
-          [orderId],
-          callback,
-        );
-      },
+    SELECT status
+    FROM orders
+    WHERE order_id = ?
+    `,
+      [orderId],
     );
+
+    if (!orders.length) {
+      throw new Error("ORDER_NOT_FOUND");
+    }
+
+    if (orders[0].status !== "PENDING") {
+      throw new Error("CANNOT_CANCEL");
+    }
+
+    await db.query(
+      `
+    UPDATE orders
+    SET status = 'CANCELLED'
+    WHERE order_id = ?
+    `,
+      [orderId],
+    );
+
+    return true;
+  }
+  static async getOrderLogs(orderId) {
+    const [logs] = await db.query(
+      `
+    SELECT
+      old_status,
+      new_status,
+      created_at
+    FROM order_status_logs
+    WHERE order_id = ?
+    ORDER BY created_at DESC
+    `,
+      [orderId],
+    );
+
+    return logs;
   }
 }
 

@@ -1,5 +1,5 @@
 import express from "express";
-import verifyToken from "../middlewares/auth.middleware.js";
+//import  from "../middlewares/auth.middleware.js";
 import {
   createOrder,
   getOrders,
@@ -15,30 +15,30 @@ import {
 const router = express.Router();
 
 // Tạo đơn hàng
-router.post("/", verifyToken, createOrder);
+router.post("/", createOrder);
 
 // Thanh toán lại
-router.post("/repay", verifyToken, repayOrder);
+router.post("/repay", repayOrder);
 
 // IPN MoMo
 router.post("/momo-ipn", momoIPN);
 
 // Danh sách đơn hàng của khách
-router.get("/", verifyToken, getOrders);
+router.get("/", getOrders);
 
 // Admin lấy toàn bộ đơn hàng
-router.get("/admin/all", verifyToken, getAllOrders);
+router.get("/admin/all", getAllOrders);
 
 // Admin xem chi tiết đơn
-router.get("/admin/:id", verifyToken, getOrderDetailAdmin);
+router.get("/admin/:id", getOrderDetailAdmin);
 
 // Admin cập nhật trạng thái
-router.put("/admin/:id/status", verifyToken, updateOrderStatus);
+router.put("/admin/:id/status", updateOrderStatus);
 
 // Hủy đơn
-router.put("/:id/cancel", verifyToken, cancelOrder);
+router.put("/:id/cancel", cancelOrder);
 
 // Chi tiết đơn hàng
-router.get("/:id", verifyToken, getOrderDetail);
+router.get("/:id", getOrderDetail);
 
 export default router;
