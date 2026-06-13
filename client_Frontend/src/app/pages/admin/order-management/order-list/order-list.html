@@ -46,7 +46,6 @@
           <th>Trạng thái</th>
           <th>Ngày tạo</th>
           <th>Thông tin đơn hàng</th>
-          <th>Hành động</th>
         </tr>
       </thead>
 
@@ -81,16 +80,6 @@
 
           <td>
             <button class="btn-detail" (click)="viewOrder(order.order_id)">Xem chi tiết</button>
-          </td>
-
-          <td>
-            <button
-              class="btn-edit"
-              *ngIf="order.status === 'PENDING'"
-              (click)="cancelOrder(order.order_id)"
-            >
-              Hủy đơn
-            </button>
           </td>
         </tr>
 

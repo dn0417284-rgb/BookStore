@@ -119,20 +119,4 @@ export class OrderList implements OnInit {
   viewOrder(id: number): void {
     this.router.navigate(['/admin/orders', id]);
   }
-
-  cancelOrder(id: number): void {
-    if (!confirm('Bạn có chắc muốn hủy đơn này?')) {
-      return;
-    }
-
-    this.orderService.cancelOrder(id).subscribe({
-      next: () => {
-        this.loadOrders();
-        alert('Hủy đơn hàng thành công');
-      },
-      error: () => {
-        alert('Hủy đơn hàng thất bại');
-      },
-    });
-  }
 }

@@ -1,5 +1,5 @@
 import express from "express";
-//import  from "../middlewares/auth.middleware.js";
+import verifyToken from "../middlewares/auth.middleware.js";
 import {
   createOrder,
   getOrders,
@@ -10,35 +10,38 @@ import {
   cancelOrder,
   repayOrder,
   momoIPN,
+  getOrderLogs,
 } from "../controllers/order.controller.js";
 
 const router = express.Router();
 
 // Tạo đơn hàng
-router.post("/", createOrder);
+router.post("/", verifyToken, createOrder);
 
 // Thanh toán lại
-router.post("/repay", repayOrder);
+router.post("/repay", verifyToken, repayOrder);
 
 // IPN MoMo
 router.post("/momo-ipn", momoIPN);
 
 // Danh sách đơn hàng của khách
-router.get("/", getOrders);
+router.get("/", verifyToken, getOrders);
 
 // Admin lấy toàn bộ đơn hàng
-router.get("/admin/all", getAllOrders);
+router.get("/admin/all", verifyToken, getAllOrders);
 
 // Admin xem chi tiết đơn
-router.get("/admin/:id", getOrderDetailAdmin);
+router.get("/admin/:id", verifyToken, getOrderDetailAdmin);
 
 // Admin cập nhật trạng thái
-router.put("/admin/:id/status", updateOrderStatus);
+router.put("/admin/:id/status", verifyToken, updateOrderStatus);
 
 // Hủy đơn
-router.put("/:id/cancel", cancelOrder);
+router.put("/:id/cancel", verifyToken, cancelOrder);
 
 // Chi tiết đơn hàng
-router.get("/:id", getOrderDetail);
+router.get("/:id", verifyToken, getOrderDetail);
 
+//Xem lịch sử cập nhật trạng thái
+router.get("/admin/:id/logs", getOrderLogs);
 export default router;

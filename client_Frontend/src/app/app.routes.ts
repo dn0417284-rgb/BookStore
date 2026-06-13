@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-//import { adminGuard } from './core/guards/admin.guard';
+import { adminGuard } from './core/guards/admin.guard';
 
 export const routes: Routes = [
   {
@@ -50,7 +50,7 @@ export const routes: Routes = [
         (m) => m.ProductList,
       ),
 
-    //canActivate: [adminGuard],
+    canActivate: [adminGuard],
   },
 
   {
@@ -58,7 +58,7 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./pages/admin/product-management/add-product/add-product').then((m) => m.AddProduct),
 
-    //canActivate: [adminGuard],
+    canActivate: [adminGuard],
   },
 
   {
@@ -68,7 +68,7 @@ export const routes: Routes = [
         (m) => m.EditProduct,
       ),
 
-    //canActivate: [adminGuard],
+    canActivate: [adminGuard],
   },
 
   {
@@ -78,7 +78,7 @@ export const routes: Routes = [
         (m) => m.CustomerList,
       ),
 
-    //canActivate: [adminGuard],
+    canActivate: [adminGuard],
   },
 
   {
@@ -86,14 +86,14 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./pages/admin/order-management/order-list/order-list').then((m) => m.OrderList),
 
-    //canActivate: [adminGuard],
+    canActivate: [adminGuard],
   },
   {
     path: 'admin/orders/:id',
     loadComponent: () =>
       import('./pages/admin/order-management/order-detail/order-detail').then((m) => m.OrderDetail),
 
-    //canActivate: [adminGuard],
+    canActivate: [adminGuard],
   },
   {
     path: '',

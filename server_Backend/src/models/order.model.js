@@ -326,23 +326,23 @@ class Order {
     const [items] = await db.query(
       `
     SELECT
-      oi.order_item_id,
-      oi.product_id,
-      oi.quantity,
-      oi.price,
-      p.title,
-      p.author,
-      p.image
-    FROM order_items oi
-    INNER JOIN products p
-      ON p.product_id = oi.product_id
-    WHERE oi.order_id = ?
+      order_item_id,
+      product_id,
+      quantity,
+      price,
+      subtotal,
+      title,
+      author,
+      image
+    FROM order_items
+    WHERE order_id = ?
     `,
       [orderId],
     );
 
     order.items = items;
-
+    const logs = await this.getOrderLogs(orderId);
+    order.logs = logs;
     return order;
   }
 
@@ -406,7 +406,15 @@ class Order {
     `,
       [newStatus, orderId],
     );
-
+    await db.query(
+      `
+    INSERT INTO order_status_logs
+    (order_id,status,note)
+    VALUES
+    (?,?,?)
+    `,
+      [orderId, newStatus, "Admin cập nhật trạng thái"],
+    );
     return true;
   }
 
@@ -443,8 +451,9 @@ class Order {
     const [logs] = await db.query(
       `
     SELECT
-      old_status,
-      new_status,
+      log_id,
+      status,
+      note,
       created_at
     FROM order_status_logs
     WHERE order_id = ?

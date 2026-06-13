@@ -1,31 +1,21 @@
-// import { inject } from '@angular/core';
+import { inject } from '@angular/core';
 
-// import {
-//   CanActivateFn,
-//   Router
-// } from '@angular/router';
+import { CanActivateFn, Router } from '@angular/router';
 
-// import { AuthService } from '../services/auth';
+import { AuthService } from '../services/auth';
 
-// export const adminGuard: CanActivateFn = () => {
+export const adminGuard: CanActivateFn = () => {
+  const auth = inject(AuthService);
 
-//   const auth = inject(AuthService);
+  const router = inject(Router);
 
-//   const router = inject(Router);
+  const user = auth.getCurrentUser();
 
-//   const user = auth.getCurrentUser();
+  if (user && user.role === 'admin') {
+    return true;
+  }
 
-//   if (
-//     user &&
-//     user.role === 'admin'
-//   ) {
+  router.navigate(['/']);
 
-//     return true;
-
-//   }
-
-//   router.navigate(['/']);
-
-//   return false;
-
-// };
+  return false;
+};

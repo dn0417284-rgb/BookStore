@@ -18,7 +18,7 @@ export class OrderDetail implements OnInit {
     private cdr: ChangeDetectorRef,
   ) {}
   order!: Order;
-
+  selectedStatus!: Order['status'];
   statuses = [
     'PENDING',
     'CONFIRMED',
@@ -31,29 +31,19 @@ export class OrderDetail implements OnInit {
   ];
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
-
     this.orderService.getOrderById(id).subscribe({
       next: (res: any) => {
         this.order = res.data;
+        this.selectedStatus = this.order.status;
         this.cdr.detectChanges();
       },
     });
   }
   updateStatus(): void {
-    this.orderService.updateStatus(this.order.order_id, this.order.status).subscribe({
+    this.orderService.updateStatus(this.order.order_id, this.selectedStatus).subscribe({
       next: () => {
-        alert('Cập nhật trạng thái thành công');
-      },
-    });
-  }
-  cancelOrder(): void {
-    if (!confirm('Hủy đơn hàng này?')) return;
-
-    this.orderService.cancelOrder(this.order.order_id).subscribe({
-      next: () => {
-        this.order.status = 'CANCELLED';
-
-        alert('Đã hủy đơn hàng');
+        this.order.status = this.selectedStatus;
+        alert('Cập nhật thành công');
       },
     });
   }
@@ -70,5 +60,27 @@ export class OrderDetail implements OnInit {
     };
 
     return map[status] || status;
+  }
+  getPaymentStatusText(status: string): string {
+    const map: any = {
+      UNPAID: 'Chưa thanh toán',
+      PAID: 'Đã thanh toán',
+      REFUNDED: 'Đã hoàn tiền',
+    };
+    return map[status] || status;
+  }
+  getAvailableStatuses(current: string): string[] {
+    const flow: any = {
+      PENDING: ['CONFIRMED', 'CANCELLED'],
+      CONFIRMED: ['PACKING'],
+      PACKING: ['SHIPPING'],
+      SHIPPING: ['DELIVERED', 'FAILED'],
+      DELIVERED: ['RECEIVED'],
+      RECEIVED: [],
+      FAILED: [],
+      CANCELLED: [],
+    };
+
+    return flow[current] || [];
   }
 }

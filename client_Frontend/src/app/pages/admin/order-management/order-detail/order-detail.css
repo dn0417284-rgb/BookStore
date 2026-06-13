@@ -9,29 +9,28 @@
   padding: 0 20px;
 }
 
-/* Header */
 .order-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom: 2px solid #edf2f7;
-  padding-bottom: 15px;
+  background: #fff;
+  padding: 20px 25px;
+  border-radius: 14px;
   margin-bottom: 25px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
 .order-header h2 {
-  margin: 0;
-  font-size: 24px;
-  color: #2d3748;
+  font-size: 26px;
+  font-weight: 700;
 }
 
-.order-header .highlight {
-  color: #3182ce;
+.highlight {
+  color: #2563eb;
 }
 
 .order-date {
-  color: #718096;
-  font-size: 14px;
+  background: #f1f5f9;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-weight: 500;
 }
 
 /* Layout chia cột */
@@ -47,12 +46,18 @@
   }
 }
 
-/* Card Style */
 .card {
-  background: #ffffff;
-  border-radius: 8px;
-  padding: 20px;
-  margin-bottom: 25px;
+  background: #fff;
+  border-radius: 14px;
+  padding: 24px;
+  margin-bottom: 24px;
+  border: 1px solid #edf2f7;
+  transition: all 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
 }
 
 .shadow {
@@ -74,12 +79,26 @@
 .info-group {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 12px;
-  font-size: 15px;
+  align-items: flex-start;
+  gap: 15px;
+  padding: 10px 0;
+  border-bottom: 1px dashed #edf2f7;
+}
+
+.info-group:last-child {
+  border-bottom: none;
 }
 
 .info-group label {
-  color: #718096;
+  min-width: 120px;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.info-group span {
+  text-align: right;
+  color: #1e293b;
+  font-weight: 500;
 }
 
 .font-weight-bold {

@@ -4,7 +4,6 @@ import Order from "../models/order.model.js";
 import crypto from "crypto";
 import axios from "axios";
 
-// Cấu hình bằng biến môi trường (env) để bảo mật, không hardcode key thật
 const MOMO = {
   partnerCode: process.env.MOMO_PARTNER_CODE,
   accessKey: process.env.MOMO_ACCESS_KEY,
@@ -475,6 +474,21 @@ export const cancelOrder = async (req, res) => {
       });
     }
 
+    return res.status(500).json({
+      success: false,
+      message: "Lỗi server",
+    });
+  }
+};
+export const getOrderLogs = async (req, res) => {
+  try {
+    const logs = await Order.getOrderLogs(Number(req.params.id));
+
+    return res.status(200).json({
+      success: true,
+      data: logs,
+    });
+  } catch (err) {
     return res.status(500).json({
       success: false,
       message: "Lỗi server",

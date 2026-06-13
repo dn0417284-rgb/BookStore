@@ -3,7 +3,6 @@ import cors from "cors";
 import path from "path";
 
 import productRoutes from "./routes/product.routes.js";
-// import authRoutes from "./src/routes/auth.routes.js";
 import customerRoutes from "./routes/customer.routes.js";
 import orderRoutes from "./routes/order.routes.js";
 import cartRoutes from "./routes/cart.routes.js";
@@ -20,7 +19,6 @@ app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
 
 // Routes
 app.use("/api/products", productRoutes);
-// app.use("/api/auth", authRoutes);
 app.use("/api/customers", customerRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/cart", cartRoutes);

@@ -15,7 +15,7 @@ export class AdminOderService {
   updateStatus(id: number, status: string) {
     return this.http.put(`/api/orders/admin/${id}/status`, { status });
   }
-  cancelOrder(id: number) {
-    return this.http.put(`/api/orders/admin/${id}/cancel`, {});
+  getOrderLogs(id: number) {
+    return this.http.get<any>(`/api/orders/admin/${id}/logs`);
   }
 }
