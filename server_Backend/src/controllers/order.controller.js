@@ -4,7 +4,6 @@ import Order from "../models/order.model.js";
 import crypto from "crypto";
 import axios from "axios";
 
-// Cấu hình bằng biến môi trường (env) để bảo mật, không hardcode key thật
 const MOMO = {
   partnerCode: process.env.MOMO_PARTNER_CODE,
   accessKey: process.env.MOMO_ACCESS_KEY,
@@ -388,23 +387,111 @@ export const getAllOrders = async (req, res) => {
   }
 };
 
-export const getOrderDetailAdmin = (req, res) => {
-  Order.getOrderDetailAdmin(Number(req.params.id), (err, order) => {
-    if (err || !order) return res.status(404).json({ success: false });
-    return res.json({ success: true, data: order });
-  });
+export const getOrderDetailAdmin = async (req, res) => {
+  try {
+    const order = await Order.getOrderDetailAdmin(Number(req.params.id));
+
+    if (!order) {
+      return res.status(404).json({
+        success: false,
+        message: "Không tìm thấy đơn hàng",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      data: order,
+    });
+  } catch (err) {
+    console.error("Lỗi lấy chi tiết đơn hàng:", err);
+
+    return res.status(500).json({
+      success: false,
+      message: "Lỗi server",
+    });
+  }
 };
 
-export const updateOrderStatus = (req, res) => {
-  Order.updateOrderStatus(Number(req.params.id), req.body.status, (err) => {
-    if (err) return res.status(500).json({ success: false });
-    return res.json({ success: true });
-  });
+export const updateOrderStatus = async (req, res) => {
+  try {
+    const orderId = Number(req.params.id);
+    const { status } = req.body;
+
+    await Order.updateOrderStatus(orderId, status);
+
+    return res.status(200).json({
+      success: true,
+      message: "Cập nhật trạng thái thành công",
+    });
+  } catch (err) {
+    console.error("Lỗi cập nhật trạng thái:", err);
+
+    if (err.message === "ORDER_NOT_FOUND") {
+      return res.status(404).json({
+        success: false,
+        message: "Không tìm thấy đơn hàng",
+      });
+    }
+
+    if (err.message === "INVALID_STATUS_FLOW") {
+      return res.status(400).json({
+        success: false,
+        message: "Chuyển trạng thái không hợp lệ",
+      });
+    }
+
+    return res.status(500).json({
+      success: false,
+      message: "Lỗi server",
+    });
+  }
 };
 
-export const cancelOrder = (req, res) => {
-  Order.cancelOrder(Number(req.params.id), req.user.customer_id, (err) => {
-    if (err) return res.status(500).json({ success: false });
-    return res.json({ success: true });
-  });
+export const cancelOrder = async (req, res) => {
+  try {
+    const orderId = Number(req.params.id);
+
+    await Order.cancelOrder(orderId);
+
+    return res.status(200).json({
+      success: true,
+      message: "Hủy đơn hàng thành công",
+    });
+  } catch (err) {
+    console.error("Lỗi hủy đơn hàng:", err);
+
+    if (err.message === "ORDER_NOT_FOUND") {
+      return res.status(404).json({
+        success: false,
+        message: "Không tìm thấy đơn hàng",
+      });
+    }
+
+    if (err.message === "CANNOT_CANCEL") {
+      return res.status(400).json({
+        success: false,
+        message: "Chỉ được hủy đơn đang chờ xác nhận",
+      });
+    }
+
+    return res.status(500).json({
+      success: false,
+      message: "Lỗi server",
+    });
+  }
+};
+export const getOrderLogs = async (req, res) => {
+  try {
+    const logs = await Order.getOrderLogs(Number(req.params.id));
+
+    return res.status(200).json({
+      success: true,
+      data: logs,
+    });
+  } catch (err) {
+    return res.status(500).json({
+      success: false,
+      message: "Lỗi server",
+    });
+  }
 };

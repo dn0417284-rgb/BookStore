@@ -10,6 +10,7 @@ import {
   cancelOrder,
   repayOrder,
   momoIPN,
+  getOrderLogs,
 } from "../controllers/order.controller.js";
 
 const router = express.Router();
@@ -41,4 +42,6 @@ router.put("/:id/cancel", verifyToken, cancelOrder);
 // Chi tiết đơn hàng
 router.get("/:id", verifyToken, getOrderDetail);
 
+//Xem lịch sử cập nhật trạng thái
+router.get("/admin/:id/logs", getOrderLogs);
 export default router;

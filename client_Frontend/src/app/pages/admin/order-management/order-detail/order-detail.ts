@@ -4,6 +4,7 @@ import { AdminOderService } from '../../../../core/services/admin_orderService';
 import { Order } from '../../../../core/models/order.model';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ChangeDetectorRef } from '@angular/core';
 @Component({
   selector: 'app-order-detail',
   imports: [CommonModule, FormsModule],
@@ -14,9 +15,10 @@ export class OrderDetail implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private orderService: AdminOderService,
+    private cdr: ChangeDetectorRef,
   ) {}
   order!: Order;
-
+  selectedStatus!: Order['status'];
   statuses = [
     'PENDING',
     'CONFIRMED',
@@ -29,29 +31,56 @@ export class OrderDetail implements OnInit {
   ];
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
-
     this.orderService.getOrderById(id).subscribe({
       next: (res: any) => {
         this.order = res.data;
+        this.selectedStatus = this.order.status;
+        this.cdr.detectChanges();
       },
     });
   }
   updateStatus(): void {
-    this.orderService.updateStatus(this.order.order_id, this.order.status).subscribe({
+    this.orderService.updateStatus(this.order.order_id, this.selectedStatus).subscribe({
       next: () => {
-        alert('Cập nhật trạng thái thành công');
+        this.order.status = this.selectedStatus;
+        alert('Cập nhật thành công');
       },
     });
   }
-  cancelOrder(): void {
-    if (!confirm('Hủy đơn hàng này?')) return;
+  getStatusText(status: string): string {
+    const map: { [key: string]: string } = {
+      PENDING: 'Chờ xác nhận',
+      CONFIRMED: 'Đã xác nhận',
+      PACKING: 'Đang đóng gói',
+      SHIPPING: 'Đang giao hàng',
+      DELIVERED: 'Đã giao hàng',
+      RECEIVED: 'Đã nhận hàng',
+      FAILED: 'Giao hàng thất bại',
+      CANCELLED: 'Đã hủy',
+    };
 
-    this.orderService.cancelOrder(this.order.order_id).subscribe({
-      next: () => {
-        this.order.status = 'CANCELLED';
+    return map[status] || status;
+  }
+  getPaymentStatusText(status: string): string {
+    const map: any = {
+      UNPAID: 'Chưa thanh toán',
+      PAID: 'Đã thanh toán',
+      REFUNDED: 'Đã hoàn tiền',
+    };
+    return map[status] || status;
+  }
+  getAvailableStatuses(current: string): string[] {
+    const flow: any = {
+      PENDING: ['CONFIRMED', 'CANCELLED'],
+      CONFIRMED: ['PACKING'],
+      PACKING: ['SHIPPING'],
+      SHIPPING: ['DELIVERED', 'FAILED'],
+      DELIVERED: ['RECEIVED'],
+      RECEIVED: [],
+      FAILED: [],
+      CANCELLED: [],
+    };
 
-        alert('Đã hủy đơn hàng');
-      },
-    });
+    return flow[current] || [];
   }
 }

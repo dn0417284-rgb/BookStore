@@ -153,32 +153,60 @@ tbody tr:hover {
 
 /* ===== Status Badges ===== */
 .status-badge {
+  display: inline-block;
   padding: 6px 12px;
   border-radius: 20px;
   font-size: 13px;
   font-weight: 600;
+  text-align: center;
 }
+
+/* Chờ xác nhận */
 .pending {
   background: #fef3c7;
   color: #92400e;
 }
+
+/* Đã xác nhận */
 .confirmed {
   background: #dbeafe;
   color: #1d4ed8;
 }
+
+/* Đang đóng gói */
+.packing {
+  background: #ede9fe;
+  color: #6d28d9;
+}
+
+/* Đang giao */
 .shipping {
   background: #cffafe;
   color: #0f766e;
 }
-.delivered,
-.received {
+
+/* Đã giao */
+.delivered {
   background: #dcfce7;
   color: #15803d;
 }
-.failed,
-.cancelled {
+
+/* Đã nhận hàng */
+.received {
+  background: #bbf7d0;
+  color: #166534;
+}
+
+/* Thất bại */
+.failed {
   background: #fee2e2;
   color: #dc2626;
+}
+
+/* Đã hủy */
+.cancelled {
+  background: #f3f4f6;
+  color: #4b5563;
 }
 
 /* ===== Buttons ===== */
