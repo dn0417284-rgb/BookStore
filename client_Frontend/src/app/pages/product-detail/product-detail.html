@@ -1,1 +1,225 @@
-<p>product-detail works!</p>
+<div
+  class="loading"
+  *ngIf="loading"
+>
+  Đang tải sản phẩm...
+</div>
+
+<div
+  class="not-found"
+  *ngIf="!loading && !product"
+>
+  Không tìm thấy sản phẩm.
+</div>
+
+<div
+  class="product-container"
+  *ngIf="!loading && product"
+>
+
+  <!-- BACK -->
+
+  <button
+    class="btn-back"
+    (click)="goBack()"
+  >
+    ← Quay lại
+  </button>
+
+  <!-- TOP -->
+
+  <div class="product-top">
+
+    <!-- IMAGE -->
+
+    <div class="product-gallery">
+
+      <img
+        [src]="'images/' + product.image"
+        [alt]="product.title"
+      >
+
+    </div>
+
+    <!-- INFO -->
+
+    <div class="product-info">
+
+      <h1>
+        {{ product.title }}
+      </h1>
+
+      <div class="rating-row">
+
+        <span>
+          ⭐ {{ product.rating }}
+        </span>
+
+        <span>
+          (0 đánh giá)
+        </span>
+
+      </div>
+
+      <div class="book-meta">
+
+        <span>
+          ISBN:
+          {{ product.product_id }}
+        </span>
+
+        <span>
+          Tác giả:
+          {{ product.author }}
+        </span>
+
+        <span class="in-stock">
+          Còn hàng
+        </span>
+
+      </div>
+
+      <div class="price-label">
+        Giá:
+      </div>
+
+      <div class="price">
+        {{ product.price | number }}₫
+      </div>
+
+      <!-- QUANTITY -->
+
+      <div class="quantity-section">
+
+        <label>
+          Số lượng:
+        </label>
+
+        <div class="quantity-box">
+
+          <button
+            (click)="decreaseQuantity()"
+          >
+            −
+          </button>
+
+          <span>
+            {{ quantity }}
+          </span>
+
+          <button
+            (click)="increaseQuantity()"
+          >
+            +
+          </button>
+
+        </div>
+
+      </div>
+
+      <!-- BUTTONS -->
+
+      <div class="actions">
+
+        <button
+          class="btn-cart"
+          (click)="addToCart()"
+        >
+          Thêm vào giỏ
+        </button>
+
+        <!-- SỬA TẠI ĐÂY: Truyền $event để kích hoạt chặn sự kiện ngầm chui vào giỏ hàng -->
+        <button
+          class="btn-buy"
+          (click)="buyNow($event)"
+        >
+           Mua ngay
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- THÔNG TIN SÁCH -->
+
+  <div class="product-section">
+
+    <h2>
+      Thông tin sách
+    </h2>
+
+    <div class="detail-grid">
+
+      <div>
+        <strong>Tác giả:</strong>
+        {{ product.author }}
+      </div>
+
+      <div>
+        <strong>Nhà xuất bản:</strong>
+        {{ product.publisher }}
+      </div>
+
+      <div>
+        <strong>Định dạng:</strong>
+        {{ product.cover_type }}
+      </div>
+
+      <div>
+        <strong>Tình trạng:</strong>
+        Còn hàng
+      </div>
+
+      <div>
+        <strong>Đánh giá:</strong>
+        ⭐ {{ product.rating }}
+      </div>
+
+      <div>
+        <strong>Đã bán:</strong>
+        {{ product.sold }}
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- MÔ TẢ -->
+
+  <div class="product-section">
+
+    <h2>
+      Mô tả sản phẩm
+    </h2>
+
+    <p>
+      {{ product.description }}
+    </p>
+
+  </div>
+
+  <!-- ĐÁNH GIÁ -->
+
+  <div class="product-section">
+
+    <h2>
+      Đánh giá khách hàng
+    </h2>
+
+    <div class="empty-review">
+
+      <h3>
+        Chưa có đánh giá nào
+      </h3>
+
+      <p>
+        Hãy là người đầu tiên đánh giá sản phẩm này.
+      </p>
+
+    </div>
+
+  </div>
+
+</div>
