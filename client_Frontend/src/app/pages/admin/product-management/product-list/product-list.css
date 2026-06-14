@@ -1,0 +1,148 @@
+.book-image {
+  width: 60px;
+  height: 80px;
+  object-fit: contain;
+  border-radius: 6px;
+  border: 1px solid #e2e8f0;
+  background-color: #f9fafb;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  display: block;
+  margin: 0 auto; /* căn giữa trong ô */
+}
+
+.book-title {
+  font-weight: 600;
+  color: #0f172a;
+}
+.page-title {
+  margin-bottom: 24px;
+}
+
+.page-title h2 {
+  font-size: 32px;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 12px;
+}
+
+.book-count {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+
+  padding: 10px 18px;
+
+  background: #eff6ff;
+
+  border: 1px solid #bfdbfe;
+
+  border-radius: 999px;
+}
+
+.count-label {
+  color: #475569;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.count-value {
+  min-width: 34px;
+  height: 34px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #2563eb;
+  color: white;
+
+  border-radius: 50%;
+
+  font-size: 14px;
+  font-weight: 700;
+
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.25);
+}
+.price {
+  color: #b91c1c;
+  font-weight: 700;
+}
+
+.rating-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 42px;
+  padding: 5px 10px;
+  border-radius: 20px;
+  background: #fef3c7;
+  color: #92400e;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.cover-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px 10px;
+  border-radius: 20px;
+  background: #dbeafe;
+  color: #1d4ed8;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.search-btn {
+  padding: 10px 18px;
+  border: none;
+  border-radius: 8px;
+  background: #2563eb;
+  color: white;
+  cursor: pointer;
+  font-weight: 500;
+  transition: 0.2s;
+}
+.search-btn:hover {
+  opacity: 0.9;
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+
+  background: rgba(15, 23, 42, 0.55);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  z-index: 999;
+  backdrop-filter: blur(6px);
+}
+
+.modal {
+  width: 700px;
+  max-width: 80vw;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+  animation: modalShow 0.25s ease;
+}
+
+@keyframes modalShow {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.main-content.blurred {
+  filter: blur(3px);
+  pointer-events: none;
+}

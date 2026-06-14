@@ -1,0 +1,158 @@
+/* Toàn bộ container của Form */
+.product-form {
+  max-width: 850px;
+  margin: 20px auto;
+  padding: 30px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px 30px; /* Khoảng cách giữa các row và column */
+}
+
+/* Tiêu đề chính của form */
+.product-form h2 {
+  width: 100%;
+  font-size: 22px;
+  font-weight: 700;
+  color: #111827;
+  margin-top: 0;
+  margin-bottom: 10px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+/* Cấu trúc của mỗi ô nhập liệu (Chiếm 1/2 chiều rộng để chia thành 2 cột) */
+.form-group {
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+  /* Tính toán chiều rộng: 50% trừ đi một nửa khoảng cách gap */
+  width: calc(50% - 15px);
+  box-sizing: border-box;
+}
+
+/* Các trường đặc biệt cần chiếm trọn 100% chiều rộng (Mô tả, Hình ảnh) */
+.form-group.full-width {
+  width: 100%;
+}
+
+/* Label tiêu đề bên trái input */
+.form-group label {
+  width: 100px;
+  min-width: 100px;
+  padding-top: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #374151;
+}
+
+/* Container bọc input và thông báo lỗi */
+.input-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+/* Tùy chỉnh ô Input và Textarea */
+.input-container input,
+.input-container textarea {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #111827;
+  background-color: #ffffff;
+  box-sizing: border-box;
+  transition: all 0.2s ease;
+}
+
+/* Thao tác tùy chỉnh chiều cao cho Textarea (Mô tả) */
+.input-container textarea {
+  height: 120px;
+  resize: vertical;
+}
+
+/* Hiệu ứng khi click focus vào ô nhập liệu */
+.input-container input:focus,
+.input-container textarea:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+/* Tùy chỉnh input loại File (Chọn tệp hình ảnh) */
+.input-container input[type='file'] {
+  padding: 8px 10px;
+  background: #f9fafb;
+  cursor: pointer;
+}
+
+/* Thông báo lỗi validation của Angular bên dưới input */
+.error-message {
+  color: #dc2626;
+  font-size: 12px;
+  margin-top: 5px;
+  font-weight: 5px;
+}
+
+/* Cụm điều khiển nút bấm ở dưới cùng form */
+.form-actions {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 15px;
+  padding-top: 15px;
+}
+
+/* Định dạng chung cho cả 2 button */
+.form-actions button {
+  padding: 10px 32px;
+  font-size: 15px;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s ease;
+}
+
+/* Nút "Cập nhật / Thêm sách" (Màu xanh dương đậm gợn bóng) */
+.form-actions button[type='submit'] {
+  background-color: #1d3f94;
+  color: #ffffff;
+  box-shadow: 0 4px 10px rgba(29, 63, 148, 0.3);
+}
+
+.form-actions button[type='submit']:hover:not(:disabled) {
+  background-color: #163072;
+}
+
+/* Trạng thái nút Submit bị khóa khi form chưa hợp lệ */
+.form-actions button[type='submit']:disabled {
+  background-color: #9ca3af;
+  color: #e5e7eb;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* Nút "Hủy" (Màu hồng cam nhạt chữ đỏ) */
+.form-actions .btn-cancel {
+  background-color: #fde8e8;
+  color: #9b1c1c;
+}
+
+.form-actions .btn-cancel:hover {
+  background-color: #fbd5d5;
+}
+
+/* Responsive cho màn hình điện thoại (Dưới 768px sẽ tự chuyển về 1 cột dọc) */
+@media (max-width: 768px) {
+  .form-group {
+    width: 100%;
+  }
+}

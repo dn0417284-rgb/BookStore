@@ -1,0 +1,127 @@
+<div class="order-detail-container" *ngIf="order">
+  <div class="order-header">
+    <h2>
+      Mã đơn hàng: <span class="highlight">{{ order.order_code }}</span>
+    </h2>
+    <span class="order-date">Ngày tạo: {{ order.created_at | date: 'dd/MM/yyyy HH:mm' }}</span>
+  </div>
+
+  <div class="order-content">
+    <div class="content-left">
+      <!-- Thông tin khách hàng -->
+      <div class="card shadow">
+        <h3><i class="icon-user"></i> Thông tin khách hàng</h3>
+        <div class="info-group">
+          <label>Khách hàng:</label>
+          <span class="info-value font-weight-bold">{{ order.customer_name }}</span>
+        </div>
+        <div class="info-group">
+          <label>Số điện thoại:</label>
+          <span class="info-value">{{ order.phone }}</span>
+        </div>
+        <div class="info-group">
+          <label>Email:</label>
+          <span>{{ order.email }}</span>
+        </div>
+        <div class="info-group">
+          <label>Địa chỉ:</label>
+          <span>{{ order.address }}</span>
+        </div>
+        <div class="info-group">
+          <label>Ghi chú:</label>
+          <span>{{ order.note || 'Không có' }}</span>
+        </div>
+      </div>
+      <!-- Thông tin thanh toán -->
+      <div class="card shadow">
+        <h3>Thông tin thanh toán</h3>
+
+        <div class="info-group">
+          <label>Phương thức:</label>
+          <span>{{ order.payment_method }}</span>
+        </div>
+
+        <div class="info-group">
+          <label>Trạng thái:</label>
+          <span>
+            {{ getPaymentStatusText(order.payment_status!) }}
+          </span>
+        </div>
+
+        <div *ngIf="order.payment_time" class="info-group">
+          <label>Thời gian thanh toán:</label>
+
+          <span>
+            {{ order.payment_time | date: 'dd/MM/yyyy HH:mm' }}
+          </span>
+        </div>
+      </div>
+      <!-- Trạng thái đơn hàng -->
+      <div class="card shadow status-card">
+        <h3><i class="icon-status"></i> Trạng thái đơn hàng</h3>
+        <div class="current-status-box">
+          <label>Trạng thái hiện tại:</label>
+          <span class="status-badge" [ngClass]="order.status.toLowerCase()">
+            {{ getStatusText(order.status) }}
+          </span>
+        </div>
+
+        <div *ngIf="getAvailableStatuses(order.status).length > 0">
+          <hr class="card-divider" />
+
+          <label class="control-label"> Cập nhật trạng thái mới </label>
+
+          <div class="status-control">
+            <select class="custom-select" [(ngModel)]="selectedStatus">
+              <option *ngFor="let s of getAvailableStatuses(order.status)" [value]="s">
+                {{ getStatusText(s) }}
+              </option>
+            </select>
+
+            <button class="btn btn-primary" (click)="updateStatus()">Cập nhật</button>
+          </div>
+        </div>
+
+        <div *ngIf="getAvailableStatuses(order.status).length === 0" class="final-status">
+          <i class="fas fa-check-circle"></i>
+
+          Đơn hàng đã ở trạng thái cuối cùng
+        </div>
+      </div>
+    </div>
+    <!-- Danh sách sản phẩm -->
+    <div class="content-right">
+      <div class="card shadow">
+        <h3><i class="icon-box"></i> Danh sách sản phẩm</h3>
+
+        <div class="table-responsive">
+          <table class="styled-table">
+            <thead>
+              <tr>
+                <th>Sản phẩm</th>
+                <th class="text-center">SL</th>
+                <th class="text-right">Giá bán</th>
+                <th class="text-right">Tạm tính</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of order.items">
+                <td class="product-title">{{ item.title }}</td>
+                <td class="text-center font-weight-bold">{{ item.quantity }}</td>
+                <td class="text-right">{{ item.price | number }} đ</td>
+                <td class="text-right font-weight-bold text-primary">
+                  {{ item.subtotal | number }} đ
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="order-summary">
+          <span class="summary-label">Tổng tiền thanh toán:</span>
+          <span class="summary-value">{{ order.total_amount | number }} đ</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
