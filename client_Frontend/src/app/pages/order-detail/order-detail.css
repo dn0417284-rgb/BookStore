@@ -352,3 +352,18 @@
 .btn-pay-now:hover {
   opacity: 0.9;
 }
+
+
+.product-link {
+  text-decoration: none;
+  color: inherit;
+  transition: 0.2s;
+}
+
+.product-link:hover {
+  color: #2563eb;
+}
+
+.product-image {
+  cursor: pointer;
+}
