@@ -29,6 +29,9 @@ export class Checkout implements OnInit {
   isBuyNowMode = false;
   isSubmitting = false; 
 
+  showZaloPayMessage = false;
+  showSuccessMessage = false;
+
   paymentMethod: 'COD' | 'MOMO' | 'ZALOPAY' = 'COD';
 
   addresses: Address[] = [];
@@ -118,10 +121,17 @@ export class Checkout implements OnInit {
   }
 
   placeOrder(): void {
-    if (!this.selectedAddress) {
-      alert('Vui lòng chọn địa chỉ nhận hàng');
-      return;
-    }
+    if (this.paymentMethod === 'ZALOPAY') {
+    this.showZaloPayMessage = true;
+    return;
+  }
+
+  this.showZaloPayMessage = false;
+
+  if (!this.selectedAddress) {
+    alert('Vui lòng chọn địa chỉ nhận hàng');
+    return;
+  }
 
     if (this.isSubmitting) return;
     this.isSubmitting = true;
@@ -215,10 +225,16 @@ export class Checkout implements OnInit {
   }
 
   private finalizeCheckoutSuccess(): void {
-    this.cartService.loadCart(); 
+    this.cartService.loadCart();
     this.isSubmitting = false;
-    alert('Đặt hàng thành công');
-    this.router.navigate(['/orders']);
+
+    this.showSuccessMessage = true;
+
+    this.cdr.detectChanges();
+
+    setTimeout(() => {
+      this.router.navigate(['/orders']);
+    }, 2000);
   }
 
   increaseQuantity(productId: number): void {
@@ -242,4 +258,9 @@ export class Checkout implements OnInit {
       localStorage.setItem('checkoutItems', JSON.stringify(this.items));
     }
   }
+
+  get isZaloPaySelected(): boolean {
+    return this.paymentMethod === 'ZALOPAY';
+  }
+
 }
