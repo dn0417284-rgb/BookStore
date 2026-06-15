@@ -20,7 +20,7 @@ import {
 
 import {
   ProductService
-} from '../../core/services/product';
+} from '../../core/services/product-service';
 
 import {
   CartService

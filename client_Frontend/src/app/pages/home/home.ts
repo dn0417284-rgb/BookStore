@@ -2,7 +2,8 @@
 import {
   Component,
   OnInit,
-  ChangeDetectorRef
+  ChangeDetectorRef,
+  Inject
 } from '@angular/core';
 
 import {
@@ -21,7 +22,7 @@ import {
 
 import {
   ProductService
-} from '../../core/services/product';
+} from '../../core/services/product-service';
 
 import {
   CartService
