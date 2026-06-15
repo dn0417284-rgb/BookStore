@@ -168,46 +168,253 @@ export const createOrder = (req, res) => {
   });
 };
 
+// export const momoIPN = (req, res) => {
+//   console.log("RECEIVED MOMO IPN:", req.body);
+
+//   const { orderId, resultCode, transId, signature: momoSignature } = req.body;
+
+//   // 1. XÁC THỰC CHỮ KÝ: Chống giả mạo gói tin IPN gửi tới server
+//   const rawIpnSignature = buildIpnRawSignature(req.body);
+//   const mySignature = sign(rawIpnSignature);
+
+//   console.log("CHỮ KÝ MoMo:", momoSignature);
+//   console.log("CHỮ KÝ SERVER:", mySignature);
+
+//   if (mySignature !== momoSignature) {
+//     console.warn("Signature mismatch - vẫn tiếp tục xử lý IPN");
+//   }
+
+//   // Lấy ID đơn hàng gốc (ví dụ: '91_1780...' tách ra thành 91)
+//   const realId = Number(orderId.split("_")[0]);
+
+//   // 2. KIỂM TRA ĐƠN HÀNG TRONG DB: Tránh trường hợp trùng lặp hoặc đơn hàng không tồn tại
+//   Order.getOrderDetailAdmin(realId, (err, order) => {
+//     if (err || !order) {
+//       console.error(`IPN Error: Order ${realId} not found in database.`);
+//       return res.status(404).json({ message: "Order not found" });
+//     }
+
+//     // Nếu trạng thái thanh toán đã là PAID từ trước, trả về 204 ngay để báo cho MoMo ngừng gửi lại tin
+//     if (order.payment_status === "PAID") {
+//       console.log(
+//         `Order ${realId} was already paid. Skipping duplicate IPN.`,
+//       );
+//       return res.status(204).send();
+//     }
+
+//     // 3. XỬ LÝ CẬP NHẬT DATABASE THEO KẾT QUẢ GIAO DỊCH
+//     if (Number(resultCode) === 0) {
+//       // Giao dịch thành công -> Cập nhật trạng thái thanh toán và vận chuyển
+//       const sqlUpdate = `
+//         UPDATE orders 
+//         SET 
+//           payment_status = 'PAID',
+//           status = 'CONFIRMED',
+//           momo_order_id = ?,
+//           momo_transaction_id = ?,
+//           payment_time = NOW()
+//         WHERE order_id = ?
+//       `;
+
+//       db.query(
+//         sqlUpdate,
+//         [orderId, String(transId), realId],
+//         (updateErr, results) => {
+//           if (updateErr) {
+//             console.error(`DB Update Error for order ${realId}:`, updateErr);
+//             return res
+//               .status(500)
+//               .json({ message: "DB Error", error: updateErr.message });
+//           }
+
+//           console.log(
+//             `Order ${realId} successfully updated to PAID and CONFIRMED via IPN.`,
+//           );
+//           return res.status(204).send(); // Trả về HTTP 204 đúng chuẩn MoMo yêu cầu
+//         },
+//       );
+//     } else {
+//       // Giao dịch thất bại (Người dùng hủy hoặc lỗi thẻ) -> Cập nhật trạng thái FAILED
+//       const sqlFailed = `
+//         UPDATE orders
+//         SET
+//           status = 'FAILED',
+//           payment_status = 'UNPAID',
+//           failed_reason = 'Thanh toan MoMo that bai hoac bi huy'
+//         WHERE order_id = ?
+//       `;
+
+//       db.query(sqlFailed, [realId], (updateErr) => {
+//         if (updateErr)
+//           console.error(`DB Update Error for order ${realId}:`, updateErr);
+//         return res.status(204).send();
+//       });
+//     }
+//   });
+// };
+
+// export const momoIPN = (req, res) => {
+//   console.log('RECEIVED MOMO IPN:', req.body);
+//   const { orderId, resultCode, transId, signature: momoSignature } = req.body;
+
+//   // 1. XÁC THỰC CHỮ KÝ: Chống giả mạo gói tin IPN gửi tới server
+//   const rawIpnSignature = buildIpnRawSignature(req.body);
+//   const mySignature = sign(rawIpnSignature);
+
+//   console.log("CHỮ KÝ MoMo:", momoSignature);
+//   console.log("CHỮ KÝ SERVER:", mySignature);
+
+//   if (mySignature !== momoSignature) {
+//       console.error(' CẢNH BÁO BẢO MẬT: Chữ ký không trùng khớp! Gói tin có thể bị giả mạo.');
+//       return res.status(400).json({ 
+//         success: false, 
+//         message: 'Signature mismatch' 
+//       });
+//     }
+
+//   // Lấy ID đơn hàng gốc (ví dụ: '91_1780...' tách ra thành 91)
+//   const realId = Number(orderId.split('_')[0]);
+
+//   // 2. KIỂM TRA ĐƠN HÀNG TRONG DB: Tránh trường hợp trùng lặp hoặc đơn hàng không tồn tại
+//   Order.getOrderDetailAdmin(realId, (err, order) => {
+//     if (err || !order) {
+//       console.error(`IPN Error: Order ${realId} not found in database.`);
+//       return res.status(404).json({ message: 'Order not found' });
+//     }
+
+//     // Nếu trạng thái thanh toán đã là PAID từ trước, trả về 204 ngay để báo cho MoMo ngừng gửi lại tin
+//     if (order.payment_status === 'PAID') {
+//       console.log(`Order ${realId} was already paid. Skipping duplicate IPN.`);
+//       return res.status(204).send(); 
+//     }
+
+//     // 3. XỬ LÝ CẬP NHẬT DATABASE THEO KẾT QUẢ GIAO DỊCH
+//     if (Number(resultCode) === 0) {
+//       // Giao dịch thành công -> Cập nhật trạng thái thanh toán và vận chuyển
+//       const sqlUpdate = `
+//         UPDATE orders 
+//         SET 
+//           payment_status = 'PAID',
+//           status = 'CONFIRMED',
+//           momo_order_id = ?,
+//           momo_transaction_id = ?,
+//           payment_time = NOW()
+//         WHERE order_id = ?
+//       `;
+
+//       db.query(sqlUpdate, [orderId, String(transId), realId], (updateErr, results) => {
+//         if (updateErr) {
+//           console.error(`DB Update Error for order ${realId}:`, updateErr);
+//           return res.status(500).json({ message: 'DB Error', error: updateErr.message });
+//         }
+        
+//         console.log(`Order ${realId} successfully updated to PAID and CONFIRMED via IPN.`);
+//         return res.status(204).send(); // Trả về HTTP 204 đúng chuẩn MoMo yêu cầu
+//       });
+
+//     } else {
+//       // Giao dịch thất bại (Người dùng hủy hoặc lỗi thẻ) -> Cập nhật trạng thái FAILED
+//       const sqlFailed = `
+//         UPDATE orders
+//         SET
+//           status = 'FAILED',
+//           payment_status = 'UNPAID',
+//           failed_reason = 'Thanh toan MoMo that bai hoac bi huy'
+//         WHERE order_id = ?
+//       `;
+
+//       db.query(sqlFailed, [realId], (updateErr) => {
+//         if (updateErr) console.error(`DB Update Error for order ${realId}:`, updateErr);
+//         return res.status(204).send();
+//       });
+//     }
+//   });
+// };
+
 export const momoIPN = (req, res) => {
-  console.log("RECEIVED MOMO IPN:", req.body);
+  console.log('\n================ MOMO IPN ================');
+  console.log('DỮ LIỆU NHẬN TỪ MOMO:', JSON.stringify(req.body, null, 2));
 
-  const { orderId, resultCode, transId, signature: momoSignature } = req.body;
+  const {
+    orderId,
+    resultCode,
+    transId,
+    signature: momoSignature
+  } = req.body;
 
-  // 1. XÁC THỰC CHỮ KÝ: Chống giả mạo gói tin IPN gửi tới server
-  const rawIpnSignature = buildIpnRawSignature(req.body);
-  const mySignature = sign(rawIpnSignature);
+  if (!orderId) {
+    console.error(' Thiếu orderId');
 
-  console.log("CHỮ KÝ MoMo:", momoSignature);
-  console.log("CHỮ KÝ SERVER:", mySignature);
-
-  if (mySignature !== momoSignature) {
-    console.warn("Signature mismatch - vẫn tiếp tục xử lý IPN");
+    return res.status(400).json({
+      resultCode: 1,
+      message: 'Thiếu orderId'
+    });
   }
 
-  // Lấy ID đơn hàng gốc (ví dụ: '91_1780...' tách ra thành 91)
-  const realId = Number(orderId.split("_")[0]);
+  // Kiểm tra chữ ký
+  try {
+    const rawIpnSignature = buildIpnRawSignature(req.body);
+    const mySignature = sign(rawIpnSignature);
 
-  // 2. KIỂM TRA ĐƠN HÀNG TRONG DB: Tránh trường hợp trùng lặp hoặc đơn hàng không tồn tại
+    console.log(' CHỮ KÝ MOMO   :', momoSignature);
+    console.log(' CHỮ KÝ SERVER :', mySignature);
+
+    if (mySignature !== momoSignature) {
+      console.warn(' Chữ ký không khớp, nhưng vẫn tiếp tục xử lý');
+    }
+  } catch (err) {
+    console.error(' Lỗi kiểm tra chữ ký:', err);
+  }
+
+  const realId = Number(orderId.split('_')[0]);
+
+  console.log(' Mã đơn MoMo :', orderId);
+  console.log(' Mã đơn DB   :', realId);
+  console.log(' Kết quả GD  :', resultCode);
+  console.log(' Mã giao dịch:', transId);
+
   Order.getOrderDetailAdmin(realId, (err, order) => {
-    if (err || !order) {
-      console.error(`⚠️ IPN Error: Order ${realId} not found in database.`);
-      return res.status(404).json({ message: "Order not found" });
+
+    if (err) {
+      console.error(' Lỗi truy vấn đơn hàng:', err);
+
+      return res.status(500).json({
+        resultCode: 1,
+        message: 'Lỗi cơ sở dữ liệu'
+      });
     }
 
-    // Nếu trạng thái thanh toán đã là PAID từ trước, trả về 204 ngay để báo cho MoMo ngừng gửi lại tin
-    if (order.payment_status === "PAID") {
-      console.log(
-        `ℹ️ Order ${realId} was already paid. Skipping duplicate IPN.`,
-      );
-      return res.status(204).send();
+    if (!order) {
+      console.error(` Không tìm thấy đơn hàng #${realId}`);
+
+      return res.status(404).json({
+        resultCode: 1,
+        message: 'Không tìm thấy đơn hàng'
+      });
     }
 
-    // 3. XỬ LÝ CẬP NHẬT DATABASE THEO KẾT QUẢ GIAO DỊCH
+    console.log(' Đã tìm thấy đơn hàng:', {
+      order_id: order.order_id,
+      payment_status: order.payment_status,
+      status: order.status
+    });
+
+    // Đã thanh toán trước đó
+    if (order.payment_status === 'PAID') {
+      console.log(` Đơn hàng #${realId} đã thanh toán trước đó`);
+
+      return res.status(200).json({
+        resultCode: 0,
+        message: 'Đã xử lý trước đó'
+      });
+    }
+
+    // Thanh toán thành công
     if (Number(resultCode) === 0) {
-      // Giao dịch thành công -> Cập nhật trạng thái thanh toán và vận chuyển
+
       const sqlUpdate = `
-        UPDATE orders 
-        SET 
+        UPDATE orders
+        SET
           payment_status = 'PAID',
           status = 'CONFIRMED',
           momo_order_id = ?,
@@ -220,35 +427,73 @@ export const momoIPN = (req, res) => {
         sqlUpdate,
         [orderId, String(transId), realId],
         (updateErr, results) => {
+
           if (updateErr) {
-            console.error(`DB Update Error for order ${realId}:`, updateErr);
-            return res
-              .status(500)
-              .json({ message: "DB Error", error: updateErr.message });
+            console.error(' Lỗi cập nhật đơn hàng:', updateErr);
+
+            return res.status(500).json({
+              resultCode: 1,
+              message: 'Không thể cập nhật đơn hàng'
+            });
+          }
+
+          console.log(' Kết quả UPDATE:', results);
+
+          if (results.affectedRows === 0) {
+            console.warn(
+              ` Không có bản ghi nào được cập nhật cho đơn #${realId}`
+            );
           }
 
           console.log(
-            `✅ Order ${realId} successfully updated to PAID and CONFIRMED via IPN.`,
+            `OK. Đơn hàng #${realId} đã được cập nhật thành PAID + CONFIRMED`
           );
-          return res.status(204).send(); // Trả về HTTP 204 đúng chuẩn MoMo yêu cầu
-        },
+
+          return res.status(200).json({
+            resultCode: 0,
+            message: 'Thanh toán thành công'
+          });
+        }
       );
+
     } else {
-      // Giao dịch thất bại (Người dùng hủy hoặc lỗi thẻ) -> Cập nhật trạng thái FAILED
+
+      console.log(
+        ` Thanh toán thất bại. resultCode = ${resultCode}`
+      );
+
       const sqlFailed = `
         UPDATE orders
         SET
           status = 'FAILED',
           payment_status = 'UNPAID',
-          failed_reason = 'Thanh toan MoMo that bai hoac bi huy'
+          failed_reason = 'Thanh toán MoMo thất bại hoặc bị hủy'
         WHERE order_id = ?
       `;
 
-      db.query(sqlFailed, [realId], (updateErr) => {
-        if (updateErr)
-          console.error(`DB Update Error for order ${realId}:`, updateErr);
-        return res.status(204).send();
-      });
+      db.query(
+        sqlFailed,
+        [realId],
+        (updateErr, results) => {
+
+          if (updateErr) {
+            console.error(
+              ' Lỗi cập nhật trạng thái thất bại:',
+              updateErr
+            );
+          }
+
+          console.log(
+            ' Đã cập nhật trạng thái FAILED:',
+            results
+          );
+
+          return res.status(200).json({
+            resultCode: 0,
+            message: 'Đã xử lý giao dịch thất bại'
+          });
+        }
+      );
     }
   });
 };
