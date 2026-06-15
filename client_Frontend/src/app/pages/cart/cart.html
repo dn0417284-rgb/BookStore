@@ -1,1 +1,161 @@
-<p>cart works!</p>
+<div class="cart-container">
+
+  <h1>Giỏ hàng của bạn</h1>
+
+  <div
+    *ngIf="items.length === 0"
+    class="empty-cart"
+  >
+    Chưa có sản phẩm nào trong giỏ hàng
+  </div>
+
+  <div
+    class="cart-actions"
+    *ngIf="items.length > 0"
+  >
+
+    <label class="select-all">
+
+      <input
+        type="checkbox"
+        [(ngModel)]="selectAll"
+        (change)="toggleAll()"
+      >
+
+      <span>Chọn tất cả</span>
+
+    </label>
+
+    <div
+      class="selected-bar"
+      *ngIf="selectedItems.length >= 2"
+    >
+
+      <span class="selected-count">
+
+        Đã chọn:
+        <strong>
+          {{ selectedCount() }}
+        </strong>
+        sản phẩm
+
+      </span>
+
+      <span class="selected-total">
+
+        Tổng tiền:
+        <strong>
+          {{ selectedTotal() | number }}₫
+        </strong>
+
+      </span>
+
+      <button
+        class="checkout-btn"
+        (click)="checkoutSelected()"
+      >
+        Thanh toán
+      </button>
+
+      <button
+        class="btn-delete-selected"
+        (click)="deleteSelected()"
+      >
+        Xóa đã chọn
+      </button>
+
+    </div>
+
+  </div>
+
+  <div
+    *ngFor="let item of items"
+    class="cart-item"
+  >
+
+    <div class="checkbox-box">
+
+      <input
+        type="checkbox"
+        [checked]="selectedItems.includes(item.product_id)"
+        (change)="toggleItem(item.product_id)"
+      >
+
+    </div>
+
+    <div class="image-box">
+
+      <img
+        [src]="'images/' + item.image"
+        [alt]="item.title"
+      >
+
+    </div>
+
+    <div class="info">
+
+      <h3>
+        {{ item.title }}
+      </h3>
+
+      <p class="author">
+        {{ item.author }}
+      </p>
+
+      <div class="price">
+        {{ item.price | number }}₫
+      </div>
+
+    </div>
+
+    <div class="quantity">
+
+      <button
+        (click)="decreaseQuantity(item)"
+      >
+        -
+      </button>
+
+      <span>
+        {{ item.quantity }}
+      </span>
+
+      <button
+        (click)="increaseQuantity(item)"
+      >
+        +
+      </button>
+
+    </div>
+
+    <div class="subtotal">
+
+      {{
+        item.price *
+        item.quantity
+        | number
+      }}₫
+
+    </div>
+
+    <button
+      class="remove-btn"
+      (click)="removeItem(item.product_id)"
+    >
+      Xóa
+    </button>
+
+    <a
+      *ngIf="
+        selectedItems.length < 2 ||
+        !selectedItems.includes(item.product_id)
+      "
+      (click)="checkoutSingle(item)"
+      class="btn-checkout-selected"
+    >
+      Thanh toán
+    </a>
+
+  </div>
+
+</div>

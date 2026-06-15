@@ -1,0 +1,575 @@
+/* ==========================================================================
+   1. KHUNG CHUNG & LAYOUT CHÍNH (GRID)
+   ========================================================================== */
+.checkout-container {
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 0 20px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  color: #2d3748;
+}
+
+.checkout-container h1 {
+  font-size: 26px;
+  font-weight: 700;
+  color: #1a202c;
+  margin-bottom: 28px;
+  letter-spacing: -0.5px;
+}
+
+/* Chia 2 cột: Main (Trái) và Sidebar (Phải) */
+.checkout-layout {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 24px;
+  align-items: start;
+}
+
+/* Khung cấu trúc các khối Section */
+.checkout-section {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02), 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  border: 1px solid #edf2f7;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+  border-bottom: 1px solid #edf2f7;
+  padding-bottom: 12px;
+}
+
+.section-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #2d3748;
+  margin: 0;
+  letter-spacing: 0.5px;
+}
+
+/* ==========================================================================
+   2. KHỐI ĐỊA CHỈ GIAO HÀNG
+   ========================================================================== */
+.link-manage-address {
+  color: #3182ce;
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.link-manage-address:hover {
+  text-decoration: underline;
+}
+
+.address-list-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Thẻ địa chỉ */
+.address-card {
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background-color: #ffffff;
+}
+
+.address-card:hover {
+  border-color: #cbd5e0;
+  background-color: #f7fafc;
+}
+
+.address-card.selected {
+  border-color: #3182ce;
+  background-color: #f0f7ff;
+}
+
+.address-label {
+  display: flex;
+  gap: 14px;
+  cursor: pointer;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.address-label input[type="radio"] {
+  margin-top: 4px;
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: #3182ce;
+}
+
+.address-content {
+  flex: 1;
+}
+
+.address-top-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 6px;
+  flex-wrap: wrap;
+}
+
+.receiver-name {
+  font-weight: 600;
+  color: #1a202c;
+  font-size: 15px;
+}
+
+.phone-number {
+  color: #4a5568;
+  font-size: 14px;
+}
+
+.default-badge {
+  background-color: #ebf8ff;
+  color: #2b6cb0;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 4px;
+  border: 1px solid #bee3f8;
+}
+
+.address-detail-text {
+  margin: 0;
+  font-size: 14px;
+  color: #718096;
+  line-height: 1.5;
+}
+
+/* Các nút thêm địa chỉ */
+.empty-address-box {
+  text-align: center;
+  padding: 30px 20px;
+  color: #718096;
+}
+
+.btn-add-address {
+  display: inline-block;
+  margin-top: 12px;
+  background-color: #3182ce;
+  color: #ffffff;
+  padding: 10px 20px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.btn-add-address-minimal {
+  display: inline-block;
+  color: #4a5568;
+  font-size: 14px;
+  text-decoration: none;
+  font-weight: 500;
+  margin-top: 6px;
+  padding-left: 4px;
+}
+
+.btn-add-address-minimal:hover {
+  color: #3182ce;
+}
+
+/* ==========================================================================
+   3. DANH SÁCH SẢN PHẨM MUA
+   ========================================================================== */
+.product-list-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.checkout-product-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #edf2f7;
+}
+
+.checkout-product-item:last-child {
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+/* Khung bọc ảnh sản phẩm nhỏ ở trang thanh toán - Đã nâng kích thước lớn lên */
+.product-thumbnail {
+  width: 90px;        /* Tăng chiều rộng từ 70px lên 90px */
+  height: 110px;      /* Tăng chiều cao lên 110px để vừa vặn với phom đứng của bìa sách */
+  border-radius: 10px; /* Bo góc mịn hơn một chút cho cân đối với phom mới */
+  border: 1px solid #e2e8f0;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: #f7fafc;
+  display: flex;       /* Căn giữa ảnh tuyệt đối */
+  align-items: center;
+  justify-content: center;
+}
+
+/* Thẻ ảnh bên trong khung nhỏ */
+.product-thumbnail img {
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  max-height: 100%;
+  object-fit: contain; /* Giữ nguyên 100% tỷ lệ gốc bìa sách, không bao giờ bị cắt xén */
+  padding: 4px;        /* Tạo khoảng đệm nhỏ để ảnh không bị dính sát viền khung */
+  box-sizing: border-box;
+}
+
+/* Định dạng thẻ bọc liên kết ảnh */
+.product-link-wrapper {
+  display: block;
+  text-decoration: none;
+}
+
+/* Định dạng thẻ bọc liên kết tiêu đề: Giữ nguyên màu gốc và thêm hiệu ứng gạch chân mờ khi hover */
+.product-title-link {
+  text-decoration: none;
+  display: inline-block;
+}
+
+.product-title-link:hover .product-title {
+  color: #3182ce; /* Chuyển màu nhẹ khi đưa chuột vào tiêu đề sách */
+  text-decoration: underline;
+}
+
+.product-details {
+  flex: 1;
+}
+
+.product-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: #2d3748;
+  margin: 0 0 4px 0;
+  line-height: 1.4;
+}
+
+.product-unit-price {
+  margin: 0;
+  font-size: 13px;
+  color: #718096;
+}
+
+/* Thanh tăng giảm số lượng */
+.quantity-controller-box {
+  display: flex;
+  align-items: center;
+  border: 1px solid #cbd5e0;
+  border-radius: 6px;
+  overflow: hidden;
+  background: #ffffff;
+}
+
+.quantity-controller-box button {
+  background: #f7fafc;
+  border: none;
+  width: 28px;
+  height: 28px;
+  font-size: 16px;
+  cursor: pointer;
+  color: #4a5568;
+  transition: background 0.2s;
+}
+
+.quantity-controller-box button:hover:not(:disabled) {
+  background: #edf2f7;
+}
+
+.quantity-controller-box button:disabled {
+  color: #cbd5e0;
+  cursor: not-allowed;
+}
+
+.quantity-value {
+  width: 36px;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.product-subtotal-price {
+  font-weight: 600;
+  color: #1a202c;
+  font-size: 15px;
+  width: 100px;
+  text-align: right;
+}
+
+.empty-cart-box {
+  text-align: center;
+  padding: 40px 20px;
+  color: #718096;
+}
+
+.btn-back-cart {
+  display: inline-block;
+  margin-top: 12px;
+  color: #3182ce;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+/* ==========================================================================
+   4. PHƯƠNG THỨC THANH TOÁN & GHI CHÚ
+   ========================================================================== */
+.payment-methods-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.payment-method-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 14px 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.payment-method-card:hover {
+  background-color: #f7fafc;
+}
+
+.payment-method-card.active {
+  border-color: #3182ce;
+  background-color: #f0f7ff;
+}
+
+.payment-method-card input[type="radio"] {
+  margin-top: 3px;
+  accent-color: #3182ce;
+}
+
+.payment-meta {
+  display: flex;
+  flex-direction: column;
+}
+
+.payment-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #2d3748;
+}
+
+.payment-desc {
+  font-size: 12px;
+  color: #718096;
+  margin-top: 2px;
+}
+
+/* Ô Textarea ghi chú */
+.note-box-wrapper textarea {
+  width: 100%;
+  border: 1px solid #cbd5e0;
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 14px;
+  font-family: inherit;
+  resize: none;
+  outline: none;
+  box-sizing: border-box;
+  margin-top: 8px;
+}
+
+.note-box-wrapper textarea:focus {
+  border-color: #3182ce;
+  box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.15);
+}
+
+/* ==========================================================================
+   5. KHỐI TỔNG KẾT HÓA ĐƠN & ĐẶT HÀNG (SIDEBAR)
+   ========================================================================== */
+.checkout-summary-card {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02), 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  border: 1px solid #edf2f7;
+  /* Định vị dính (sticky) để cố định khi cuộn màn hình máy tính */
+  position: sticky;
+  top: 24px;
+}
+
+.summary-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  font-size: 14px;
+  color: #4a5568;
+}
+
+.summary-value {
+  font-weight: 500;
+  color: #2d3748;
+}
+
+.summary-value.free-shipping {
+  color: #38a169;
+  font-weight: 600;
+}
+
+.summary-divider {
+  height: 1px;
+  background-color: #edf2f7;
+  margin: 16px 0;
+}
+
+.total-amount-row {
+  margin-bottom: 24px;
+}
+
+.total-label {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1a202c;
+}
+
+.total-value {
+  font-size: 20px;
+  font-weight: 700;
+  color: #e53e3e; /* Màu đỏ nhấn mạnh số tiền cần trả */
+}
+
+/* Siêu nút Đặt Hàng */
+.btn-place-order {
+  width: 100%;
+  background-color: #e53e3e;
+  color: #ffffff;
+  border: none;
+  padding: 15px;
+  font-size: 16px;
+  font-weight: 700;
+  border-radius: 10px;
+  cursor: pointer;
+  letter-spacing: 0.5px;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 6px -1px rgba(229, 62, 62, 0.2);
+}
+
+.btn-place-order:hover:not(:disabled) {
+  background-color: #c53030;
+  box-shadow: 0 6px 12px -2px rgba(229, 62, 62, 0.3);
+  transform: translateY(-1px);
+}
+
+.btn-place-order:disabled {
+  background-color: #cbd5e0;
+  color: #a0aec0;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+
+.spinner-text {
+  opacity: 0.8;
+  font-weight: 500;
+}
+
+/* ==========================================================================
+   6. RESPONSIVE (MÀN HÌNH ĐIỆN THOẠI & TABLET)
+   ========================================================================== */
+@media (max-width: 1024px) {
+  /* Chuyển layout từ 2 cột dọc thành 1 hàng cuộn chiếu đứng */
+  .checkout-layout {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .checkout-summary-card {
+    position: static; /* Hủy cơ chế dính trên thiết bị nhỏ */
+    margin-top: 8px;
+  }
+}
+
+@media (max-width: 640px) {
+  .checkout-container {
+    padding: 0 12px;
+    margin: 20px auto;
+  }
+
+  .checkout-container h1 {
+    font-size: 22px;
+    margin-bottom: 18px;
+  }
+
+  .checkout-section, 
+  .checkout-summary-card {
+    padding: 16px;
+  }
+
+  .checkout-product-item {
+    position: relative;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .product-details {
+    width: calc(100% - 90px);
+  }
+
+  /* Đẩy cụm số lượng và tổng tiền xuống dòng riêng biệt trên mobile */
+  .quantity-controller-box {
+    margin-left: 86px;
+  }
+
+  .product-subtotal-price {
+    flex: 1;
+    text-align: right;
+  }
+}
+
+.payment-warning {
+  margin-top: 12px;
+  text-align: center;
+  color: #dc2626;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.success-toast {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 9999;
+
+  background: #22c55e;
+  color: white;
+
+  padding: 14px 20px;
+  border-radius: 8px;
+
+  font-weight: 600;
+
+  box-shadow: 0 4px 12px rgba(0,0,0,.15);
+
+  animation: fadeIn .3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

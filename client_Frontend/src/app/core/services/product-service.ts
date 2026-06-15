@@ -1,66 +1,22 @@
-import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-
+import { Injectable } from '@angular/core';
 import { Product } from '../models/product.model';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ProductService {
-
-  private apiUrl =
-    'http://localhost:3000/api/products';
-
-  constructor(
-    private http: HttpClient
-  ) {}
-
-  getProducts(): Observable<Product[]> {
-
-    return this.http.get<Product[]>(
-      this.apiUrl
-    );
-
+  constructor(private http: HttpClient) {}
+  getProducts() {
+    return this.http.get<Product[]>(`/api/products`);
   }
-
-  getProductById(
-    id: number
-  ): Observable<Product> {
-
-    return this.http.get<Product>(
-      `${this.apiUrl}/${id}`
-    );
-
+  createProduct(formData: FormData) {
+    return this.http.post(`/api/products`, formData);
   }
-
-  searchProducts(
-    keyword: string
-  ): Observable<Product[]> {
-
-    return this.http.get<Product[]>(
-      `${this.apiUrl}/search?keyword=${keyword}`
-    );
-
+  deleteProduct(id: number) {
+    return this.http.delete(`/api/products/${id}`);
   }
-
-  getBestSellers(): Observable<Product[]> {
-
-    return this.http.get<Product[]>(
-      `${this.apiUrl}/best-sellers`
-    );
-
+  updateProduct(id: number, formData: FormData) {
+    return this.http.put<Product>(`/api/products/${id}`, formData);
   }
-
-  filterProductsByPrice(
-    min: number,
-    max: number
-  ): Observable<Product[]> {
-
-    return this.http.get<Product[]>(
-      `${this.apiUrl}/filter?min=${min}&max=${max}`
-    );
-
-  }
-
 }

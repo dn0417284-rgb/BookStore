@@ -1,0 +1,369 @@
+/* =========================
+   CONTAINER
+========================= */
+.order-detail-container {
+  max-width: 1400px;
+  margin: 30px auto;
+  padding: 20px;
+}
+
+.loading {
+  text-align: center;
+  padding: 60px;
+  font-size: 18px;
+  color: #64748b;
+}
+
+/* =========================
+   HEADER
+========================= */
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+.page-header h1 {
+  margin: 0;
+  font-size: 28px;
+  color: #1e293b;
+}
+
+.btn-back {
+  text-decoration: none;
+  background: #fff;
+  color: #2563eb;
+  border: 1px solid #2563eb;
+  padding: 10px 18px;
+  border-radius: 10px;
+  font-weight: 600;
+  transition: 0.2s;
+}
+
+.btn-back:hover {
+  background: #2563eb;
+  color: #fff;
+}
+
+/* =========================
+   CARD BASE
+========================= */
+.status-card,
+.info-card,
+.timeline-card,
+.products-card,
+.total-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(0,0,0,.05);
+  margin-bottom: 20px;
+}
+
+/* =========================
+   STATUS
+========================= */
+.status-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.status-top h3 {
+  margin: 0 0 5px;
+}
+
+.status-text {
+  color: #64748b;
+  margin: 0;
+}
+
+.status {
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.status.pending { background: #fef3c7; color: #b45309; }
+.status.confirmed { background: #dbeafe; color: #1d4ed8; }
+.status.packing { background: #f3e8ff; color: #9333ea; }
+.status.shipping { background: #ede9fe; color: #6d28d9; }
+.status.delivered { background: #cffafe; color: #0f766e; }
+.status.received { background: #dcfce7; color: #15803d; }
+.status.failed { background: #fee2e2; color: #dc2626; }
+.status.cancelled { background: #f1f5f9; color: #475569; }
+
+/* =========================
+   INFO GRID
+========================= */
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.info-card h3 {
+  margin: 0 0 15px;
+  color: #1e293b;
+}
+
+.info-card p {
+  margin: 10px 0;
+  line-height: 1.6;
+}
+
+/* =========================
+   PAYMENT
+========================= */
+.payment-badge {
+  display: inline-block;
+  padding: 5px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.payment-badge.cod { background: #f1f5f9; color: #334155; }
+.payment-badge.momo { background: #ffe4f1; color: #d61f69; }
+
+.payment-status {
+  font-weight: 600;
+  color: #16a34a;
+}
+
+/* =========================
+   TIMELINE
+========================= */
+.timeline {
+  margin-top: 20px;
+}
+
+.timeline-item {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #2563eb;
+  margin-top: 6px;
+  flex-shrink: 0;
+}
+
+.timeline-item strong {
+  display: block;
+  margin-bottom: 4px;
+}
+
+.timeline-item p {
+  margin: 0;
+  color: #64748b;
+}
+
+/* =========================
+   PRODUCTS
+========================= */
+.products-card h3 {
+  margin: 0 0 20px;
+}
+
+.product-row {
+  display: grid;
+  grid-template-columns: 90px 1fr 100px 140px 160px;
+  gap: 15px;
+  align-items: center;
+  padding: 15px 0;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.product-row:last-child {
+  border-bottom: none;
+}
+
+.product-row img {
+  width: 70px;
+  height: 95px;
+  object-fit: cover;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+}
+
+.product-info h4 {
+  margin: 0 0 6px;
+}
+
+.product-info p {
+  margin: 0;
+  color: #64748b;
+}
+
+.product-qty,
+.product-price,
+.product-total {
+  text-align: center;
+}
+
+.product-total {
+  font-weight: 700;
+  color: #dc2626;
+}
+
+/* =========================
+   TOTAL (FIXED + CLEAN)
+========================= */
+.total-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.total-row {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 15px;
+  font-size: 18px;
+}
+
+.total-row strong {
+  color: #dc2626;
+}
+
+.total-card .sub-row {
+  font-size: 14px;
+  color: #666;
+}
+
+.total-card .main-row {
+  font-size: 18px;
+  color: #333;
+}
+
+.total-card .highlight {
+  color: #28a745;
+  font-weight: bold;
+}
+
+/* =========================
+   STATUS PAYMENT COLOR
+========================= */
+.status-card .unpaid { color: #dc3545; }
+.status-card .paid { color: #28a745; }
+.status-card .refunded { color: #17a2b8; }
+
+/* =========================
+   ACTION BAR
+========================= */
+.action-bar {
+  display: flex;
+  justify-content: flex-end;
+  gap: 15px;
+  margin-top: 25px;
+}
+
+.btn-success,
+.btn-danger {
+  border: none;
+  padding: 12px 24px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.2s;
+}
+
+.btn-success { background: #16a34a; color: #fff; }
+.btn-success:hover { background: #15803d; }
+
+.btn-danger { background: #dc2626; color: #fff; }
+.btn-danger:hover { background: #b91c1c; }
+
+/* =========================
+   TABLET
+========================= */
+@media (max-width: 992px) {
+  .info-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .product-row {
+    grid-template-columns: 80px 1fr;
+  }
+
+  .product-qty,
+  .product-price,
+  .product-total {
+    text-align: left;
+  }
+}
+
+/* =========================
+   MOBILE
+========================= */
+@media (max-width: 768px) {
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+
+  .status-top {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .product-row {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .product-row img {
+    width: 90px;
+    height: 120px;
+  }
+
+  .action-bar {
+    flex-direction: column;
+  }
+
+  .btn-success,
+  .btn-danger {
+    width: 100%;
+  }
+}
+
+.btn-pay-now {
+  background: #ae2070;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.btn-pay-now:hover {
+  opacity: 0.9;
+}
+
+
+.product-link {
+  text-decoration: none;
+  color: inherit;
+  transition: 0.2s;
+}
+
+.product-link:hover {
+  color: #2563eb;
+}
+
+.product-image {
+  cursor: pointer;
+}

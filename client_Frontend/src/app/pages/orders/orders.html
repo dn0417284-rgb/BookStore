@@ -1,0 +1,171 @@
+<div class="orders-container">
+
+  <h1>Lịch sử đơn hàng</h1>
+
+  <div
+    *ngIf="orders.length === 0"
+    class="empty"
+  >
+    Bạn chưa có đơn hàng nào
+  </div>
+
+  <div
+    *ngFor="let order of paginatedOrders"
+    class="order-card"
+  >
+
+    <!-- Header -->
+    <div class="order-header">
+
+      <div>
+        <strong class="order-code">
+          Đơn hàng #{{ order.order_id }}
+        </strong>
+      </div>
+
+      <!-- Đã sửa: Ép kiểu kiểm tra động an toàn để không bị lỗi build TS2339 trên template -->
+      <span
+        class="status"
+        [ngClass]="[
+          order.status ? order.status.toLowerCase() : '',
+          order['payment_status'] ? order['payment_status'].toLowerCase() : ''
+        ]"
+      >
+        {{ 
+          (order['payment_method'] === 'MOMO' || order['payment_method'] === 'ZALOPAY') && order['payment_status'] === 'unpaid' 
+          ? 'Chờ thanh toán' 
+          : getStatusText(order.status) 
+        }}
+      </span>
+
+    </div>
+
+    <!-- Info -->
+    <div class="order-info">
+
+      <div class="info-row">
+        <span>Khách hàng</span>
+        <strong>{{ order.customer_name }}</strong>
+      </div>
+
+      <div class="info-row">
+        <span>SĐT</span>
+        <strong>{{ order.phone }}</strong>
+      </div>
+
+      <div class="info-row">
+        <span>Địa chỉ</span>
+        <strong>{{ order.address }}</strong>
+      </div>
+
+      <div class="info-row">
+        <span>Tổng tiền</span>
+        <strong class="price">
+          {{ order.total_amount | number }}₫
+        </strong>
+      </div>
+
+    </div>
+
+    <!-- Preview -->
+    <!-- Đã sửa: Bảo toàn đúng cú pháp mảng [0] gốc của bạn để bốc ảnh cuốn sách đầu tiên -->
+    <div
+      class="order-preview"
+      *ngIf="order.items && order.items.length > 0"
+    >
+
+      <img
+        [src]="'images/' + order.items[0].image"
+        [alt]="order.items[0].title"
+      >
+
+      <div class="preview-content">
+
+        <h4>
+          {{ order.items[0].title }}
+        </h4>
+
+        <span
+          class="product-count"
+          *ngIf="order.items.length > 1"
+        >
+          + {{ order.items.length - 1 }} sản phẩm khác
+        </span>
+
+      </div>
+
+    </div>
+
+    <!-- Footer -->
+    <div class="order-footer">
+
+      <span class="item-total">
+        {{ order.items ? order.items.length : 0 }} sản phẩm
+      </span>
+
+      <!-- KHU VỰC HÀNH ĐỘNG: Chứa cụm nút bấm thẳng hàng -->
+      <div class="action-buttons-group" style="display: flex; align-items: center; gap: 12px;">
+        
+        <!-- NÚT THANH TOÁN THÔNG MINH: Chỉ hiện nếu đơn trực tuyến chưa đóng tiền -->
+        <button 
+          type="button" 
+          class="btn-pay-now"
+          *ngIf="(order['payment_method'] === 'MOMO' || order['payment_method'] === 'ZALOPAY') && order['payment_status'] === 'unpaid'"
+          (click)="repayOrder(order)">
+          💳 Thanh toán ngay
+        </button>
+
+        <a
+          class="detail-link"
+          [routerLink]="['/orders', order.order_id]"
+        >
+          Chi tiết →
+        </a>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- Pagination -->
+  <div
+    class="pagination"
+    *ngIf="totalPages > 1"
+  >
+
+    <button
+      (click)="changePage(currentPage - 1)"
+      [disabled]="currentPage === 1"
+    >
+      ←
+    </button>
+
+    <ng-container *ngFor="let page of pages">
+
+      <button
+        *ngIf="page !== '...'"
+        [class.active]="page === currentPage"
+        (click)="changePage(+page)"
+      >
+        {{ page }}
+      </button>
+
+      <span
+        *ngIf="page === '...'"
+        class="dots"
+      >
+        ...
+      </span>
+
+    </ng-container>
+
+    <button
+      (click)="changePage(currentPage + 1)"
+      [disabled]="currentPage === totalPages"
+    >
+      →
+    </button>
+
+  </div>
+
+</div>

@@ -2,137 +2,91 @@ import { Routes } from '@angular/router';
 import { adminGuard } from './core/guards/admin.guard';
 
 export const routes: Routes = [
-
+  // AUTH
   {
     path: 'login',
-    loadComponent: () =>
-      import('./pages/login/login')
-        .then(m => m.Login)
+    loadComponent: () => import('./pages/login/login').then((m) => m.Login),
   },
   {
     path: 'register',
-    loadComponent: () =>
-      import('./pages/register/register')
-        .then(m => m.Register)
-  },
-  {
-    path: 'admin',
-
-    loadComponent: () =>
-      import('./pages/admin/dashboard/dashboard')
-        .then(m => m.Dashboard),
-
-    canActivate: [adminGuard]
+    loadComponent: () => import('./pages/register/register').then((m) => m.Register),
   },
 
-  {
-    path: 'admin/products',
-    loadComponent: () =>
-      import('./pages/admin/product-management/product-list/product-list')
-        .then(m => m.ProductList),
-    canActivate: [adminGuard]
-  },
-
-  {
-    path: 'orders',
-    loadComponent: () =>
-      import('./pages/orders/orders')
-        .then(m => m.Orders)
-  },
-
-  {
-    path: 'admin/orders',
-    loadComponent: () =>
-      import('./pages/admin/order-management/order-management')
-        .then(m => m.OrderManagement)
-  },
-
-  {
-    path: 'admin/orders/:id',
-    loadComponent: () =>
-      import(
-        './pages/admin/order-management/order-detail-admin/order-detail-admin'
-      ).then(m => m.OrderDetailAdmin),
-    canActivate: [adminGuard]
-  },
-
-  {
-    path: 'orders/:id',
-    loadComponent: () =>
-      import('./pages/order-detail/order-detail')
-        .then(m => m.OrderDetail)
-  },
-
-  
-  {
-    path: 'admin/products/add',
-    loadComponent: () =>
-      import('./pages/admin/product-management/add-product/add-product')
-        .then(m => m.AddProduct),
-    canActivate: [adminGuard]
-  },
-
-  {
-    path: 'admin/products/edit/:id',
-    loadComponent: () =>
-      import('./pages/admin/product-management/edit-product/edit-product')
-        .then(m => m.EditProduct),
-    canActivate: [adminGuard]
-  },
-
-  {
-    path: 'admin/customers',
-    loadComponent: () =>
-      import('./pages/admin/customer-management/customer-list/customer-list')
-        .then(m => m.CustomerList),
-    canActivate: [adminGuard]
-  },
-
-  {
-    path: 'profile',
-    loadComponent: () =>
-      import('./pages/profile/profile')
-        .then(m => m.Profile)
-  },
-
+  // USER
   {
     path: '',
-
-    loadComponent: () =>
-      import('./pages/home/home')
-        .then(m => m.Home)
+    loadComponent: () => import('./pages/home/home').then((m) => m.Home),
   },
-
   {
     path: 'product/:id',
-
-    loadComponent: () =>
-      import('./pages/product-detail/product-detail')
-        .then(m => m.ProductDetail)
+    loadComponent: () => import('./pages/product-detail/product-detail').then((m) => m.ProductDetail),
   },
-
   {
     path: 'cart',
-
-    loadComponent: () =>
-      import('./pages/cart/cart')
-        .then(m => m.Cart)
+    loadComponent: () => import('./pages/cart/cart').then((m) => m.Cart),
   },
-
   {
     path: 'checkout',
-
-    loadComponent: () =>
-      import('./pages/checkout/checkout')
-        .then(m => m.Checkout)
+    loadComponent: () => import('./pages/checkout/checkout').then((m) => m.Checkout),
   },
-
+  {
+    path: 'orders',
+    loadComponent: () => import('./pages/orders/orders').then((m) => m.Orders),
+  },
+  {
+    path: 'orders/:id',
+    loadComponent: () => import('./pages/order-detail/order-detail').then((m) => m.OrderDetail),
+  },
+  {
+    path: 'profile',
+    loadComponent: () => import('./pages/profile/profile').then((m) => m.Profile),
+  },
   {
     path: 'addresses',
     loadComponent: () =>
-      import(
-        './pages/profile/address-management/address-management'
-      )
-      .then(m => m.AddressManagement)
-  }
+      import('./pages/profile/address-management/address-management').then((m) => m.AddressManagement),
+  },
+
+  // ADMIN
+  {
+    path: 'admin',
+    loadComponent: () => import('./pages/admin/dashboard/dashboard').then((m) => m.Dashboard),
+    canActivate: [adminGuard],
+  },
+  {
+    path: 'admin/products',
+    loadComponent: () =>
+      import('./pages/admin/product-management/product-list/product-list').then((m) => m.ProductList),
+    canActivate: [adminGuard],
+  },
+  {
+    path: 'admin/products/add',
+    loadComponent: () =>
+      import('./pages/admin/product-management/add-product/add-product').then((m) => m.AddProduct),
+    canActivate: [adminGuard],
+  },
+  {
+    path: 'admin/products/edit/:id',
+    loadComponent: () =>
+      import('./pages/admin/product-management/edit-product/edit-product').then((m) => m.EditProduct),
+    canActivate: [adminGuard],
+  },
+  {
+    path: 'admin/customers',
+    loadComponent: () =>
+      import('./pages/admin/customer-management/customer-list/customer-list').then((m) => m.CustomerList),
+    canActivate: [adminGuard],
+  },
+  {
+    path: 'admin/orders',
+    loadComponent: () =>
+      import('./pages/admin/order-management/order-list/order-list').then((m) => m.OrderList),
+    canActivate: [adminGuard],
+  },
+  {
+    path: 'admin/orders/:id',
+    loadComponent: () =>
+      import('./pages/admin/order-management/order-detail/order-detail').then((m) => m.OrderDetail),
+    canActivate: [adminGuard],
+  },
 ];
