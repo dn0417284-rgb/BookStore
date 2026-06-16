@@ -1,6 +1,6 @@
 import Address from '../models/address.model.js';
 
-export const getAddresses = (
+const getAddresses = (
   req,
   res
 ) => {
@@ -28,7 +28,7 @@ export const getAddresses = (
 
 };
 
-export const createAddress = (
+const createAddress = (
   req,
   res
 ) => {
@@ -94,8 +94,7 @@ export const createAddress = (
   );
 
 };
-
-export const updateAddress = (
+const updateAddress = (
   req,
   res
 ) => {
@@ -163,7 +162,7 @@ export const updateAddress = (
 
 };
 
-export const deleteAddress = (
+const deleteAddress = (
   req,
   res
 ) => {
@@ -191,7 +190,7 @@ export const deleteAddress = (
 
 };
 
-export const setDefaultAddress = (
+const setDefaultAddress = (
   req,
   res
 ) => {
@@ -218,4 +217,12 @@ export const setDefaultAddress = (
     }
   );
 
+};
+
+export {
+  getAddresses,
+  createAddress,
+  updateAddress,
+  deleteAddress,
+  setDefaultAddress
 };

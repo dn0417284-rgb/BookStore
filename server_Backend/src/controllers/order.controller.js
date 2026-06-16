@@ -69,7 +69,7 @@ function sign(raw) {
     .digest("hex");
 }
 
-export const createOrder = (req, res) => {
+const createOrder = (req, res) => {
   req.body.customer_id = req.user.customer_id;
 
   Order.create(req.body, async (err, orderId) => {
@@ -517,6 +517,19 @@ export const repayOrder = (req, res) => {
         message: "Order cannot be repaid",
       });
     }
+  );
+};
+const getOrderDetail = (req, res) => {
+  Order.getOrderDetail(
+    Number(req.params.id),
+    req.user.customer_id,
+    (err, order) => {
+
+      if (err) {
+        return res.status(500).json({
+          success: false
+        });
+      }
 
     try {
       const ts = Date.now();
@@ -558,8 +571,9 @@ export const repayOrder = (req, res) => {
         .map((key) => `${key}=${fieldsToSign[key]}`)
         .join("&");
 
-      // 3. Tiến hành ký số SHA256 kèm theo Secret Key
-      body.signature = sign(rawSignature);
+    }
+  );
+};
 
       // 4. Gọi API sang cổng gateway MoMo với cấu hình headers đầy đủ
       const r = await axios.post(MOMO.endpoint, body, {
@@ -589,7 +603,7 @@ export const repayOrder = (req, res) => {
         error: e.response?.data || e.message,
       });
     }
-  });
+  );
 };
 
 /**
@@ -739,4 +753,15 @@ export const getOrderLogs = async (req, res) => {
       message: "Lỗi server",
     });
   }
+};
+
+export {
+  createOrder,
+  getOrders,
+  getOrderDetail,
+  getAllOrders,
+  getOrderDetailAdmin,
+  updateOrderStatus,
+  cancelOrder,
+  repayOrder
 };

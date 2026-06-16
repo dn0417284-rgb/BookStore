@@ -13,22 +13,39 @@ class Order {
           return callback(err);
         }
 
-        const {
+      const [orderResult] = await connection.query(
+        `
+        INSERT INTO orders
+        (
           customer_id,
           customer_name,
           phone,
           email,
           address,
           note,
+          total_amount
+        )
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+        `,
+        [
+          customer_id,
+          customer_name,
+          phone,
+          email || null,
+          address,
+          note || null,
           total_amount,
           payment_method,
           address_id,
           items,
         } = order;
 
-        connection.query(
+      const orderId = orderResult.insertId;
+
+      for (const item of items) {
+        await connection.query(
           `
-          INSERT INTO orders
+          INSERT INTO order_items
           (
             customer_id,
             customer_name,

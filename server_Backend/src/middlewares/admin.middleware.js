@@ -1,11 +1,22 @@
-const adminMiddleware = (req, res, next) => {
-  if (req.user.role !== "admin") {
+const adminMiddleware = (
+  req,
+  res,
+  next
+) => {
+
+  if (
+    req.user.role !== 'admin'
+  ) {
+
     return res.status(403).json({
-      message: "Bạn không có quyền truy cập",
+      message:
+        'Bạn không có quyền truy cập'
     });
+
   }
 
   next();
+
 };
 
 export default adminMiddleware;

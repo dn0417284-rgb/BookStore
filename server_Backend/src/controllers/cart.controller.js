@@ -1,7 +1,7 @@
 import Cart from '../models/cart.model.js';
 
 // GET CART
-export const getCart = (req, res) => {
+const getCart = (req, res) => {
 
   const customerId =
     req.user.customer_id;
@@ -30,7 +30,7 @@ export const getCart = (req, res) => {
 };
 
 // ADD TO CART
-export const addToCart = (req, res) => {
+const addToCart = (req, res) => {
 
   const customerId = req.user.customer_id;
 
@@ -45,7 +45,7 @@ export const addToCart = (req, res) => {
     quantity,
     (err) => {
 
-      if (err) {
+    Cart.getByCustomer(customerId, (err2, results) => {
 
         return res.status(500).json({
           message: 'Lỗi thêm giỏ hàng',
@@ -54,16 +54,10 @@ export const addToCart = (req, res) => {
 
       }
 
-      Cart.getByCustomer(
-        customerId,
-        (err2, results) => {
-
-          if (err2) {
-
-            return res.status(500).json({
-              message: 'Lỗi lấy giỏ hàng',
-              error: err2
-            });
+      return res.status(201).json({
+        success: true,
+        data: results
+      });
 
           }
 
@@ -81,7 +75,7 @@ export const addToCart = (req, res) => {
 };
 
 // UPDATE QUANTITY
-export const updateQuantity = (req, res) => {
+const updateQuantity = (req, res) => {
 
   const customerId =
     req.user.customer_id;
@@ -108,18 +102,10 @@ export const updateQuantity = (req, res) => {
 
       }
 
-      Cart.getByCustomer(
-        customerId,
-        (err2, results) => {
-
-          if (err2) {
-
-            return res.status(500).json({
-              message: 'Lỗi lấy giỏ hàng',
-              error: err2
-            });
-
-          }
+      return res.status(200).json({
+        success: true,
+        data: results
+      });
 
           return res.status(200).json({
             success: true,
@@ -135,7 +121,7 @@ export const updateQuantity = (req, res) => {
 };
 
 // REMOVE ITEM
-export const removeItem = (req, res) => {
+const removeItem = (req, res) => {
 
   const customerId =
     req.user.customer_id;
@@ -157,11 +143,10 @@ export const removeItem = (req, res) => {
 
       }
 
-      Cart.getByCustomer(
-        customerId,
-        (err2, results) => {
-
-          if (err2) {
+      return res.status(200).json({
+        success: true,
+        data: results
+      });
 
             return res.status(500).json({
               message: 'Lỗi lấy giỏ hàng',
@@ -184,7 +169,7 @@ export const removeItem = (req, res) => {
 };
 
 // CLEAR CART
-export const clearCart = (req, res) => {
+const clearCart = (req, res) => {
 
   const customerId =
     req.user.customer_id;
@@ -210,4 +195,12 @@ export const clearCart = (req, res) => {
     }
   );
 
+};
+
+export {
+  getCart,
+  addToCart,
+  updateQuantity,
+  removeItem,
+  clearCart
 };

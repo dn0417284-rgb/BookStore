@@ -1,10 +1,16 @@
-import dotenv from "dotenv";
-dotenv.config();
-import "./config/db.js"; // kết nối DB
-import app from "./app.js"; // import app đã cấu hình
+import express from "express";
+import cors from "cors";
+import customerRoutes from "./routes/customer.routes.js";
 
-const PORT = process.env.PORT || 3000;
+const app = express();
+app.use(cors({
+  origin: "http://localhost:4200",
+  credentials: true
+}));
+app.use(express.json());
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+app.use("/api/customers", customerRoutes);
+
+app.listen(3000, () => {
+  console.log("Server running on port 3000");
 });
