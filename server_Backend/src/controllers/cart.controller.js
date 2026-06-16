@@ -33,24 +33,25 @@ const getCart = (req, res) => {
 const addToCart = (req, res) => {
 
   const customerId = req.user.customer_id;
-  const { product_id, quantity } = req.body;
 
-  Cart.add(customerId, product_id, quantity, (err) => {
+  const {
+    product_id,
+    quantity
+  } = req.body;
 
-    if (err) {
-      return res.status(500).json({
-        message: 'Lỗi thêm giỏ hàng',
-        error: err
-      });
-    }
+  Cart.add(
+    customerId,
+    product_id,
+    quantity,
+    (err) => {
 
     Cart.getByCustomer(customerId, (err2, results) => {
 
-      if (err2) {
         return res.status(500).json({
-          message: 'Lỗi lấy giỏ hàng',
-          error: err2
+          message: 'Lỗi thêm giỏ hàng',
+          error: err
         });
+
       }
 
       return res.status(201).json({
@@ -58,34 +59,47 @@ const addToCart = (req, res) => {
         data: results
       });
 
-    });
+          }
 
-  });
+          return res.status(201).json({
+            success: true,
+            data: results
+          });
+
+        }
+      );
+
+    }
+  );
+
 };
 
 // UPDATE QUANTITY
 const updateQuantity = (req, res) => {
 
-  const customerId = req.user.customer_id;
-  const productId = req.params.productId;
-  const { quantity } = req.body;
+  const customerId =
+    req.user.customer_id;
 
-  Cart.updateQuantity(customerId, productId, quantity, (err) => {
+  const productId =
+    req.params.productId;
 
-    if (err) {
-      return res.status(500).json({
-        message: 'Lỗi cập nhật số lượng',
-        error: err
-      });
-    }
+  const {
+    quantity
+  } = req.body;
 
-    Cart.getByCustomer(customerId, (err2, results) => {
+  Cart.updateQuantity(
+    customerId,
+    productId,
+    quantity,
+    (err) => {
 
-      if (err2) {
+      if (err) {
+
         return res.status(500).json({
-          message: 'Lỗi lấy giỏ hàng',
-          error: err2
+          message: 'Lỗi cập nhật số lượng',
+          error: err
         });
+
       }
 
       return res.status(200).json({
@@ -93,33 +107,40 @@ const updateQuantity = (req, res) => {
         data: results
       });
 
-    });
+          return res.status(200).json({
+            success: true,
+            data: results
+          });
 
-  });
+        }
+      );
+
+    }
+  );
+
 };
 
 // REMOVE ITEM
 const removeItem = (req, res) => {
 
-  const customerId = req.user.customer_id;
-  const productId = req.params.productId;
+  const customerId =
+    req.user.customer_id;
 
-  Cart.remove(customerId, productId, (err) => {
+  const productId =
+    req.params.productId;
 
-    if (err) {
-      return res.status(500).json({
-        message: 'Lỗi xóa sản phẩm',
-        error: err
-      });
-    }
+  Cart.remove(
+    customerId,
+    productId,
+    (err) => {
 
-    Cart.getByCustomer(customerId, (err2, results) => {
+      if (err) {
 
-      if (err2) {
         return res.status(500).json({
-          message: 'Lỗi lấy giỏ hàng',
-          error: err2
+          message: 'Lỗi xóa sản phẩm',
+          error: err
         });
+
       }
 
       return res.status(200).json({
@@ -127,9 +148,24 @@ const removeItem = (req, res) => {
         data: results
       });
 
-    });
+            return res.status(500).json({
+              message: 'Lỗi lấy giỏ hàng',
+              error: err2
+            });
 
-  });
+          }
+
+          return res.status(200).json({
+            success: true,
+            data: results
+          });
+
+        }
+      );
+
+    }
+  );
+
 };
 
 // CLEAR CART

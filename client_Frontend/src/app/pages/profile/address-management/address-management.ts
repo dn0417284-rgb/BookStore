@@ -29,6 +29,9 @@ export class AddressManagement implements OnInit {
   districts: any[] = [];
   wards: any[] = [];
 
+  errorMessage = '';
+  successMessage = '';
+
   selectedProvinceCode: number | null = null;
   selectedDistrictCode: number | null = null;
 
@@ -60,6 +63,8 @@ export class AddressManagement implements OnInit {
       .subscribe({
         next: (res: any) => {
           this.addresses = res.data || [];
+
+          this.cdr.detectChanges();
         },
         error: (err) => {
           console.error(err);
@@ -68,30 +73,68 @@ export class AddressManagement implements OnInit {
   }
 
   saveAddress(): void {
+
+    this.errorMessage = '';
+    this.successMessage = '';
+
     if (this.editingId) {
+
       this.addressService
         .updateAddress(
           this.editingId,
           this.form
         )
         .subscribe({
+
           next: () => {
+
+            this.successMessage =
+              'Cập nhật địa chỉ thành công';
+
             this.resetForm();
             this.loadAddresses();
+
+          },
+
+          error: (err) => {
+
+            this.errorMessage =
+              err.error?.message ||
+              'Không thể cập nhật địa chỉ';
+            this.cdr.detectChanges();
           }
+
         });
+
       return;
+
     }
 
-    this.addressService
-      .createAddress(this.form)
-      .subscribe({
-        next: () => {
-          this.resetForm();
-          this.loadAddresses();
-        }
-      });
-  }
+  this.addressService
+    .createAddress(this.form)
+    .subscribe({
+
+      next: () => {
+
+        this.successMessage =
+          'Thêm địa chỉ thành công';
+
+        this.resetForm();
+        this.loadAddresses();
+
+      },
+
+      error: (err) => {
+
+        this.errorMessage =
+          err.error?.message ||
+          'Không thể thêm địa chỉ';
+        this.cdr.detectChanges();
+      }
+
+    });
+
+}
 
   editAddress(address: Address): void {
     this.editingId = address.address_id;

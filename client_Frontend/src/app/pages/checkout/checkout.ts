@@ -1,216 +1,5 @@
-
-// import { Component, OnInit , ChangeDetectorRef } from '@angular/core';
-// import { CommonModule } from '@angular/common';
-// import { FormsModule } from '@angular/forms';
-// import { Router, RouterLink } from '@angular/router';
-// import { forkJoin, Observable, of } from 'rxjs';
-
-// import { CartService } from '../../core/services/cart';
-// import { CartItem } from '../../core/models/cart-item.model';
-// import { OrderService } from '../../core/services/order';
-// import { AddressService, Address } from '../../core/services/address';
-
-// @Component({
-//   selector: 'app-checkout',
-//   standalone: true,
-//   imports: [
-//     CommonModule,
-//     FormsModule,
-//     RouterLink
-//   ],
-//   templateUrl: './checkout.html',
-//   styleUrls: ['./checkout.css']
-// })
-// export class Checkout implements OnInit {
-
-//   items: CartItem[] = [];
-//   note = '';
-//   isBuyNowMode = false;
-//   isSubmitting = false; 
-
-//   paymentMethod: 'COD' | 'MOMO' = 'COD';
-
-//   addresses: Address[] = [];
-//   selectedAddressId: number | null = null;
-//   selectedAddress: Address | null = null;
-
-//   constructor(
-//     private cartService: CartService,
-//     private orderService: OrderService,
-//     private addressService: AddressService,
-//     private router: Router,
-//     private cdr: ChangeDetectorRef
-//   ) {}
-
-//   ngOnInit(): void {
-//     this.loadAddresses();
-//     this.initCheckoutItems();
-//   }
-
-//   /**
-//    * FIX ĐƯỜNG DẪN: Chuyển đổi từ '/products' thành '/product' đồng bộ hoàn toàn với cấu trúc file routes của dự án
-//    */
-//   goToProductDetail(event: Event, item: CartItem): void {
-//     event.preventDefault();
-//     event.stopPropagation();
-
-//     const productId = item.product?.product_id || (item.product as any)?.id;
-    
-//     if (productId) {
-//       // Sửa dứt điểm lỗi tại đây: Dùng '/product' thay vì '/products'
-//       this.router.navigate(['/product', productId]);
-//     } else {
-//       console.error('Không tìm thấy ID của sản phẩm:', item);
-//     }
-//   }
-
-//   private initCheckoutItems(): void {
-//     const buyNowItem = this.cartService.getBuyNowItem();
-
-//     if (buyNowItem) {
-//       this.isBuyNowMode = true;
-//       this.items = [{ ...buyNowItem }];
-//       this.cartService.clearBuyNowItem();
-//     } else {
-//       const checkoutItems = localStorage.getItem('checkoutItems');
-//       this.items = checkoutItems ? JSON.parse(checkoutItems) : [];
-      
-//       if (this.items.length === 0) {
-//         this.router.navigate(['/cart']);
-//       }
-//     }
-//   }
-
-//   loadAddresses(): void {
-//     this.addressService
-//       .getAddresses()
-//       .subscribe({
-//         next: (res: any) => {
-//           this.addresses = res.data || [];
-
-//           if (this.addresses.length === 0)  {
-//             this.cdr.detectChanges(); // Ép cập nhật trạng thái trống rỗng
-//             return;
-//           }
-
-//           const defaultAddress = this.addresses.find((a: any) => a.is_default);
-
-//           if (defaultAddress) {
-//             this.selectAddress(defaultAddress);
-//           } else {
-//             this.selectAddress(this.addresses[0]);
-//           }
-
-//            this.cdr.detectChanges(); 
-//         },
-//         error: (err: any) => {
-//           console.error('Không thể tải danh sách địa chỉ:', err);
-//         }
-//       });
-//   }
-
-//   selectAddress(address: Address): void {
-//     this.selectedAddress = address;
-//     this.selectedAddressId = address.address_id;
-//   }
-
-//   total(): number {
-//     return this.items.reduce(
-//       (sum, item) => sum + Number(item.product.price) * item.quantity,
-//       0
-//     );
-//   }
-
-//   placeOrder(): void {
-//     if (!this.selectedAddress) {
-//       alert('Vui lòng chọn địa chỉ nhận hàng');
-//       return;
-//     }
-
-//     if (this.paymentMethod === 'MOMO') {
-//       alert('Chức năng thanh toán MoMo đang được phát triển. Vui lòng chọn COD.');
-//       return;
-//     }
-
-//     if (this.isSubmitting) return;
-//     this.isSubmitting = true;
-
-//     const orderData = {
-//       address_id: this.selectedAddress.address_id,
-//       payment_method: this.paymentMethod,
-//       note: this.note.trim(),
-//       total_amount: this.total(),
-//       items: this.items.map(item => ({
-//         product_id: item.product.product_id || (item.product as any).id,
-//         quantity: item.quantity,
-//         price: item.product.price
-//       }))
-//     };
-
-//     console.log('ORDER DATA:', orderData);
-
-//     this.orderService
-//       .createOrder(orderData)
-//       .subscribe({
-//         next: () => {
-//           let cartClearTask$: Observable<any> = of(null);
-
-//           if (!this.isBuyNowMode) {
-//             const requests = this.items.map(item => {
-//               const pId = item.product.product_id || (item.product as any).id;
-//               return this.cartService.removeItem(pId);
-//             });
-//             cartClearTask$ = forkJoin(requests);
-//           }
-
-//           cartClearTask$.subscribe({
-//             next: () => this.finalizeCheckoutSuccess(),
-//             error: (err: any) => {
-//               console.error('Lỗi khi dọn dẹp các sản phẩm trong giỏ hàng:', err);
-//               this.finalizeCheckoutSuccess();
-//             }
-//           });
-//         },
-//         error: (err: any) => {
-//           console.error('Lỗi tạo đơn hàng từ API:', err);
-//           alert('Khởi tạo đơn hàng không thành công. Vui lòng kiểm tra lại thông tin.');
-//           this.isSubmitting = false;
-//         }
-//       });
-//   }
-
-//   private finalizeCheckoutSuccess(): void {
-//     localStorage.removeItem('checkoutItems');
-//     this.cartService.loadCart(); 
-//     this.isSubmitting = false;
-//     alert('Đặt hàng thành công');
-//     this.router.navigate(['/orders']);
-//   }
-
-//   increaseQuantity(productId: number): void {
-//     const item = this.items.find(i => (i.product.product_id === productId || (i.product as any).id === productId));
-//     if (item) {
-//       item.quantity++;
-//       this.syncLocalStorageWithQuantity();
-//     }
-//   }
-
-//   decreaseQuantity(productId: number): void {
-//     const item = this.items.find(i => (i.product.product_id === productId || (i.product as any).id === productId));
-//     if (item && item.quantity > 1) {
-//       item.quantity--;
-//       this.syncLocalStorageWithQuantity();
-//     }
-//   }
-
-//   private syncLocalStorageWithQuantity(): void {
-//     if (!this.isBuyNowMode) {
-//       localStorage.setItem('checkoutItems', JSON.stringify(this.items));
-//     }
-//   }
-// }
-
-
+// cd C:\ngrok
+//ngrok http 3000
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -239,6 +28,9 @@ export class Checkout implements OnInit {
   note = '';
   isBuyNowMode = false;
   isSubmitting = false; 
+
+  showZaloPayMessage = false;
+  showSuccessMessage = false;
 
   paymentMethod: 'COD' | 'MOMO' | 'ZALOPAY' = 'COD';
 
@@ -329,10 +121,17 @@ export class Checkout implements OnInit {
   }
 
   placeOrder(): void {
-    if (!this.selectedAddress) {
-      alert('Vui lòng chọn địa chỉ nhận hàng');
-      return;
-    }
+    if (this.paymentMethod === 'ZALOPAY') {
+    this.showZaloPayMessage = true;
+    return;
+  }
+
+  this.showZaloPayMessage = false;
+
+  if (!this.selectedAddress) {
+    alert('Vui lòng chọn địa chỉ nhận hàng');
+    return;
+  }
 
     if (this.isSubmitting) return;
     this.isSubmitting = true;
@@ -350,10 +149,14 @@ export class Checkout implements OnInit {
       note: this.note.trim(),
       total_amount: this.total(),
       items: this.items.map(item => ({
-        product_id: item.product.product_id || (item.product as any).id,
-        quantity: item.quantity,
-        price: item.product.price
-      }))
+      product_id: item.product.product_id || (item.product as any).id,
+      quantity: item.quantity,
+      price: item.product.price,
+
+      title: item.product.title,
+      author: item.product.author,
+      image: item.product.image
+    }))
     };
 
     console.log('ORDER DATA GỬI LÊN:', orderData);
@@ -422,10 +225,16 @@ export class Checkout implements OnInit {
   }
 
   private finalizeCheckoutSuccess(): void {
-    this.cartService.loadCart(); 
+    this.cartService.loadCart();
     this.isSubmitting = false;
-    alert('Đặt hàng thành công');
-    this.router.navigate(['/orders']);
+
+    this.showSuccessMessage = true;
+
+    this.cdr.detectChanges();
+
+    setTimeout(() => {
+      this.router.navigate(['/orders']);
+    }, 2000);
   }
 
   increaseQuantity(productId: number): void {
@@ -449,4 +258,9 @@ export class Checkout implements OnInit {
       localStorage.setItem('checkoutItems', JSON.stringify(this.items));
     }
   }
+
+  get isZaloPaySelected(): boolean {
+    return this.paymentMethod === 'ZALOPAY';
+  }
+
 }

@@ -64,6 +64,38 @@ class Address {
 
   }
 
+  static checkDuplicate(
+    customerId,
+    province,
+    district,
+    ward,
+    addressDetail,
+    callback
+  ) {
+
+    db.query(
+      `
+      SELECT address_id
+      FROM customer_addresses
+      WHERE customer_id = ?
+        AND province = ?
+        AND district = ?
+        AND ward = ?
+        AND address_detail = ?
+      LIMIT 1
+      `,
+      [
+        customerId,
+        province,
+        district,
+        ward,
+        addressDetail
+      ],
+      callback
+    );
+
+  }
+
   static update(
     addressId,
     customerId,
@@ -102,6 +134,42 @@ class Address {
         address_detail,
         addressId,
         customerId
+      ],
+      callback
+    );
+
+  }
+
+  
+  static checkDuplicateForUpdate(
+    addressId,
+    customerId,
+    province,
+    district,
+    ward,
+    addressDetail,
+    callback
+  ) {
+
+    db.query(
+      `
+      SELECT address_id
+      FROM customer_addresses
+      WHERE customer_id = ?
+        AND province = ?
+        AND district = ?
+        AND ward = ?
+        AND address_detail = ?
+        AND address_id <> ?
+      LIMIT 1
+      `,
+      [
+        customerId,
+        province,
+        district,
+        ward,
+        addressDetail,
+        addressId
       ],
       callback
     );

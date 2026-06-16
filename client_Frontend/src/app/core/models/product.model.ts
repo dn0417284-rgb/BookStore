@@ -2,12 +2,12 @@ export class Product {
   constructor(
     public product_id: number,
     public title: string,
-    public rating: string, // đánh giá tính theo sao
-    public sold: number, // số lượng sách đã bán
+    public rating: string,
+    public sold: number,
     public price: number,
-    public publisher: string, // nhà xuất bản
+    public publisher: string,
     public author: string,
-    public cover_type: string, // loại bìa sách
+    public cover_type: string,
     public description: string,
     public image: string,
   ) {}

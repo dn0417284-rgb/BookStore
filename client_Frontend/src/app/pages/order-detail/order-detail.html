@@ -333,15 +333,22 @@
         class="product-row"
       >
 
-        <img
-          [src]="'images/' + item.image"
-          [alt]="item.title"
-        >
+        <a [routerLink]="['/product', item.product_id]">
+          <img
+            [src]="'images/' + item.image"
+            [alt]="item.title"
+          >
+        </a>
 
         <div class="product-info">
 
           <h4>
-            {{ item.title }}
+            <a
+              [routerLink]="['/product', item.product_id]"
+              class="product-link"
+            >
+              {{ item.title }}
+            </a>
           </h4>
 
           <p>
@@ -390,8 +397,25 @@
     <span class="label">Cần thanh toán</span>
     <strong class="value highlight">{{ order.payment_status === 'PAID' ? '0' : (order.total_amount | number) }}₫</strong>
   </div>
-</div>
 
+  <!-- THANH TOÁN LẠI MOMO -->
+
+  <div
+    class="repay-box"
+    *ngIf="
+      order.payment_method === 'MOMO' &&
+      order.payment_status !== 'PAID'
+    "
+  >
+    <button
+      class="btn-pay-now"
+      (click)="payAgain()"
+    >
+      Thanh toán ngay
+    </button>
+  </div>
+
+</div>
 
     <!-- ACTION -->
 

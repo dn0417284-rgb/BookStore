@@ -338,3 +338,32 @@
     width: 100%;
   }
 }
+
+.btn-pay-now {
+  background: #ae2070;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.btn-pay-now:hover {
+  opacity: 0.9;
+}
+
+
+.product-link {
+  text-decoration: none;
+  color: inherit;
+  transition: 0.2s;
+}
+
+.product-link:hover {
+  color: #2563eb;
+}
+
+.product-image {
+  cursor: pointer;
+}

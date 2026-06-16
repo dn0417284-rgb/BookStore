@@ -33,56 +33,129 @@ const createAddress = (
   res
 ) => {
 
-  req.body.customer_id =
+  const customerId =
     req.user.customer_id;
 
-  Address.create(
-    req.body,
-    (err, result) => {
+  req.body.customer_id =
+    customerId;
+
+  Address.checkDuplicate(
+    customerId,
+    req.body.province,
+    req.body.district,
+    req.body.ward,
+    req.body.address_detail,
+    (err, rows) => {
 
       if (err) {
 
         return res.status(500).json({
           success: false,
-          message: 'Lỗi thêm địa chỉ'
+          message:
+            'Lỗi kiểm tra địa chỉ'
         });
 
       }
 
-      return res.json({
-        success: true,
-        address_id:
-          result.insertId
-      });
+      if (rows.length > 0) {
+
+        return res.status(400).json({
+          success: false,
+          message:
+            'Bạn đã lưu địa chỉ này rồi'
+        });
+
+      }
+
+      Address.create(
+        req.body,
+        (err, result) => {
+
+          if (err) {
+
+            return res.status(500).json({
+              success: false,
+              message:
+                'Lỗi thêm địa chỉ'
+            });
+
+          }
+
+          return res.json({
+            success: true,
+            address_id:
+              result.insertId
+          });
+
+        }
+      );
 
     }
   );
 
 };
-
 const updateAddress = (
   req,
   res
 ) => {
 
-  Address.update(
-    Number(req.params.id),
-    req.user.customer_id,
-    req.body,
-    (err) => {
+  const addressId =
+    Number(req.params.id);
+
+  const customerId =
+    req.user.customer_id;
+
+  Address.checkDuplicateForUpdate(
+    addressId,
+    customerId,
+    req.body.province,
+    req.body.district,
+    req.body.ward,
+    req.body.address_detail,
+    (err, rows) => {
 
       if (err) {
 
         return res.status(500).json({
           success: false,
-          message: 'Lỗi cập nhật'
+          message:
+            'Lỗi kiểm tra địa chỉ'
         });
 
       }
 
-      return res.json({
-        success: true
-      });
+      if (rows.length > 0) {
+
+        return res.status(400).json({
+          success: false,
+          message:
+            'Địa chỉ này đã tồn tại'
+        });
+
+      }
+
+      Address.update(
+        addressId,
+        customerId,
+        req.body,
+        (err) => {
+
+          if (err) {
+
+            return res.status(500).json({
+              success: false,
+              message:
+                'Lỗi cập nhật'
+            });
+
+          }
+
+          return res.json({
+            success: true
+          });
+
+        }
+      );
 
     }
   );

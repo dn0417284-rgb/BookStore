@@ -535,3 +535,41 @@
     text-align: right;
   }
 }
+
+.payment-warning {
+  margin-top: 12px;
+  text-align: center;
+  color: #dc2626;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.success-toast {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 9999;
+
+  background: #22c55e;
+  color: white;
+
+  padding: 14px 20px;
+  border-radius: 8px;
+
+  font-weight: 600;
+
+  box-shadow: 0 4px 12px rgba(0,0,0,.15);
+
+  animation: fadeIn .3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

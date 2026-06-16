@@ -1,6 +1,6 @@
 import express from 'express';
-
 import verifyToken from '../middlewares/auth.middleware.js';
+
 import {
   createOrder,
   getOrders,
@@ -9,65 +9,41 @@ import {
   getOrderDetailAdmin,
   updateOrderStatus,
   cancelOrder,
-  repayOrder
+  repayOrder,
+  momoIPN,
+  getOrderLogs,
 } from '../controllers/order.controller.js';
 
 const router = express.Router();
 
 // Tạo đơn hàng
-router.post(
-  '/',
-  verifyToken,
-  createOrder
-);
+router.post('/', verifyToken, createOrder);
 
-// Tạo lại link thanh toán
-router.post(
-  '/repay',
-  verifyToken,
-  repayOrder
-);
+// Thanh toán lại
+router.post('/repay', verifyToken, repayOrder);
 
-// Lịch sử đơn hàng
-router.get(
-  '/',
-  verifyToken,
-  getOrders
-);
+// IPN MoMo
+router.post('/momo-ipn', momoIPN);
 
-// Admin: tất cả đơn hàng
-router.get(
-  '/admin/all',
-  verifyToken,
-  getAllOrders
-);
+// Danh sách đơn hàng
+router.get('/', verifyToken, getOrders);
 
-// Admin: chi tiết đơn hàng
-router.get(
-  '/admin/:id',
-  verifyToken,
-  getOrderDetailAdmin
-);
+// Admin lấy toàn bộ đơn hàng
+router.get('/admin/all', verifyToken, getAllOrders);
 
-// Admin: cập nhật trạng thái
-router.put(
-  '/admin/:id/status',
-  verifyToken,
-  updateOrderStatus
-);
+// Admin xem chi tiết đơn
+router.get('/admin/:id', verifyToken, getOrderDetailAdmin);
 
-// Khách hàng: hủy đơn
-router.put(
-  '/:id/cancel',
-  verifyToken,
-  cancelOrder
-);
+// Admin cập nhật trạng thái
+router.put('/admin/:id/status', verifyToken, updateOrderStatus);
 
-// Khách hàng: xem chi tiết đơn
-router.get(
-  '/:id',
-  verifyToken,
-  getOrderDetail
-);
+// Xem lịch sử trạng thái
+router.get('/admin/:id/logs', verifyToken, getOrderLogs);
+
+// Hủy đơn
+router.put('/:id/cancel', verifyToken, cancelOrder);
+
+// Chi tiết đơn hàng
+router.get('/:id', verifyToken, getOrderDetail);
 
 export default router;

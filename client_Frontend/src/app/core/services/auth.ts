@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
+import { CartService } from '../../core/services/cart';
+
 export interface LoginResponse {
   token: string;
   customer?: any;
@@ -11,10 +13,14 @@ export interface LoginResponse {
   providedIn: 'root',
 })
 export class AuthService {
+  private apiUrl = 'http://localhost:3000/api/customers';
+  // hoặc:
+  // private apiUrl = '/api/auth';
 
-private apiUrl = 'http://localhost:3000/api/customers';
-
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private cartService: CartService
+  ) {}
 
   // ====================
   // LOGIN
@@ -36,7 +42,6 @@ private apiUrl = 'http://localhost:3000/api/customers';
     );
   }
 
-
   // ====================
   // SAVE LOGIN DATA
   // ====================
@@ -46,7 +51,10 @@ private apiUrl = 'http://localhost:3000/api/customers';
     }
 
     if (res.customer) {
-      localStorage.setItem('customer', JSON.stringify(res.customer));
+      localStorage.setItem(
+        'customer',
+        JSON.stringify(res.customer)
+      );
     }
   }
 
@@ -54,8 +62,8 @@ private apiUrl = 'http://localhost:3000/api/customers';
   // GET CURRENT USER
   // ====================
   getCurrentUser(): any {
-    const data = localStorage.getItem('customer');
-    return data ? JSON.parse(data) : null;
+    const customer = localStorage.getItem('customer');
+    return customer ? JSON.parse(customer) : null;
   }
 
   // ====================
@@ -73,14 +81,20 @@ private apiUrl = 'http://localhost:3000/api/customers';
   }
 
   // ====================
+  // GET ROLE
+  // ====================
+  getUserRole(): string | null {
+    const user = this.getCurrentUser();
+    return user ? user.role : null;
+  }
+
+  // ====================
   // LOGOUT
   // ====================
   logout(): void {
     localStorage.removeItem('token');
     localStorage.removeItem('customer');
-  }
-  getUserRole(): string | null {
-    const user = this.getCurrentUser();
-    return user ? user.role : null;
+
+    this.cartService.clearLocalCart();
   }
 }

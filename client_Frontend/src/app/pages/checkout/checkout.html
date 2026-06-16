@@ -196,6 +196,14 @@
 
 
 <div class="checkout-container">
+  <!-- THÔNG BÁO THÀNH CÔNG -->
+    <div
+      *ngIf="showSuccessMessage"
+      class="success-toast"
+    >
+      Đặt hàng thành công...
+    </div>
+
   <h1>Thanh toán đơn hàng</h1>
 
   <div class="checkout-layout">
@@ -409,6 +417,19 @@
           <span *ngIf="!isSubmitting">ĐẶT HÀNG NGAY</span>
           <span *ngIf="isSubmitting" class="spinner-text">ĐANG CHUYỂN ĐẾN CỔNG THANH TOÁN...</span>
         </button>
+
+        <!-- THÔNG BÁO ZALOPAY -->
+          <div
+            *ngIf="showZaloPayMessage"
+            style="
+              margin-top:10px;
+              color:#ef4444;
+              text-align:center;
+              font-weight:600;
+            "
+          >
+            Chức năng hiện chưa có
+          </div>
       </section>
 
     </div>
