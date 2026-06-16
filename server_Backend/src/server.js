@@ -1,16 +1,16 @@
 import express from "express";
 import cors from "cors";
-import app from "./app.js";
+import customerRoutes from "./routes/customer.routes.js";
 
-app.use(cors());
+const app = express();
+app.use(cors({
+  origin: "http://localhost:4200",
+  credentials: true
+}));
 app.use(express.json());
 
-app.get("/", (req, res) => {
-  res.send("Server Running");
-});
+app.use("/api/customers", customerRoutes);
 
-const PORT = process.env.PORT || 3000;
-
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+app.listen(3000, () => {
+  console.log("Server running on port 3000");
 });
