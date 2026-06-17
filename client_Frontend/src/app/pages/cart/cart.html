@@ -83,19 +83,29 @@
 
     </div>
 
-    <div class="image-box">
+    <a
+  class="image-box"
+  [routerLink]="['/product', item.product_id]"
+>
 
-      <img
-        [src]="'images/' + item.image"
-        [alt]="item.title"
-      >
+  <img
+    [src]="'http://localhost:3000/uploads/' + item.image"
+    [alt]="item.title"
+    class="book-image"
+    (error)="item.image = 'assets/no-image.png'"
+  />
 
-    </div>
+</a>
 
     <div class="info">
 
       <h3>
-        {{ item.title }}
+        <a
+          [routerLink]="['/product', item.product_id]"
+          class="product-link"
+        >
+          {{ item.title }}
+        </a>
       </h3>
 
       <p class="author">

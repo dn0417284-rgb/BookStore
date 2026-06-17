@@ -22,13 +22,26 @@ export class CartService {
   // INIT LOAD CART
   // ==========================
   initCart(): void {
+
+  const token = localStorage.getItem('token');
+
+  if (token) {
     this.loadCart();
   }
+}
 
   // ==========================
   // LOAD CART FROM SERVER
   // ==========================
   loadCart(): void {
+
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+      this.cartSubject.next([]);
+      return;
+    }
+
     this.http.get<any>(this.apiUrl).subscribe({
       next: (res) => {
         this.cartSubject.next(res.data || []);

@@ -335,9 +335,11 @@
 
         <a [routerLink]="['/product', item.product_id]">
           <img
-            [src]="'images/' + item.image"
-            [alt]="item.title"
-          >
+                [src]="'http://localhost:3000/uploads/' + item.image"
+                [alt]="item.title"
+                class="book-image"
+                (error)="item.image = 'assets/no-image.png'"
+              />
         </a>
 
         <div class="product-info">

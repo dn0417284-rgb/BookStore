@@ -4,6 +4,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../core/services/auth';
+import { CartService } from '../../core/services/cart';
 
 @Component({
   selector: 'app-login',
@@ -20,6 +21,7 @@ export class LoginComponent {
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
+    private cartService: CartService,
     private router: Router
   ) {
     if (this.authService.isLoggedIn()) {
@@ -47,19 +49,39 @@ export class LoginComponent {
 
     this.authService.login(this.loginForm.value).subscribe({
       next: (res) => {
-        this.isLoading = false;
-        const role = this.authService.getUserRole();
-        if (role === 'admin') {
-          this.router.navigate(['/admin/customers']);
-        } else {
-          this.router.navigate(['/']);
-        }
-      },
+
+      console.log(
+        'LOGIN RESPONSE:',
+        JSON.stringify(res, null, 2)
+      );
+
+      this.isLoading = false;
+
+      this.authService.saveLogin(res);
+
+      // load lại giỏ hàng từ server
+      this.cartService.loadCart();
+
+      console.log(
+        'TOKEN LOCAL:',
+        localStorage.getItem('token')
+      );
+
+      const role = this.authService.getUserRole();
+
+      if (role === 'admin') {
+        this.router.navigate(['/home']);
+      } else {
+        this.router.navigate(['/']);
+      }
+    },
+
       error: (err) => {
         this.isLoading = false;
         this.errorMessage =
-          err?.error?.message || 'Đăng nhập thất bại. Vui lòng thử lại.';
-      },
+          err?.error?.message ||
+          'Đăng nhập thất bại. Vui lòng thử lại.';
+      }
     });
   }
 }

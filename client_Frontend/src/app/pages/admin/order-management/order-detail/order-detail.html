@@ -69,16 +69,41 @@
         <div *ngIf="getAvailableStatuses(order.status).length > 0">
           <hr class="card-divider" />
 
-          <label class="control-label"> Cập nhật trạng thái mới </label>
+          <label class="control-label">
+            Cập nhật trạng thái mới
+          </label>
 
           <div class="status-control">
-            <select class="custom-select" [(ngModel)]="selectedStatus">
-              <option *ngFor="let s of getAvailableStatuses(order.status)" [value]="s">
+
+            <select
+              class="custom-select"
+              [(ngModel)]="selectedStatus"
+            >
+
+              <option
+                value=""
+                disabled
+              >
+                Chọn trạng thái mới
+              </option>
+
+              <option
+                *ngFor="let s of getAvailableStatuses(order.status)"
+                [value]="s"
+              >
                 {{ getStatusText(s) }}
               </option>
+
             </select>
 
-            <button class="btn btn-primary" (click)="updateStatus()">Cập nhật</button>
+            <button
+              class="btn btn-primary"
+              [disabled]="!selectedStatus"
+              (click)="updateStatus()"
+            >
+              Cập nhật
+            </button>
+
           </div>
         </div>
 

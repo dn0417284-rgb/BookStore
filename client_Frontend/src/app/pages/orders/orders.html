@@ -74,10 +74,14 @@
       *ngIf="order.items && order.items.length > 0"
     >
 
-      <img
-        [src]="'images/' + order.items[0].image"
-        [alt]="order.items[0].title"
-      >
+    
+      
+    <img
+                [src]="'http://localhost:3000/uploads/' + order.items[0].image"
+                [alt]="order.items[0].image.title"
+                class="book-image"
+                (error)="order.items[0].image = 'assets/no-image.png'"
+              />
 
       <div class="preview-content">
 

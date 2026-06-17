@@ -114,9 +114,11 @@
         <div class="image-wrapper">
 
           <img
-            [src]="'images/' + product.image"
-            [alt]="product.title"
-          >
+                [src]="'http://localhost:3000/uploads/' + product.image"
+                [alt]="product.title"
+                class="book-image"
+                (error)="product.image = 'assets/no-image.png'"
+              />
 
           <div class="overlay">
             Xem chi tiết
@@ -182,12 +184,11 @@
         </button>
 
         <input
-          type="number"
-          min="1"
-          [value]="quantities[product.product_id]"
-          (input)="onQuantityChange(product.product_id, $event)"
+          type="text"
+          [(ngModel)]="quantities[product.product_id]"
+          (keypress)="onlyPositiveNumber($event)"
           class="quantity-input"
-        >
+        />
 
         <button
           type="button"

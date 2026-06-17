@@ -17,6 +17,8 @@ import {
   OrderService
 } from '../../core/services/order';
 
+import Swal from 'sweetalert2';
+
 @Component({
   selector: 'app-order-detail',
   standalone: true,
@@ -271,24 +273,42 @@ export class OrderDetail implements OnInit {
 
   cancelOrder(): void {
 
-    const ok =
-      confirm(
-        'Bạn chắc chắn muốn hủy đơn hàng?'
-      );
+  Swal.fire({
+    title: 'Hủy đơn hàng?',
+    text: 'Bạn có chắc muốn hủy đơn hàng này?',
+    icon: 'warning',
 
-    if (!ok) {
+    width: 420,
+
+    showCancelButton: true,
+
+    confirmButtonText: 'Hủy đơn',
+    cancelButtonText: 'Quay lại',
+
+    reverseButtons: true,
+
+    confirmButtonColor: '#ef4444',
+    cancelButtonColor: '#64748b'
+  }).then((result) => {
+
+    if (!result.isConfirmed) {
       return;
     }
 
     this.orderService
-      .cancelOrder(this.orderId)
+      .cancelOrder(this.order.order_id)
       .subscribe({
 
-        next: (res) => {
+        next: (res: any) => {
 
-          alert(
-            res.message
-          );
+          Swal.fire({
+            icon: 'success',
+            title: 'Đã hủy đơn hàng',
+            text: res.message,
+            timer: 1800,
+            showConfirmButton: false,
+            width: 400
+          });
 
           this.loadOrder();
 
@@ -296,16 +316,22 @@ export class OrderDetail implements OnInit {
 
         error: (err) => {
 
-          alert(
-            err.error?.message ||
-            'Không thể hủy đơn'
-          );
+          Swal.fire({
+            icon: 'error',
+            title: 'Không thể hủy',
+            text:
+              err.error?.message ||
+              'Đã xảy ra lỗi',
+            width: 400
+          });
 
         }
 
       });
 
-  }
+  });
+
+}
 
   
 }

@@ -30,23 +30,72 @@ export class OrderDetail implements OnInit {
     'CANCELLED',
   ];
   ngOnInit(): void {
-    const id = Number(this.route.snapshot.paramMap.get('id'));
-    this.orderService.getOrderById(id).subscribe({
+
+  const id = Number(
+    this.route.snapshot.paramMap.get('id')
+  );
+
+  console.log('ORDER ID:', id);
+
+  this.orderService
+    .getOrderById(id)
+    .subscribe({
+
       next: (res: any) => {
+
+        console.log('API RESPONSE:', res);
+
         this.order = res.data;
-        this.selectedStatus = this.order.status;
+
+        this.selectedStatus = '' as any;
+
         this.cdr.detectChanges();
       },
+
+      error: (err) => {
+
+        console.error(
+          'ORDER DETAIL ERROR:',
+          err
+        );
+
+      }
+
     });
-  }
+
+}
+
   updateStatus(): void {
-    this.orderService.updateStatus(this.order.order_id, this.selectedStatus).subscribe({
-      next: () => {
-        this.order.status = this.selectedStatus;
-        alert('Cập nhật thành công');
-      },
-    });
+
+  if (!this.selectedStatus) {
+    return;
   }
+
+  this.orderService
+    .updateStatus(
+      this.order.order_id,
+      this.selectedStatus
+    )
+    .subscribe({
+
+      next: () => {
+
+        this.order.status =
+          this.selectedStatus;
+
+        this.selectedStatus =
+          '' as any;
+
+        this.cdr.detectChanges();
+
+        alert('Cập nhật thành công');
+
+      }
+
+    });
+
+}
+
   getStatusText(status: string): string {
     const map: { [key: string]: string } = {
       PENDING: 'Chờ xác nhận',

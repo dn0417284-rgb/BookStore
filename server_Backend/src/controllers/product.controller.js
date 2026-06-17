@@ -1,7 +1,11 @@
 import productService from "../services/product.service.js";
 import productModel from "../models/product.model.js";
 import fs from "fs";
+
+
+
 const productController = {
+  
   getProducts: async (req, res) => {
     try {
       const products = await productModel.getProducts();
@@ -105,5 +109,76 @@ const productController = {
       });
     }
   },
+
+  getProductById: async (req, res) => {
+  try {
+    const products = await productModel.getProducts();
+
+    const product = products.find(
+      p => p.product_id == req.params.id
+    );
+
+    if (!product) {
+      return res.status(404).json({
+        message: "Không tìm thấy sản phẩm"
+      });
+    }
+
+    res.json(product);
+  } catch (error) {
+    res.status(500).json({
+      message: "Lỗi server"
+    });
+  }
+},
+
+searchProducts: async (req, res) => {
+  try {
+    const keyword = (
+      req.query.keyword || ""
+    ).toLowerCase();
+
+    const products = await productModel.getProducts();
+
+    const result = products.filter(
+      p =>
+        p.product_name
+          ?.toLowerCase()
+          .includes(keyword)
+    );
+
+    res.json(result);
+  } catch (error) {
+    res.status(500).json({
+      message: "Lỗi server"
+    });
+  }
+},
+
+filterProducts: async (req, res) => {
+  try {
+    const products = await productModel.getProducts();
+
+    res.json(products);
+  } catch (error) {
+    res.status(500).json({
+      message: "Lỗi server"
+    });
+  }
+},
+
+getBestSellers: async (req, res) => {
+  try {
+    const products = await productModel.getProducts();
+
+    res.json(products.slice(0, 8));
+  } catch (error) {
+    res.status(500).json({
+      message: "Lỗi server"
+    });
+  }
+},
+
+
 };
 export default productController;

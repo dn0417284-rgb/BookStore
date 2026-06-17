@@ -14,7 +14,8 @@ import {
 
 import {
   Router,
-  RouterModule
+  RouterModule,
+  RouterLink
 } from '@angular/router';
 
 import {
@@ -29,7 +30,8 @@ import { forkJoin } from 'rxjs';
   imports: [
     CommonModule,
     RouterModule,
-    FormsModule
+    FormsModule,
+    RouterLink
   ],
   templateUrl: './cart.html',
   styleUrls: ['./cart.css']

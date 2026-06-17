@@ -13,7 +13,7 @@ export interface LoginResponse {
   providedIn: 'root',
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:3000/api/customers';
+  private apiUrl = '/api/customers';
   // hoặc:
   // private apiUrl = '/api/auth';
 
@@ -45,7 +45,11 @@ export class AuthService {
   // ====================
   // SAVE LOGIN DATA
   // ====================
-  saveLogin(res: LoginResponse): void {
+  saveLogin(res: any): void {
+
+    console.log('SAVE LOGIN:', res);
+    console.log('TOKEN:', res?.token);
+
     if (res.token) {
       localStorage.setItem('token', res.token);
     }
@@ -56,6 +60,11 @@ export class AuthService {
         JSON.stringify(res.customer)
       );
     }
+
+    console.log(
+      'TOKEN AFTER SAVE:',
+      localStorage.getItem('token')
+    );
   }
 
   // ====================

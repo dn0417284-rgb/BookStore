@@ -1,4 +1,5 @@
 import customerModel from "../models/customer.model.js";
+import jwt from 'jsonwebtoken';
 
 const customerController = {
   getCustomers: async (req, res) => {
@@ -79,19 +80,38 @@ const customerController = {
         });
       }
 
-      res.status(200).json({
+      const token = jwt.sign(
+        {
+          customer_id: customer.customer_id,
+          role: customer.role
+        },
+        process.env.JWT_SECRET || 'bookstore_secret',
+        {
+          expiresIn: '7d'
+        }
+      );
+
+      // Loại bỏ password khỏi dữ liệu trả về
+      const {
+        password: _password,
+        ...customerInfo
+      } = customer;
+
+      return res.status(200).json({
         success: true,
         message: "Đăng nhập thành công",
-        customer
+        token,
+        customer: customerInfo
       });
 
     } catch (error) {
-      res.status(500).json({
+      return res.status(500).json({
         success: false,
         message: error.message
       });
     }
   }
+
 };
 
 export default customerController;

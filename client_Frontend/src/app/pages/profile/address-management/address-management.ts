@@ -11,6 +11,8 @@ import {
   ProvinceService
 } from '../../../core/services/province.service';
 
+import Swal from 'sweetalert2';
+
 @Component({
   selector: 'app-address-management',
   standalone: true,
@@ -183,29 +185,91 @@ export class AddressManagement implements OnInit {
       });
   }
 
-  deleteAddress(id: number): void {
-    if (!confirm('Xóa địa chỉ này?')) {
+  async deleteAddress(id: number): Promise<void> {
+
+    const result = await Swal.fire({
+      title: 'Xóa địa chỉ?',
+      text: 'Bạn có chắc muốn xóa địa chỉ này không?',
+      icon: 'warning',
+
+      showCancelButton: true,
+
+      confirmButtonText: 'Xóa',
+      cancelButtonText: 'Hủy',
+
+      confirmButtonColor: '#dc3545',
+      cancelButtonColor: '#6c757d'
+    });
+
+    if (!result.isConfirmed) {
       return;
     }
 
     this.addressService
       .deleteAddress(id)
       .subscribe({
+
         next: () => {
+
           this.loadAddresses();
+
+          Swal.fire({
+            toast: true,
+            position: 'top-end',
+
+            icon: 'success',
+            title: 'Đã xóa địa chỉ',
+
+            showConfirmButton: false,
+            timer: 2000,
+            timerProgressBar: true
+          });
+
+        },
+
+        error: () => {
+
+          Swal.fire({
+            toast: true,
+            position: 'top-end',
+
+            icon: 'error',
+            title: 'Xóa địa chỉ thất bại',
+
+            showConfirmButton: false,
+            timer: 2000
+          });
+
         }
+
       });
   }
 
   setDefault(id: number): void {
-    this.addressService
-      .setDefaultAddress(id)
-      .subscribe({
-        next: () => {
-          this.loadAddresses();
-        }
-      });
-  }
+
+  this.addressService
+    .setDefaultAddress(id)
+    .subscribe({
+
+      next: () => {
+
+        this.loadAddresses();
+
+        Swal.fire({
+          toast: true,
+          position: 'top-end',
+
+          icon: 'success',
+          title: 'Đã đặt làm địa chỉ mặc định',
+
+          showConfirmButton: false,
+          timer: 2000
+        });
+
+      }
+
+    });
+}
 
   resetForm(): void {
     this.editingId = null;

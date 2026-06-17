@@ -1,6 +1,7 @@
 import express from 'express';
 
-import verifyToken from '../middlewares/auth.middleware.js';
+import verifyToken
+  from '../middlewares/auth.middleware.js';
 
 import {
   getCart,
@@ -10,7 +11,8 @@ import {
   clearCart
 } from '../controllers/cart.controller.js';
 
-const router = express.Router();
+const router =
+  express.Router();
 
 // Lấy giỏ hàng
 router.get(

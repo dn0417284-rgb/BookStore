@@ -1,24 +1,43 @@
-<div class="page-title">
-  <h2>Quản lý đơn hàng</h2>
+<h2 class="page-heading">
+  Quản lý đơn hàng
+</h2>
+
+<div class="toolbar">
 
   <div class="order-count">
     <span class="count-label">Tổng đơn hàng</span>
-    <span class="count-value">{{ orders.length }}</span>
+    <span class="count-value">
+      {{ orders.length }}
+    </span>
   </div>
-</div>
 
-<div class="toolbar">
   <div class="toolbar-right">
+
     <input
       type="text"
       placeholder="Tìm kiếm mã đơn hàng hoặc khách hàng..."
       [(ngModel)]="searchTerm"
       class="search-input"
     />
-    <input type="date" [(ngModel)]="fromDate" class="date-input" />
+
+    <input
+      type="date"
+      [(ngModel)]="fromDate"
+      class="date-input"
+    />
+
     <span class="date-separator">→</span>
-    <input type="date" [(ngModel)]="toDate" class="date-input" />
-    <select [(ngModel)]="selectedStatus" class="status-filter">
+
+    <input
+      type="date"
+      [(ngModel)]="toDate"
+      class="date-input"
+    />
+
+    <select
+      [(ngModel)]="selectedStatus"
+      class="status-filter"
+    >
       <option value="">Tất cả trạng thái</option>
       <option value="PENDING">Chờ xác nhận</option>
       <option value="CONFIRMED">Đã xác nhận</option>
@@ -29,9 +48,23 @@
       <option value="FAILED">Giao thất bại</option>
       <option value="CANCELLED">Đã hủy</option>
     </select>
-    <button class="search-btn" (click)="searchOrders()">Tìm kiếm</button>
-    <button class="reset-btn" (click)="resetSearch()">Làm mới</button>
+
+    <button
+      class="search-btn"
+      (click)="searchOrders()"
+    >
+      Tìm kiếm
+    </button>
+
+    <button
+      class="reset-btn"
+      (click)="resetSearch()"
+    >
+      Làm mới
+    </button>
+
   </div>
+
 </div>
 
 <div class="table-card">
@@ -40,7 +73,7 @@
       <thead>
         <tr>
           <th>Mã đơn hàng</th>
-          <th>Mã vận đơn</th>
+          <!-- <th>Mã vận đơn</th> -->
           <th>Khách hàng</th>
           <th>Tổng tiền</th>
           <th>Trạng thái</th>
@@ -52,12 +85,12 @@
       <tbody>
         <tr *ngFor="let order of pagedOrders">
           <td class="order-code">
-            {{ order.order_code }}
+            {{ order.order_id }}
           </td>
 
-          <td>
+          <!-- <td>
             {{ order.tracking_code || '---' }}
-          </td>
+          </td> -->
 
           <td>
             <div class="customer-info">

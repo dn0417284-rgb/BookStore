@@ -1,30 +1,37 @@
 <div class="page-title">
-  <h2>Quản lý sách</h2>
+
+  <h2 class="page-heading">
+  Quản lý sách
+</h2>
+
+<div class="toolbar">
 
   <div class="book-count">
     <span class="count-label">Tổng số sách</span>
-    <span class="count-value">{{ filteredBooks.length }}</span>
+    <span class="count-value">
+      {{ filteredBooks.length }}
+    </span>
   </div>
+
+  <div class="toolbar-right">
+    <input
+      type="text"
+      placeholder="Tìm kiếm tên sách hoặc tác giả..."
+      [(ngModel)]="searchTerm"
+      class="search-input"
+      (keyup.enter)="searchBooks()"
+    />
+
+    <button class="search-btn" (click)="searchBooks()">
+      Tìm kiếm
+    </button>
+
+    <button class="primary-btn" (click)="toggleAddForm()">
+      + Thêm sách
+    </button>
+  </div>
+
 </div>
-
-<!-- Nội dung chính -->
-<div class="main-content" [class.blurred]="showAddForm">
-  <!-- Tìm kiếm -->
-  <div class="toolbar">
-    <div class="toolbar-right">
-      <input
-        type="text"
-        placeholder="Tìm kiếm tên sách hoặc tác giả..."
-        [(ngModel)]="searchTerm"
-        class="search-input"
-        (keyup.enter)="searchBooks()"
-      />
-
-      <button class="search-btn" (click)="searchBooks()">Tìm kiếm</button>
-
-      <button class="primary-btn" (click)="toggleAddForm()">+ Thêm sách</button>
-    </div>
-  </div>
   <!-- Bang danh sach san pham -->
   <div class="table-card">
     <div class="table-responsive">

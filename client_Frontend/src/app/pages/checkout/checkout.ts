@@ -234,7 +234,7 @@ export class Checkout implements OnInit {
 
     setTimeout(() => {
       this.router.navigate(['/orders']);
-    }, 2000);
+    }, 1500);
   }
 
   increaseQuantity(productId: number): void {

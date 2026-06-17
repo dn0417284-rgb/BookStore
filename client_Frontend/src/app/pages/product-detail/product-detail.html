@@ -35,9 +35,11 @@
     <div class="product-gallery">
 
       <img
-        [src]="'images/' + product.image"
-        [alt]="product.title"
-      >
+                [src]="'http://localhost:3000/uploads/' + product.image"
+                [alt]="product.title"
+                class="book-image"
+                (error)="product.image = 'assets/no-image.png'"
+              />
 
     </div>
 

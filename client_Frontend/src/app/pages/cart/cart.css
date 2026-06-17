@@ -311,3 +311,17 @@
     text-align: center;
   }
 }
+
+.product-link {
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.product-link:hover {
+  color: #1976d2;
+}
+
+.image-box {
+  cursor: pointer;
+}

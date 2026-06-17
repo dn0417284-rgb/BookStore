@@ -2,30 +2,21 @@ import db from '../config/db.js';
 
 class Address {
 
-  static getAllByCustomerId(
-    customerId,
-    callback
-  ) {
-
-    db.query(
+  static async getAllByCustomerId(customerId) {
+    const [rows] = await db.query(
       `
       SELECT *
       FROM customer_addresses
       WHERE customer_id = ?
-      ORDER BY is_default DESC,
-      address_id DESC
+      ORDER BY is_default DESC, address_id DESC
       `,
-      [customerId],
-      callback
+      [customerId]
     );
 
+    return rows;
   }
 
-  static create(
-    address,
-    callback
-  ) {
-
+  static async create(address) {
     const {
       customer_id,
       receiver_name,
@@ -36,7 +27,7 @@ class Address {
       address_detail
     } = address;
 
-    db.query(
+    const [result] = await db.query(
       `
       INSERT INTO customer_addresses
       (
@@ -58,30 +49,28 @@ class Address {
         district,
         ward,
         address_detail
-      ],
-      callback
+      ]
     );
 
+    return result;
   }
 
-  static checkDuplicate(
+  static async checkDuplicate(
     customerId,
     province,
     district,
     ward,
-    addressDetail,
-    callback
+    addressDetail
   ) {
-
-    db.query(
+    const [rows] = await db.query(
       `
       SELECT address_id
       FROM customer_addresses
       WHERE customer_id = ?
-        AND province = ?
-        AND district = ?
-        AND ward = ?
-        AND address_detail = ?
+      AND province = ?
+      AND district = ?
+      AND ward = ?
+      AND address_detail = ?
       LIMIT 1
       `,
       [
@@ -90,19 +79,17 @@ class Address {
         district,
         ward,
         addressDetail
-      ],
-      callback
+      ]
     );
 
+    return rows;
   }
 
-  static update(
+  static async update(
     addressId,
     customerId,
-    address,
-    callback
+    address
   ) {
-
     const {
       receiver_name,
       phone,
@@ -112,7 +99,7 @@ class Address {
       address_detail
     } = address;
 
-    db.query(
+    const [result] = await db.query(
       `
       UPDATE customer_addresses
       SET
@@ -134,33 +121,30 @@ class Address {
         address_detail,
         addressId,
         customerId
-      ],
-      callback
+      ]
     );
 
+    return result;
   }
 
-  
-  static checkDuplicateForUpdate(
+  static async checkDuplicateForUpdate(
     addressId,
     customerId,
     province,
     district,
     ward,
-    addressDetail,
-    callback
+    addressDetail
   ) {
-
-    db.query(
+    const [rows] = await db.query(
       `
       SELECT address_id
       FROM customer_addresses
       WHERE customer_id = ?
-        AND province = ?
-        AND district = ?
-        AND ward = ?
-        AND address_detail = ?
-        AND address_id <> ?
+      AND province = ?
+      AND district = ?
+      AND ward = ?
+      AND address_detail = ?
+      AND address_id <> ?
       LIMIT 1
       `,
       [
@@ -170,19 +154,17 @@ class Address {
         ward,
         addressDetail,
         addressId
-      ],
-      callback
+      ]
     );
 
+    return rows;
   }
 
-  static delete(
+  static async delete(
     addressId,
-    customerId,
-    callback
+    customerId
   ) {
-
-    db.query(
+    const [result] = await db.query(
       `
       DELETE FROM customer_addresses
       WHERE address_id = ?
@@ -191,50 +173,41 @@ class Address {
       [
         addressId,
         customerId
-      ],
-      callback
+      ]
     );
 
+    return result;
   }
 
-  static setDefault(
+  static async setDefault(
     addressId,
-    customerId,
-    callback
+    customerId
   ) {
 
-    db.query(
+    await db.query(
       `
       UPDATE customer_addresses
       SET is_default = FALSE
       WHERE customer_id = ?
       `,
-      [customerId],
-      (err) => {
-
-        if (err) {
-          return callback(err);
-        }
-
-        db.query(
-          `
-          UPDATE customer_addresses
-          SET is_default = TRUE
-          WHERE address_id = ?
-          AND customer_id = ?
-          `,
-          [
-            addressId,
-            customerId
-          ],
-          callback
-        );
-
-      }
+      [customerId]
     );
 
-  }
+    const [result] = await db.query(
+      `
+      UPDATE customer_addresses
+      SET is_default = TRUE
+      WHERE address_id = ?
+      AND customer_id = ?
+      `,
+      [
+        addressId,
+        customerId
+      ]
+    );
 
+    return result;
+  }
 }
 
 export default Address;

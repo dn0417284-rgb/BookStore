@@ -2,8 +2,7 @@
 import {
   Component,
   OnInit,
-  ChangeDetectorRef,
-  Inject
+  ChangeDetectorRef
 } from '@angular/core';
 
 import {
@@ -30,6 +29,8 @@ import {
 
 import { FormsModule } from '@angular/forms';
 
+import Swal from 'sweetalert2';
+
 @Component({
   selector: 'app-home',
   standalone: true,
@@ -55,10 +56,8 @@ export class Home implements OnInit {
   titleKeyword = '';
 
   currentTab: 'best-seller' | 'all' = 'best-seller';
-
-  quantities: {
-    [key: number]: number;
-  } = {};
+  
+  quantities: { [key: number]: number } = {};
 
   // ==========================================
   // CÁC BIẾN QUẢN LÝ PHÂN TRANG (PAGINATION)
@@ -67,7 +66,7 @@ export class Home implements OnInit {
   pageSize = 10;        // ĐÃ SỬA: Hiển thị đúng 10 quyển trên 1 trang
   totalPages = 1;       // Tổng số trang tính toán được
   pagesArray: (number | string)[] = []; // Mảng chứa danh sách số trang hiển thị
-
+  
   constructor(
     private productService: ProductService,
     private cartService: CartService,
@@ -138,6 +137,8 @@ export class Home implements OnInit {
       const keyword = (this.route.snapshot.queryParamMap.get('keyword') || '').trim();
 
       this.applyGlobalFilter(keyword);
+      this.ctx.detectChanges();
+
     }
   });
 }
@@ -162,6 +163,7 @@ export class Home implements OnInit {
 
       this.filteredProducts = result;
       this.products = result;
+      this.ctx.detectChanges();
     },
     error: (err) => console.error(err)
   });
@@ -279,26 +281,98 @@ export class Home implements OnInit {
     this.quantities[productId] = val;
   }
 
+  onlyPositiveNumber(event: KeyboardEvent): void {
+  const key = event.key;
+
+  // Chỉ cho phép 1-9
+  if (!/^[1-9]$/.test(key)) {
+    event.preventDefault();
+  }
+}
+  
   addToCart(product: Product): void {
 
-  const quantity =
-    this.quantities[product.product_id] || 1;
+  const quantity = Number(
+    this.quantities[product.product_id]
+  );
+
+  if (
+    isNaN(quantity) ||
+    quantity < 1
+  ) {
+
+    Swal.fire({
+      toast: true,
+      position: 'top-end',
+
+      icon: 'warning',
+
+      title: 'Số lượng không hợp lệ',
+
+      showConfirmButton: false,
+
+      timer: 2000
+    });
+
+    this.quantities[product.product_id] = 1;
+    this.ctx.detectChanges();
+
+    return;
+  }
 
   this.cartService
-    .addToCart(product.product_id, quantity)
+    .addToCart(
+      product.product_id,
+      quantity
+    )
     .subscribe({
 
       next: () => {
 
-        alert(`Đã thêm ${quantity} "${product.title}" vào giỏ hàng`);
+        this.quantities = {
+          ...this.quantities,
+          [product.product_id]: 1
+        };
+
+        this.ctx.detectChanges();
+
+        Swal.fire({
+          toast: true,
+          position: 'top-end',
+
+          icon: 'success',
+
+          title:
+            `Đã thêm ${quantity} "${product.title}" vào giỏ hàng`,
+
+          showConfirmButton: false,
+
+          timer: 2000,
+          timerProgressBar: true
+        });
 
       },
 
       error: (err) => {
 
-        console.error('ADD CART ERROR:', err);
+        console.error(
+          'ADD CART ERROR:',
+          err
+        );
 
-        alert('Không thể thêm vào giỏ hàng');
+        Swal.fire({
+          toast: true,
+          position: 'top-end',
+
+          icon: 'error',
+
+          title: 'Không thể thêm vào giỏ hàng',
+
+          showConfirmButton: false,
+
+          timer: 1500
+        });
+
       }
 
     });
@@ -306,14 +380,44 @@ export class Home implements OnInit {
 }
 
   buyNow(product: Product): void {
-    const quantity = this.quantities[product.product_id] || 1;
-    const buyNowData = {
-      product: JSON.parse(JSON.stringify(product)),
-      quantity: quantity
-    };
-    this.cartService.setBuyNowItem(buyNowData);
-    this.router.navigate(['/checkout']);
+
+  const quantity = Number(
+    this.quantities[product.product_id]
+  );
+
+  if (
+    isNaN(quantity) ||
+    quantity < 1
+  ) {
+
+    Swal.fire({
+      toast: true,
+      position: 'top-end',
+
+      icon: 'warning',
+
+      title: 'Số lượng không hợp lệ',
+
+      showConfirmButton: false,
+
+      timer: 2000
+    });
+
+    this.quantities[product.product_id] = 1;
+    this.ctx.detectChanges();
+
+    return;
   }
+
+  const buyNowData = {
+    product: JSON.parse(JSON.stringify(product)),
+    quantity: quantity
+  };
+
+  this.cartService.setBuyNowItem(buyNowData);
+
+  this.router.navigate(['/checkout']);
+}
 
  searchByPrice(): void {
 

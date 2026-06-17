@@ -26,6 +26,8 @@ import {
   CartService
 } from '../../core/services/cart';
 
+import Swal from 'sweetalert2';
+
 @Component({
   selector: 'app-product-detail',
   standalone: true,
@@ -117,43 +119,56 @@ export class ProductDetail implements OnInit {
 
   addToCart(): void {
 
-    if (!this.product) {
+  if (!this.product) return;
 
-      return;
+  if (this.quantity < 1) {
 
-    }
+    Swal.fire({
+      toast: true,
+      position: 'top-end',
+      icon: 'warning',
+      title: 'Số lượng không hợp lệ ',
+      showConfirmButton: false,
+      timer: 2000
+    });
 
-    this.cartService
-      .addToCart(
-        this.product.product_id,
-        this.quantity
-      )
-      .subscribe({
-
-        next: () => {
-
-          alert(
-            `Đã thêm ${this.quantity} sản phẩm vào giỏ hàng`
-          );
-
-        },
-
-        error: (err) => {
-
-          console.error(
-            'ADD CART ERROR:',
-            err
-          );
-
-          alert(
-            'Không thể thêm vào giỏ hàng'
-          );
-
-        }
-
-      });
-
+    this.quantity = 1;
+    return;
   }
+
+  this.cartService
+    .addToCart(this.product.product_id, this.quantity)
+    .subscribe({
+
+      next: () => {
+
+        Swal.fire({
+          toast: true,
+          position: 'top-end',
+          icon: 'success',
+          title: `Đã thêm ${this.quantity} "${this.product?.title}" vào giỏ hàng`,
+          showConfirmButton: false,
+          timer: 2000,
+          timerProgressBar: true
+        });
+
+        this.quantity = 1;
+      },
+
+      error: () => {
+
+        Swal.fire({
+          toast: true,
+          position: 'top-end',
+          icon: 'error',
+          title: 'Không thể thêm vào giỏ hàng',
+          showConfirmButton: false,
+          timer: 2000
+        });
+
+      }
+    });
+}
 
   buyNow(event: Event): void {
 

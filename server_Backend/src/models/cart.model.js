@@ -2,9 +2,9 @@ import db from '../config/db.js';
 
 class Cart {
 
-  static getByCustomer(customerId, callback) {
+  static async getByCustomer(customerId) {
 
-    db.query(
+    const [rows] = await db.query(
       `
       SELECT
         c.product_id,
@@ -18,80 +18,71 @@ class Cart {
         ON p.product_id = c.product_id
       WHERE c.customer_id = ?
       `,
-      [customerId],
-      callback
+      [customerId]
     );
 
+    return rows;
   }
 
-  static add(customerId, productId, quantity, callback) {
+  static async add(customerId, productId, quantity) {
 
-    db.query(
+    const [rows] = await db.query(
       `
       SELECT *
       FROM cart
       WHERE customer_id = ?
       AND product_id = ?
       `,
-      [customerId, productId],
-      (err, results) => {
-
-        if (err) {
-          return callback(err);
-        }
-
-        if (results.length > 0) {
-
-          db.query(
-            `
-            UPDATE cart
-            SET quantity = quantity + ?
-            WHERE customer_id = ?
-            AND product_id = ?
-            `,
-            [
-              quantity,
-              customerId,
-              productId
-            ],
-            callback
-          );
-
-        } else {
-
-          db.query(
-            `
-            INSERT INTO cart
-            (
-              customer_id,
-              product_id,
-              quantity
-            )
-            VALUES (?, ?, ?)
-            `,
-            [
-              customerId,
-              productId,
-              quantity
-            ],
-            callback
-          );
-
-        }
-
-      }
+      [customerId, productId]
     );
 
+    if (rows.length > 0) {
+
+      await db.query(
+        `
+        UPDATE cart
+        SET quantity = quantity + ?
+        WHERE customer_id = ?
+        AND product_id = ?
+        `,
+        [
+          quantity,
+          customerId,
+          productId
+        ]
+      );
+
+    } else {
+
+      await db.query(
+        `
+        INSERT INTO cart
+        (
+          customer_id,
+          product_id,
+          quantity
+        )
+        VALUES (?, ?, ?)
+        `,
+        [
+          customerId,
+          productId,
+          quantity
+        ]
+      );
+
+    }
+
+    return await Cart.getByCustomer(customerId);
   }
 
-  static updateQuantity(
+  static async updateQuantity(
     customerId,
     productId,
-    quantity,
-    callback
+    quantity
   ) {
 
-    db.query(
+    await db.query(
       `
       UPDATE cart
       SET quantity = ?
@@ -102,19 +93,18 @@ class Cart {
         quantity,
         customerId,
         productId
-      ],
-      callback
+      ]
     );
 
+    return await Cart.getByCustomer(customerId);
   }
 
-  static remove(
+  static async remove(
     customerId,
-    productId,
-    callback
+    productId
   ) {
 
-    db.query(
+    await db.query(
       `
       DELETE FROM cart
       WHERE customer_id = ?
@@ -123,26 +113,23 @@ class Cart {
       [
         customerId,
         productId
-      ],
-      callback
+      ]
     );
 
+    return await Cart.getByCustomer(customerId);
   }
 
-  static clear(
-    customerId,
-    callback
-  ) {
+  static async clear(customerId) {
 
-    db.query(
+    await db.query(
       `
       DELETE FROM cart
       WHERE customer_id = ?
       `,
-      [customerId],
-      callback
+      [customerId]
     );
 
+    return true;
   }
 
 }

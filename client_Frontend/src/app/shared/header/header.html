@@ -6,12 +6,12 @@
       routerLink="/"
       class="logo"
     >
-      
-      <img 
-        src="images/logo.jpg" 
-        alt="Bookstore Logo" 
+      <img
+          [src]="'http://localhost:3000/uploads/logo.jpg' "
+          alt="Bookstore Logo" 
         class="logo-img"
-      >
+         />
+     
       
       <span class="logo-text">BOOKSTORE</span>
     </a>
@@ -133,39 +133,64 @@
     </button>
 
     <div
-      class="dropdown-menu"
-      *ngIf="showUserMenu"
+  class="dropdown-menu"
+  *ngIf="showUserMenu"
+>
+
+  <!-- USER -->
+
+  <ng-container *ngIf="!isAdmin">
+
+    <a
+      routerLink="/profile"
+      (click)="showUserMenu = false"
     >
+      Thông tin cá nhân
+    </a>
 
-      <a
-        routerLink="/profile"
-        (click)="showUserMenu = false"
-      >
-        Thông tin cá nhân
-      </a>
+    <a
+      routerLink="/orders"
+      (click)="showUserMenu = false"
+    >
+      Đơn hàng của tôi
+    </a>
 
-      <a
-        *ngIf="isAdmin"
-        routerLink="/admin"
-        (click)="showUserMenu = false"
-      >
-        Quản lý
-      </a>
+  </ng-container>
 
-      <a
-        routerLink="/orders"
-        (click)="showUserMenu = false"
-      >
-        Đơn hàng của tôi
-      </a>
+  <!-- ADMIN -->
 
-      <button
-        (click)="logout()"
-      >
-        Đăng xuất
-      </button>
+  <ng-container *ngIf="isAdmin">
 
-    </div>
+    <a
+      routerLink="/admin/customers"
+      (click)="showUserMenu = false"
+    >
+      Quản lý người dùng
+    </a>
+
+    <a
+      routerLink="/admin/products"
+      (click)="showUserMenu = false"
+    >
+      Quản lý sản phẩm
+    </a>
+
+    <a
+      routerLink="/admin/orders"
+      (click)="showUserMenu = false"
+    >
+      Quản lý đơn hàng
+    </a>
+
+  </ng-container>
+
+  <button
+    (click)="logout()"
+  >
+    Đăng xuất
+  </button>
+
+</div>
 
   </div>
 

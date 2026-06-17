@@ -1,228 +1,178 @@
 import Address from '../models/address.model.js';
 
-const getAddresses = (
-  req,
-  res
-) => {
+// GET ALL
+export const getAddresses = async (req, res) => {
+  try {
 
-  Address.getAllByCustomerId(
-    req.user.customer_id,
-    (err, rows) => {
+    const rows = await Address.getAllByCustomerId(
+      req.user.customer_id
+    );
 
-      if (err) {
+    res.json({
+      success: true,
+      data: rows
+    });
 
-        return res.status(500).json({
-          success: false,
-          message: 'Lỗi lấy địa chỉ'
-        });
+  } catch (error) {
 
-      }
+    res.status(500).json({
+      success: false,
+      message: 'Lỗi lấy địa chỉ',
+      error: error.message
+    });
 
-      return res.json({
-        success: true,
-        data: rows
+  }
+};
+
+// CREATE
+export const createAddress = async (req, res) => {
+
+  try {
+
+    const customerId =
+      req.user.customer_id;
+
+    req.body.customer_id =
+      customerId;
+
+    const duplicate =
+      await Address.checkDuplicate(
+        customerId,
+        req.body.province,
+        req.body.district,
+        req.body.ward,
+        req.body.address_detail
+      );
+
+    if (duplicate.length > 0) {
+
+      return res.status(400).json({
+        success: false,
+        message: 'Bạn đã lưu địa chỉ này rồi'
       });
 
     }
-  );
+
+    const result =
+      await Address.create(req.body);
+
+    res.json({
+      success: true,
+      address_id: result.insertId
+    });
+
+  } catch (error) {
+
+    res.status(500).json({
+      success: false,
+      message: 'Lỗi thêm địa chỉ',
+      error: error.message
+    });
+
+  }
 
 };
 
-const createAddress = (
-  req,
-  res
-) => {
+// UPDATE
+export const updateAddress = async (req, res) => {
 
-  const customerId =
-    req.user.customer_id;
+  try {
 
-  req.body.customer_id =
-    customerId;
+    const addressId =
+      Number(req.params.id);
 
-  Address.checkDuplicate(
-    customerId,
-    req.body.province,
-    req.body.district,
-    req.body.ward,
-    req.body.address_detail,
-    (err, rows) => {
+    const customerId =
+      req.user.customer_id;
 
-      if (err) {
-
-        return res.status(500).json({
-          success: false,
-          message:
-            'Lỗi kiểm tra địa chỉ'
-        });
-
-      }
-
-      if (rows.length > 0) {
-
-        return res.status(400).json({
-          success: false,
-          message:
-            'Bạn đã lưu địa chỉ này rồi'
-        });
-
-      }
-
-      Address.create(
-        req.body,
-        (err, result) => {
-
-          if (err) {
-
-            return res.status(500).json({
-              success: false,
-              message:
-                'Lỗi thêm địa chỉ'
-            });
-
-          }
-
-          return res.json({
-            success: true,
-            address_id:
-              result.insertId
-          });
-
-        }
-      );
-
-    }
-  );
-
-};
-const updateAddress = (
-  req,
-  res
-) => {
-
-  const addressId =
-    Number(req.params.id);
-
-  const customerId =
-    req.user.customer_id;
-
-  Address.checkDuplicateForUpdate(
-    addressId,
-    customerId,
-    req.body.province,
-    req.body.district,
-    req.body.ward,
-    req.body.address_detail,
-    (err, rows) => {
-
-      if (err) {
-
-        return res.status(500).json({
-          success: false,
-          message:
-            'Lỗi kiểm tra địa chỉ'
-        });
-
-      }
-
-      if (rows.length > 0) {
-
-        return res.status(400).json({
-          success: false,
-          message:
-            'Địa chỉ này đã tồn tại'
-        });
-
-      }
-
-      Address.update(
+    const duplicate =
+      await Address.checkDuplicateForUpdate(
         addressId,
         customerId,
-        req.body,
-        (err) => {
-
-          if (err) {
-
-            return res.status(500).json({
-              success: false,
-              message:
-                'Lỗi cập nhật'
-            });
-
-          }
-
-          return res.json({
-            success: true
-          });
-
-        }
+        req.body.province,
+        req.body.district,
+        req.body.ward,
+        req.body.address_detail
       );
 
-    }
-  );
+    if (duplicate.length > 0) {
 
-};
-
-const deleteAddress = (
-  req,
-  res
-) => {
-
-  Address.delete(
-    Number(req.params.id),
-    req.user.customer_id,
-    (err) => {
-
-      if (err) {
-
-        return res.status(500).json({
-          success: false,
-          message: 'Lỗi xóa'
-        });
-
-      }
-
-      return res.json({
-        success: true
+      return res.status(400).json({
+        success: false,
+        message: 'Địa chỉ này đã tồn tại'
       });
 
     }
-  );
+
+    await Address.update(
+      addressId,
+      customerId,
+      req.body
+    );
+
+    res.json({
+      success: true
+    });
+
+  } catch (error) {
+
+    res.status(500).json({
+      success: false,
+      message: 'Lỗi cập nhật',
+      error: error.message
+    });
+
+  }
 
 };
 
-const setDefaultAddress = (
-  req,
-  res
-) => {
+// DELETE
+export const deleteAddress = async (req, res) => {
 
-  Address.setDefault(
-    Number(req.params.id),
-    req.user.customer_id,
-    (err) => {
+  try {
 
-      if (err) {
+    await Address.delete(
+      Number(req.params.id),
+      req.user.customer_id
+    );
 
-        return res.status(500).json({
-          success: false,
-          message:
-            'Lỗi đặt mặc định'
-        });
+    res.json({
+      success: true
+    });
 
-      }
+  } catch (error) {
 
-      return res.json({
-        success: true
-      });
+    res.status(500).json({
+      success: false,
+      message: 'Lỗi xóa',
+      error: error.message
+    });
 
-    }
-  );
+  }
 
 };
 
-export {
-  getAddresses,
-  createAddress,
-  updateAddress,
-  deleteAddress,
-  setDefaultAddress
+// SET DEFAULT
+export const setDefaultAddress = async (req, res) => {
+
+  try {
+
+    await Address.setDefault(
+      Number(req.params.id),
+      req.user.customer_id
+    );
+
+    res.json({
+      success: true
+    });
+
+  } catch (error) {
+
+    res.status(500).json({
+      success: false,
+      message: 'Lỗi đặt mặc định',
+      error: error.message
+    });
+
+  }
+
 };

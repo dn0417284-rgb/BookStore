@@ -367,3 +367,21 @@
 .product-image {
   cursor: pointer;
 }
+
+.swal2-popup {
+  border-radius: 16px !important;
+}
+
+.swal2-title {
+  font-size: 24px !important;
+  font-weight: 700 !important;
+}
+
+.swal2-html-container {
+  font-size: 15px !important;
+}
+
+.swal2-confirm,
+.swal2-cancel {
+  border-radius: 10px !important;
+}
