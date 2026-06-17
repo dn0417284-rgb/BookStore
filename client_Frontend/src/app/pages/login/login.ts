@@ -7,6 +7,7 @@ import { AuthService } from '../../core/services/auth';
 
 @Component({
   selector: 'app-login',
+  standalone: true,
   imports: [CommonModule, ReactiveFormsModule, RouterLink],
   templateUrl: './login.html',
   styleUrls: ['./login.css'],
@@ -22,8 +23,8 @@ export class LoginComponent {
     private authService: AuthService,
     private router: Router
   ) {
-    if (this.authService.isLoggedIn()) {
-      this.router.navigate(['/']);
+    if (this.authService.isTokenValid()) {
+      this.router.navigate(['/login']);
     }
 
     this.loginForm = this.fb.group({
@@ -47,19 +48,27 @@ export class LoginComponent {
 
     this.authService.login(this.loginForm.value).subscribe({
       next: (res) => {
+
         this.isLoading = false;
+
+        // Lưu token + customer
+        this.authService.saveLogin(res);
+
         const role = this.authService.getUserRole();
+
         if (role === 'admin') {
           this.router.navigate(['/admin/customers']);
         } else {
           this.router.navigate(['/']);
         }
       },
+
       error: (err) => {
         this.isLoading = false;
         this.errorMessage =
-          err?.error?.message || 'Đăng nhập thất bại. Vui lòng thử lại.';
-      },
+          err?.error?.message ||
+          'Đăng nhập thất bại. Vui lòng thử lại.';
+      }
     });
   }
 }

@@ -63,32 +63,32 @@ export class ProductDetail implements OnInit {
 
       this.loading = true;
 
-      this.productService
-        .getProductById(id)
-        .subscribe({
+      // this.productService
+      //   .getProductById(id.toString())
+      //   .subscribe({
 
-          next: (data) => {
+      //     next: (data) => {
 
-            this.product = data;
+      //       this.product = data;
 
-            this.loading = false;
+      //       this.loading = false;
 
-            this.cdr.detectChanges();
+      //       this.cdr.detectChanges();
 
-          },
+      //     },
 
-          error: (err) => {
+      //     error: (err) => {
 
-            console.error(err);
+      //       console.error(err);
 
-            this.loading = false;
+      //       this.loading = false;
 
-            this.cdr.detectChanges();
+      //       this.cdr.detectChanges();
 
-          }
+      //     }
 
-        });
-
+      //   });
+console.log('product detail disabled');
     });
 
   }

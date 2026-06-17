@@ -2,20 +2,21 @@ import { CanActivateFn, Router } from '@angular/router';
 import { inject } from '@angular/core';
 import { AuthService } from '../../core/services/auth';
 
-export const authGuard: CanActivateFn = (route, state) => {
+export const roleGuard = (roles: string[]): CanActivateFn => {
+  return () => {
+    const authService = inject(AuthService);
+    const router = inject(Router);
 
-  const authService = inject(AuthService);
-  const router = inject(Router);
+    const user = authService.getCurrentUser();
 
-  const token = authService.getToken();
+    if (!user || !user.role) {
+      return router.createUrlTree(['/login']);
+    }
 
-  // ====================
-  // CHƯA LOGIN → CHUYỂN LOGIN
-  // ====================
-  if (!token) {
-    router.navigate(['/login']);
-    return false;
-  }
+    if (!roles.includes(user.role)) {
+      return router.createUrlTree(['/']);
+    }
 
-  return true;
+    return true;
+  };
 };

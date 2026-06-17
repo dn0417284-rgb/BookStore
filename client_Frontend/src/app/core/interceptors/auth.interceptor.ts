@@ -1,37 +1,20 @@
-import {
-  HttpInterceptorFn
-} from '@angular/common/http';
+import { HttpInterceptorFn } from '@angular/common/http';
 
-export const authInterceptor: HttpInterceptorFn = (
-  req,
-  next
-) => {
+export const authInterceptor: HttpInterceptorFn = (req, next) => {
+  const token = localStorage.getItem('token');
 
-  const token =
-    localStorage.getItem('token');
+  const isApiRequest =
+    req.url.includes('/api'); // an toàn hơn startsWith
 
-  // Gắn JWT cho tất cả API bắt đầu bằng /api
-  const isBackendApi =
-    req.url.startsWith('/api');
-
-  if (
-    token &&
-    isBackendApi
-  ) {
-
-    req = req.clone({
-
+  if (token && isApiRequest) {
+    const clonedReq = req.clone({
       setHeaders: {
-
-        Authorization:
-          `Bearer ${token}`
-
-      }
-
+        Authorization: `Bearer ${token}`,
+      },
     });
 
+    return next(clonedReq);
   }
 
   return next(req);
-
 };

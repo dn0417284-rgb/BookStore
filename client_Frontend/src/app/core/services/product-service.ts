@@ -19,4 +19,15 @@ export class ProductService {
   updateProduct(id: number, formData: FormData) {
     return this.http.put<Product>(`/api/products/${id}`, formData);
   }
+  //myhoi
+  getBestSellers() {
+  return this.getProducts();
+}
+filterProductsByPrice(min: number, max: number) {
+  return this.getProducts();
+}
+getProductById(id: string) {
+  return this.getProducts();
+}
+//
 }

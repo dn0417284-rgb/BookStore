@@ -1,21 +1,26 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-
 import { CartService } from '../../core/services/cart';
+import { jwtDecode } from 'jwt-decode';
 
 export interface LoginResponse {
   token: string;
   customer?: any;
 }
 
+interface JwtPayload {
+  exp: number;
+  role?: string;
+  email?: string;
+  id?: string;
+}
+
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:3000/api/customers';
-  // hoặc:
-  // private apiUrl = '/api/auth';
+  private apiUrl = '/api/customers';
 
   constructor(
     private http: HttpClient,
@@ -51,10 +56,12 @@ export class AuthService {
     }
 
     if (res.customer) {
-      localStorage.setItem(
-        'customer',
-        JSON.stringify(res.customer)
-      );
+      const safeCustomer = {
+        ...res.customer,
+        role: res.customer.role ?? 'user',
+      };
+
+      localStorage.setItem('customer', JSON.stringify(safeCustomer));
     }
   }
 
@@ -74,10 +81,28 @@ export class AuthService {
   }
 
   // ====================
-  // CHECK LOGIN
+  // CHECK TOKEN VALID (QUAN TRỌNG)
+  // ====================
+  isTokenValid(): boolean {
+    const token = this.getToken();
+    if (!token) return false;
+
+    try {
+      const decoded = jwtDecode<JwtPayload>(token);
+
+      const now = Date.now() / 1000; // seconds
+
+      return decoded.exp > now;
+    } catch (err) {
+      return false;
+    }
+  }
+
+  // ====================
+  // CHECK LOGIN (FIXED)
   // ====================
   isLoggedIn(): boolean {
-    return !!this.getToken();
+    return this.isTokenValid();
   }
 
   // ====================

@@ -1,11 +1,10 @@
-// services/auth.service.js
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const AuthModel = require('../models/auth.model');
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+import AuthModel from '../models/auth.model.js';
 
 const SALT_ROUNDS = 10;
 const JWT_SECRET = process.env.JWT_SECRET || 'bookstore_secret_key';
-const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '7d';
+const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '1m';
 
 const AuthService = {
   /**
@@ -15,41 +14,57 @@ const AuthService = {
    * - Lưu DB và trả về token
    */
   register: async ({ full_name, email, password, phone, address }) => {
-    // Validate cơ bản
+  try {
     if (!full_name || !email || !password) {
-      throw { status: 400, message: 'Vui lòng điền đầy đủ họ tên, email và mật khẩu.' };
-    }
-    if (password.length < 6) {
-      throw { status: 400, message: 'Mật khẩu phải có ít nhất 6 ký tự.' };
+      throw new Error('Thiếu thông tin bắt buộc');
     }
 
-    // Kiểm tra email đã tồn tại
-    const exists = await AuthModel.emailExists(email);
-    if (exists) {
-      throw { status: 409, message: 'Email này đã được đăng ký.' };
+    const cleanEmail = email.trim().toLowerCase();
+
+    const existing = await AuthModel.findByEmail(cleanEmail);
+    if (existing) {
+      const err = new Error('Email đã tồn tại');
+      err.status = 400;
+      throw err;
     }
 
-    // Băm password
-    const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
+    const hash = await bcrypt.hash(password, 10);
 
-    // Tạo customer trong DB
-    const customer = await AuthModel.create({
+    const user = await AuthModel.create({
       full_name,
-      email,
-      password: hashedPassword,
+      email: cleanEmail,
+      password: hash,
       phone,
       address,
     });
 
-    // Tạo JWT
     const token = jwt.sign(
-      { customer_id: customer.customer_id, role: customer.role },
+      {
+        customer_id: user.customer_id,
+        email: cleanEmail,
+        role: 'user',
+      },
       JWT_SECRET,
-      { expiresIn: JWT_EXPIRES_IN }
+      { expiresIn: '1m' }
     );
 
-    return { token, customer };
-  },
+    return {
+      token,
+      customer: {
+        customer_id: user.customer_id,
+        full_name: user.full_name,
+        email: cleanEmail,
+        role: 'user',
+      },
+    };
+
+  } catch (err) {
+    throw {
+      status: err.status || 500,
+      message: err.message || 'Register failed',
+    };
+  }
+},
 
   /**
    * Đăng nhập
@@ -61,7 +76,7 @@ const AuthService = {
     if (!email || !password) {
       throw { status: 400, message: 'Vui lòng nhập email và mật khẩu.' };
     }
-
+    console.log('Login attempt:', email);
     // Tìm customer
     const customer = await AuthModel.findByEmail(email);
     if (!customer) {
@@ -75,8 +90,12 @@ const AuthService = {
 
     // So sánh password
     const isMatch = await bcrypt.compare(password, customer.password);
+
     if (!isMatch) {
-      throw { status: 401, message: 'Email hoặc mật khẩu không đúng.' };
+      throw {
+        status: 401,
+        message: "Sai mật khẩu"
+      };
     }
 
     // Tạo JWT — payload chứa customer_id + role (đúng format mà các controller khác dùng)
@@ -86,9 +105,9 @@ const AuthService = {
       { expiresIn: JWT_EXPIRES_IN }
     );
 
-    const { password: _pw, ...customerInfo } = customer; // bỏ password khỏi response
+    const { password: _pw, ...customerInfo } = customer;
     return { token, customer: customerInfo };
   },
 };
 
-module.exports = AuthService;
+export default AuthService;

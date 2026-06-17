@@ -10,5 +10,6 @@ export class Product {
     public cover_type: string,
     public description: string,
     public image: string,
+    public stock: number
   ) {}
 }

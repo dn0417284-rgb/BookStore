@@ -1,5 +1,11 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  AbstractControl,
+  ValidationErrors
+} from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../core/services/auth';
 import { CommonModule } from '@angular/common';
@@ -12,6 +18,7 @@ function passwordMatchValidator(control: AbstractControl): ValidationErrors | nu
 }
 
 @Component({
+  standalone: true,
   selector: 'app-register',
   imports: [CommonModule, ReactiveFormsModule, RouterLink],
   templateUrl: './register.html',
@@ -29,7 +36,7 @@ export class RegisterComponent {
     private authService: AuthService,
     private router: Router
   ) {
-    if (this.authService.isLoggedIn()) {
+    if (this.authService.isTokenValid()) {
       this.router.navigate(['/']);
     }
 
@@ -39,7 +46,14 @@ export class RegisterComponent {
         email: ['', [Validators.required, Validators.email]],
         phone: ['', [Validators.pattern(/^(0[3-9])[0-9]{8}$/)]],
         address: [''],
-        password: ['', [Validators.required, Validators.minLength(6)]],
+        password: [
+          '',
+          [
+            Validators.required,
+            Validators.minLength(8),
+            Validators.pattern(/^(?=.*[A-Z])(?=.*[0-9]).{8,}$/)
+          ]
+        ],
         confirmPassword: ['', Validators.required],
       },
       { validators: passwordMatchValidator }
@@ -65,11 +79,21 @@ export class RegisterComponent {
     const { confirmPassword, ...payload } = this.registerForm.value;
 
     this.authService.register(payload).subscribe({
-      next: () => {
+      next: (res: any) => {
         this.isLoading = false;
-        this.successMessage = 'Đăng ký thành công! Đang chuyển đến trang chủ...';
-        setTimeout(() => this.router.navigate(['/']), 1500);
+
+        // lưu token nếu backend trả về
+        if (res?.token) {
+          localStorage.setItem('token', res.token);
+        }
+
+        this.successMessage = 'Đăng ký thành công!';
+
+        setTimeout(() => {
+          this.router.navigate(['/']);
+        }, 1200);
       },
+
       error: (err) => {
         this.isLoading = false;
         this.errorMessage =

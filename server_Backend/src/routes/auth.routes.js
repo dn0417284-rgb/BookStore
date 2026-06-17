@@ -1,14 +1,11 @@
-// routes/auth.routes.js
-const express = require('express');
-const router = express.Router();
-const AuthController = require('../controllers/auth.controller');
-const verifyToken = require('../middleware/auth.middleware');
+import express from 'express';
+import AuthController from '../controllers/auth.controller.js';
+import verifyToken from '../middlewares/auth.middleware.js';
 
-// Public routes — không cần token
+const router = express.Router();
+
 router.post('/register', AuthController.register);
 router.post('/login', AuthController.login);
-
-// Protected route — cần token hợp lệ
 router.get('/me', verifyToken, AuthController.getMe);
 
-module.exports = router;
+export default router;
