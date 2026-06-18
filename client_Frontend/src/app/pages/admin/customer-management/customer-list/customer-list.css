@@ -23,3 +23,9 @@
   font-size: 13px;
   font-weight: 600;
 }
+
+.table-card,
+.page-title {
+  width: 95%;
+  margin: 0 auto 20px;
+}

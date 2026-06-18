@@ -47,16 +47,16 @@ export class OrderDetail implements OnInit {
 
   ngOnInit(): void {
 
-    console.log('OrderDetail INIT');
+    //console.log('OrderDetail INIT');
 
     this.orderId = Number(
       this.route.snapshot.paramMap.get('id')
     );
 
-    console.log(
-      'Loading order:',
-      this.orderId
-    );
+    // console.log(
+    //   'Loading order:',
+    //   this.orderId
+    // );
 
     this.loadOrder();
 
@@ -72,10 +72,10 @@ export class OrderDetail implements OnInit {
 
         next: (res: any) => {
 
-          console.log(
-            'SUCCESS:',
-            res
-          );
+          // console.log(
+          //   'SUCCESS:',
+          //   res
+          // );
 
           if (
             res &&
@@ -96,8 +96,8 @@ export class OrderDetail implements OnInit {
 
           this.cdr.detectChanges();
 
-          console.log('loading=', this.loading);
-          console.log('order=', this.order);
+          // console.log('loading=', this.loading);
+          // console.log('order=', this.order);
         },
 
         error: (err) => {

@@ -51,48 +51,32 @@ export class Cart implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    //console.log('CART INIT');
+    this.cartService.cart$
+      .subscribe(items => {
+        //console.log('CART SUBJECT:', items);
+        this.items = items || [];
 
-  console.log('CART INIT');
-
-  this.cartService.cart$
-    .subscribe(items => {
-
-      console.log('CART SUBJECT:', items);
-
-      this.items = items || [];
-
-      this.cdr.detectChanges();
-
-    });
-
-  this.cartService.loadCart();
-
-}
+        this.cdr.detectChanges();
+      });
+    this.cartService.loadCart();
+  }
 
   total(): number {
-
     return this.items.reduce(
-
       (sum, item) =>
-
         sum +
         Number(item.price) *
         item.quantity,
-
       0
-
     );
-
   }
 
-  selectedCount(): number {
-
+  selectedCount(): number {//sl
     return this.selectedItems.length;
-
   }
 
-  selectedTotal(): number {
-
+  selectedTotal(): number {//tien tick
     return this.items
       .filter(item =>
         this.selectedItems.includes(
@@ -100,41 +84,31 @@ export class Cart implements OnInit {
         )
       )
       .reduce(
-
         (sum, item) =>
-
           sum +
           Number(item.price) *
           item.quantity,
-
         0
-
       );
 
   }
 
-  toggleItem(
+  toggleItem( //tick
     productId: number
   ): void {
-
     const index =
       this.selectedItems.indexOf(
         productId
       );
-
     if (index > -1) {
-
       this.selectedItems.splice(
         index,
         1
       );
-
     } else {
-
       this.selectedItems.push(
         productId
       );
-
     }
 
     this.selectAll =
@@ -160,14 +134,14 @@ export class Cart implements OnInit {
 
   }
 
-deleteSelected(): void {
+deleteSelected(): void { // x n sp
 
   const requests =
     this.selectedItems.map(id =>
       this.cartService.removeItem(id)
     );
 
-  forkJoin(requests).subscribe({
+  forkJoin(requests).subscribe({//chạy tất cả req // xong->next
 
     next: () => {
 
@@ -185,9 +159,9 @@ deleteSelected(): void {
   });
 
 }
-  checkoutSingle(item: any): void {
+  checkoutSingle(item: any): void {//tt 1 sp
 
-  const checkoutItem = {
+  const checkoutItem = {//tạo
     quantity: item.quantity,
     product: {
       product_id: item.product_id,
@@ -198,16 +172,16 @@ deleteSelected(): void {
     }
   };
 
-  localStorage.setItem(
+  localStorage.setItem(//lưu
     'checkoutItems',
     JSON.stringify([checkoutItem])
   );
 
-  this.router.navigate(['/checkout']);
+  this.router.navigate(['/checkout']);//chuyển sang
 
 }
 
-  checkoutSelected(): void {
+  checkoutSelected(): void {//tt nhìu sp
 
   const selectedProducts =
     this.items
@@ -244,11 +218,8 @@ deleteSelected(): void {
       item.quantity + 1
     )
     .subscribe({
-
       next: () => {
-
       }
-
     });
 
 }
@@ -276,7 +247,7 @@ decreaseQuantity(item: any): void {
 
 }
 
-removeItem(productId: number): void {
+removeItem(productId: number): void { //x sp
 
   this.cartService
     .removeItem(productId)

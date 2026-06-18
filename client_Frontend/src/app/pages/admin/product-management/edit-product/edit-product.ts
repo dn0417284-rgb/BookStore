@@ -60,7 +60,7 @@ export class EditProduct {
     if (this.selectedFile) {
       // Có chọn ảnh mới
       formData.append('image', this.selectedFile, this.selectedFile.name);
-      console.log(this.selectedFile.name);
+      //console.log(this.selectedFile.name);
     } else {
       // Giữ ảnh cũ
       formData.append('oldImage', this.product.image);

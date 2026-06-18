@@ -35,7 +35,7 @@ export class OrderDetail implements OnInit {
     this.route.snapshot.paramMap.get('id')
   );
 
-  console.log('ORDER ID:', id);
+  //console.log('ORDER ID:', id);
 
   this.orderService
     .getOrderById(id)
@@ -43,7 +43,7 @@ export class OrderDetail implements OnInit {
 
       next: (res: any) => {
 
-        console.log('API RESPONSE:', res);
+        //console.log('API RESPONSE:', res);
 
         this.order = res.data;
 

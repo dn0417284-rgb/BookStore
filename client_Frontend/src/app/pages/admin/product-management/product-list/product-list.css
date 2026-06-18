@@ -1,6 +1,10 @@
 /* =========================
    PAGE TITLE
 ========================= */
+.page-title {
+  width: 95%;
+  margin: 0 auto 20px;
+}
 
 .page-title {
   margin-bottom: 24px;

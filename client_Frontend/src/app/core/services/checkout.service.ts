@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 })
 export class CheckoutService {
 
-  private readonly API_URL = 'http://localhost:3000/api/orders';
+  private readonly API_URL = '/api/orders';
 
   constructor(private http: HttpClient) {}
 
@@ -87,10 +87,10 @@ export class CheckoutService {
       next: (res: any) => {
 
         if (res?.paymentUrl) {
-          // 🔥 redirect sang MoMo
+          // redirect sang MoMo
           window.location.href = res.paymentUrl;
         } else {
-          console.log('Order created (no MoMo):', res);
+          //console.log('Order created (no MoMo):', res);
         }
 
       },

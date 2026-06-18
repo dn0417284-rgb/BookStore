@@ -85,7 +85,7 @@ class Order {
               item.price * item.quantity
             ]
           );
-
+          //UPDATE stock trả về orderId
       }
 
       await connection.commit();

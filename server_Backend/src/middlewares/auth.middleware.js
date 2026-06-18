@@ -20,7 +20,7 @@ const verifyToken = (req, res, next) => {
 
   try {
 
-    const decoded = jwt.verify(
+    const decoded = jwt.verify(//hople
       token,
       process.env.JWT_SECRET
     );

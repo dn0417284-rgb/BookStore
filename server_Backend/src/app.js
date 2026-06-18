@@ -20,7 +20,7 @@ app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
 // Routes
 app.use("/api/products", productRoutes);
 app.use("/api/customers", customerRoutes);
-app.use("/api/orders", orderRoutes);
+app.use("/api/orders", orderRoutes); 
 app.use("/api/cart", cartRoutes);
 app.use("/api/addresses", addressRoutes);
 

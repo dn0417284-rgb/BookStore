@@ -67,13 +67,13 @@ export class Checkout implements OnInit {
   private initCheckoutItems(): void {
     const buyNowItem = this.cartService.getBuyNowItem();
 
-    if (buyNowItem) {
+    if (buyNowItem) {//muangay
       this.isBuyNowMode = true;
-      this.items = [{ ...buyNowItem }];
+      this.items = [{ ...buyNowItem }];//
       this.cartService.clearBuyNowItem();
-    } else {
+    } else {//giỏ hàng
       const checkoutItems = localStorage.getItem('checkoutItems');
-      this.items = checkoutItems ? JSON.parse(checkoutItems) : [];
+      this.items = checkoutItems ? JSON.parse(checkoutItems) : [];//
       
       if (this.items.length === 0) {
         this.router.navigate(['/cart']);
@@ -133,7 +133,7 @@ export class Checkout implements OnInit {
     return;
   }
 
-    if (this.isSubmitting) return;
+    if (this.isSubmitting) return;//đang gửi đơn không cho bấm
     this.isSubmitting = true;
 
     // Ghép chuỗi địa chỉ đầy đủ phòng trường hợp Backend yêu cầu trường địa chỉ text thô
@@ -159,13 +159,13 @@ export class Checkout implements OnInit {
     }))
     };
 
-    console.log('ORDER DATA GỬI LÊN:', orderData);
+    //console.log('ORDER DATA GỬI LÊN:', orderData);
 
     this.orderService
-      .createOrder(orderData)
+      .createOrder(orderData)//
       .subscribe({
         next: (res: any) => {
-          
+          //nhận res.paymentUrl 
           // ==========================================
           // XỬ LÝ THANH TOÁN ONLINE (MOMO / ZALOPAY)
           // ==========================================
@@ -175,7 +175,7 @@ export class Checkout implements OnInit {
             if (paymentUrl) {
               // Phải subscribe hành động dọn dẹp giỏ hàng trước khi chuyển hướng trang
               this.clearCartStateAfterOrder().subscribe({
-                next: () => {
+                next: () => {//------
                   this.cartService.loadCart(); // Cập nhật lại số lượng badge giỏ hàng trên Header
                   window.location.href = paymentUrl; // Chuyển hướng sang MoMo/ZaloPay
                 },

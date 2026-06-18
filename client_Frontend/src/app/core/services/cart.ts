@@ -43,8 +43,9 @@ export class CartService {
     }
 
     this.http.get<any>(this.apiUrl).subscribe({
-      next: (res) => {
+      next: (res) => { 
         this.cartSubject.next(res.data || []);
+          //console.log(res);
       },
       error: (err) => {
         console.error('LOAD CART ERROR:', err);
@@ -69,7 +70,7 @@ export class CartService {
       quantity
     }).pipe(
       tap((res: any) => {
-        // ✅ backend trả cart mới -> update luôn UI
+        //  backend trả cart mới -> update luôn UI
         this.cartSubject.next(res.data || []);
       })
     );
@@ -89,13 +90,13 @@ export class CartService {
   }
 
   // ==========================
-  // REMOVE ITEM
+  // REMOVE ITEM xóa sp
   // ==========================
   removeItem(productId: number): Observable<any> {
   return this.http.delete(`${this.apiUrl}/${productId}`).pipe(
     tap((res: any) => {
 
-      console.log('SERVICE REMOVE', res);
+      //console.log('SERVICE REMOVE', res);
 
       this.cartSubject.next(res.data || []);
 

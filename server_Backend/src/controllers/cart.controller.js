@@ -9,7 +9,7 @@ export const getCart = async (req, res) => {
     const results =
       await Cart.getByCustomer(customerId);
 
-    return res.status(200).json({
+    return res.status(200).json({ //trả về fr
       success: true,
       data: results
     });

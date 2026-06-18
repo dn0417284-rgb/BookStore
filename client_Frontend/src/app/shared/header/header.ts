@@ -141,7 +141,7 @@ export class Header implements OnInit {
     const keyword = this.searchKeyword.trim();
 
     this.router.navigate(['/'], {
-      queryParams: keyword ? { keyword } : {}
+      queryParams: keyword ? { keyword } : {} 
     });
 
   }

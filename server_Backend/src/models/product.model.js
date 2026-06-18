@@ -7,6 +7,12 @@ const productModel = {
     return rows;
   },
 
+  getProductsBestSellers: async () => {
+    // Sắp xếp theo trường sold giảm dần (DESC - Descending)
+    const [rows] = await db.query("SELECT * FROM products ORDER BY sold DESC");
+    return rows;
+  },
+  
   createProduct: async (product) => {
     const [result] = await db.query(
       `INSERT INTO products

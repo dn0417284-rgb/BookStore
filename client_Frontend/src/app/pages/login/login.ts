@@ -50,10 +50,10 @@ export class LoginComponent {
     this.authService.login(this.loginForm.value).subscribe({
       next: (res) => {
 
-      console.log(
-        'LOGIN RESPONSE:',
-        JSON.stringify(res, null, 2)
-      );
+      // console.log(
+      //   'LOGIN RESPONSE:',
+      //   JSON.stringify(res, null, 2)
+      // );
 
       this.isLoading = false;
 
@@ -62,10 +62,10 @@ export class LoginComponent {
       // load lại giỏ hàng từ server
       this.cartService.loadCart();
 
-      console.log(
-        'TOKEN LOCAL:',
-        localStorage.getItem('token')
-      );
+      // console.log(
+      //   'TOKEN LOCAL:',
+      //   localStorage.getItem('token')
+      // );
 
       const role = this.authService.getUserRole();
 

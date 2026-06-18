@@ -52,6 +52,7 @@ function buildIpnRawSignature(p) {
     `&message=${p.message}` +
     `&orderId=${p.orderId}` +
     `&orderInfo=${p.orderInfo}` +
+    `&orderType=${p.orderType}` +
     `&partnerCode=${p.partnerCode}` +
     `&payType=${p.payType}` +
     `&requestId=${p.requestId}` +
@@ -73,9 +74,9 @@ function sign(raw) {
 
 export const createOrder = async (req, res) => {
   try {
-    req.body.customer_id = req.user.customer_id;
+    req.body.customer_id = req.user.customer_id;//luu
 
-    const orderId = await Order.create(req.body);
+    const orderId = await Order.create(req.body);//vao DB
 
     const method = req.body.payment_method;
 
@@ -103,7 +104,7 @@ export const createOrder = async (req, res) => {
       `Thanh toan don hang ${orderId}`
     );
 
-    const body = {
+    const body = {//cbi dulieu gui momo
       partnerCode: MOMO.partnerCode,
       partnerName: 'Nha Sach BookStore',
       storeId: 'MomoTestStore',
@@ -148,10 +149,10 @@ export const createOrder = async (req, res) => {
       )
       .join('&');
 
-    body.signature = sign(rawSignature);
+    body.signature = sign(rawSignature); //momo yc ký để xác thực
 
     const momoRes = await axios.post(
-      MOMO.endpoint,
+      MOMO.endpoint,//gọi API->cổng thanh toán
       body,
       {
         headers: {
@@ -176,7 +177,7 @@ export const createOrder = async (req, res) => {
 
     }
 
-    return res.json({
+    return res.json({//về fr
       success: true,
       paymentUrl:
         momoRes.data.payUrl
@@ -218,24 +219,27 @@ export const momoIPN = async (req, res) => {
       buildIpnRawSignature(req.body);
 
     const mySignature =
-      sign(rawIpnSignature);
+      sign(rawIpnSignature);//ktra chu ky
 
     console.log(
-      '👉 CHỮ KÝ MoMo:',
+      'CHỮ KÝ MoMo:',
       momoSignature
     );
 
     console.log(
-      '👉 CHỮ KÝ SERVER:',
+      'CHỮ KÝ SERVER:',
       mySignature
     );
 
     if (mySignature !== momoSignature) {
+      // console.log('MOMO:', momoSignature);
+      // console.log('SERVER:', mySignature);
+      // console.log('BODY:', req.body);
 
-      console.warn(
-        '⚠️ Signature mismatch - vẫn tiếp tục xử lý IPN'
-      );
-
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid signature'
+      });
     }
 
     const realId = Number(
@@ -243,14 +247,14 @@ export const momoIPN = async (req, res) => {
     );
 
     const order =
-      await Order.getOrderDetailAdmin(
+      await Order.getOrderDetailAdmin(//tìm đơn hàng đó
         realId
       );
 
     if (!order) {
 
       console.error(
-        `⚠️ IPN Error: Order ${realId} not found in database.`
+        `IPN Error: Order ${realId} not found in database.`
       );
 
       return res.status(404).json({
@@ -259,20 +263,20 @@ export const momoIPN = async (req, res) => {
 
     }
 
-    if (
+    if (//ktra thanh toán
       order.payment_status ===
       'PAID'
     ) {
 
       console.log(
-        `ℹ️ Order ${realId} was already paid.`
+        `Order ${realId} was already paid.`
       );
 
       return res.status(204).send();
 
     }
 
-    if (Number(resultCode) === 0) {
+    if (Number(resultCode) === 0) {//tc
 
       const sqlUpdate = `
         UPDATE orders
@@ -295,7 +299,7 @@ export const momoIPN = async (req, res) => {
       );
 
       console.log(
-        `✅ Order ${realId} successfully updated`
+        ` Order ${realId} successfully updated`
       );
 
       return res.status(204).send();
@@ -495,7 +499,7 @@ export const getOrders = async (req, res) => {
         req.user.customer_id
       );
 
-    console.log('ORDERS:', orders);
+    // console.log('ORDERS:', orders);
 
     return res.json({
       success: true,

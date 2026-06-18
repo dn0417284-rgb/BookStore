@@ -169,9 +169,9 @@ filterProducts: async (req, res) => {
 
 getBestSellers: async (req, res) => {
   try {
-    const products = await productModel.getProducts();
+    const products = await productModel.getProductsBestSellers();
 
-    res.json(products.slice(0, 8));
+    res.json(products.slice(0, 5));
   } catch (error) {
     res.status(500).json({
       message: "Lỗi server"

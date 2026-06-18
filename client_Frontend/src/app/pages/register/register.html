@@ -4,10 +4,10 @@
     <p class="auth-subtitle">Tạo tài khoản mới</p>
 
     <div class="error-alert" *ngIf="errorMessage">
-      <span>⚠️ {{ errorMessage }}</span>
+      <span> {{ errorMessage }}</span>
     </div>
     <div class="success-alert" *ngIf="successMessage">
-      <span>✅ {{ successMessage }}</span>
+      <span> {{ successMessage }}</span>
     </div>
 
     <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" novalidate>

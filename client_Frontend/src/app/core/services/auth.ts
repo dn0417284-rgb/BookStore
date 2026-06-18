@@ -47,8 +47,8 @@ export class AuthService {
   // ====================
   saveLogin(res: any): void {
 
-    console.log('SAVE LOGIN:', res);
-    console.log('TOKEN:', res?.token);
+    // console.log('SAVE LOGIN:', res);
+    //console.log('TOKEN:', res?.token);
 
     if (res.token) {
       localStorage.setItem('token', res.token);
@@ -61,10 +61,10 @@ export class AuthService {
       );
     }
 
-    console.log(
-      'TOKEN AFTER SAVE:',
-      localStorage.getItem('token')
-    );
+    // console.log(
+    //   'TOKEN AFTER SAVE:',
+    //   localStorage.getItem('token')
+    // );
   }
 
   // ====================

@@ -8,7 +8,7 @@ const customerModel = {
 
   deleteCustomer: async (id) => {
     const [result] = await db.query(
-      "DELETE FROM customers WHERE customer_id = ?",
+      "UPDATE customers SET account_status = 0 WHERE customer_id = ?",
       [id]
     );
     return result;

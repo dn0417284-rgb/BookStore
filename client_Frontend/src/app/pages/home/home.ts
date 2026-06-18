@@ -298,7 +298,7 @@ export class Home implements OnInit {
 
   if (
     isNaN(quantity) ||
-    quantity < 1
+    quantity < 1  
   ) {
 
     Swal.fire({
